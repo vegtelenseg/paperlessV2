@@ -4,7 +4,7 @@ import {BaseModel} from './base';
 
 export class OnCourse extends BaseModel {
   public instructorId!: number;
-  public courseId!:number;
+  public courseId!: number;
   static get relationMappings() {
     return {
       instructor: {

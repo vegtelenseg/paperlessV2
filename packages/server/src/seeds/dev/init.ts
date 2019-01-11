@@ -1,6 +1,6 @@
 import Knex from 'knex';
 
-import {Instructor, Student, Course, OnCourse} from '../../models/';
+import {Instructor, Student, Course, OnCourse, Chapter} from '../../models/';
 import Context from '../../context';
 import tracer from '../../tracer';
 
@@ -84,11 +84,11 @@ const createCourse = async (
   {
     name,
     minGrade,
-    commitment
+    commitment,
   }: {
     name: string;
     minGrade: number;
-    commitment?: string
+    commitment?: string;
   }
 ) => {
   return Course.query(trx)
@@ -96,21 +96,40 @@ const createCourse = async (
     .insertGraph({
       name,
       minGrade,
-      commitment
+      commitment,
     });
 };
 
-const createOnCourse = async (context: Context, trx: Knex, {
-  instructorId,
-  courseId
-}: {
-  instructorId: number,
-  courseId: number
-}) => {
-  return await OnCourse.query(trx).context(context).insertGraph({
+const createOnCourse = async (
+  context: Context,
+  trx: Knex,
+  {
     instructorId,
-    courseId
-  });
+    courseId,
+  }: {
+    instructorId: number;
+    courseId: number;
+  }
+) => {
+  return await OnCourse.query(trx)
+    .context(context)
+    .insertGraph({
+      instructorId,
+      courseId,
+    });
+};
+
+const createChapter = async (context: Context, trx: Knex, {
+  courseId,
+  name
+}: {
+  courseId: number,
+  name: string
+}) => {
+  return await Chapter.query(trx).context(context).insertGraph({
+    courseId,
+    name
+  })
 }
 
 export async function seed(knex: Knex) {
@@ -120,6 +139,9 @@ export async function seed(knex: Knex) {
 
   await knex('instructor').del();
   await knex('student').del();
+  await knex('course').del();
+  await knex('on_course').del();
+  await knex('chapter').del();
 
   const iStartDate = new Date(1970, 1, 1);
   const iEndDate = new Date(1985, 12, 31);
@@ -167,55 +189,378 @@ export async function seed(knex: Knex) {
       name: 'Physical Sciences',
       minGrade: 70,
       commitment: '12 months',
+      chapters: [
+        {
+          name: 'Skills for Science',
+        },
+        {
+          name: 'Momentum and Impulse',
+        },
+        {
+          name: 'Vertical Projectile Motion in One Dimension',
+        },
+        {
+          name: 'Organic molecules',
+        },
+        {
+          name: 'Work, energy and power',
+        },
+        {
+          name: 'Doppler effect',
+        },
+        {
+          name: 'Rate and Extent of Reaction',
+        },
+        {
+          name: 'Chemical Equilibrium',
+        },
+        {
+          name: 'Acids and Bases',
+        },
+        {
+          name: 'Electric Circuits',
+        },
+        {
+          name: 'Electrodynamics',
+        },
+        {
+          name: 'Optical phenomena and properties of matter',
+        },
+        {
+          name: 'Electrochemical reactions',
+        },
+        {
+          name: 'The Chemical Industry',
+        },
+      ],
     },
     {
       name: 'Geography',
       minGrade: 70,
-      commitment: '12 months'
+      commitment: '12 months',
+      chapters: [
+        {
+          name: 'Skills for Science',
+        },
+        {
+          name: 'Momentum and Impulse',
+        },
+        {
+          name: 'Vertical Projectile Motion in One Dimension',
+        },
+        {
+          name: 'Organic molecules',
+        },
+        {
+          name: 'Work, energy and power',
+        },
+        {
+          name: 'Doppler effect',
+        },
+        {
+          name: 'Rate and Extent of Reaction',
+        },
+        {
+          name: 'Chemical Equilibrium',
+        },
+        {
+          name: 'Acids and Bases',
+        },
+        {
+          name: 'Electric Circuits',
+        },
+        {
+          name: 'Electrodynamics',
+        },
+        {
+          name: 'Optical phenomena and properties of matter',
+        },
+        {
+          name: 'Electrochemical reactions',
+        },
+        {
+          name: 'The Chemical Industry',
+        },
+      ],
     },
     {
       name: 'Mathematics',
       minGrade: 70,
-      commitment: '12 months'
+      commitment: '12 months',
+      chapters: [
+        {
+          name: 'Skills for Science',
+        },
+        {
+          name: 'Momentum and Impulse',
+        },
+        {
+          name: 'Vertical Projectile Motion in One Dimension',
+        },
+        {
+          name: 'Organic molecules',
+        },
+        {
+          name: 'Work, energy and power',
+        },
+        {
+          name: 'Doppler effect',
+        },
+        {
+          name: 'Rate and Extent of Reaction',
+        },
+        {
+          name: 'Chemical Equilibrium',
+        },
+        {
+          name: 'Acids and Bases',
+        },
+        {
+          name: 'Electric Circuits',
+        },
+        {
+          name: 'Electrodynamics',
+        },
+        {
+          name: 'Optical phenomena and properties of matter',
+        },
+        {
+          name: 'Electrochemical reactions',
+        },
+        {
+          name: 'The Chemical Industry',
+        },
+      ],
     },
     {
       name: 'Accounting',
       minGrade: 70,
-      commitment: '12 months'
+      commitment: '12 months',
+      chapters: [
+        {
+          name: 'Skills for Science',
+        },
+        {
+          name: 'Momentum and Impulse',
+        },
+        {
+          name: 'Vertical Projectile Motion in One Dimension',
+        },
+        {
+          name: 'Organic molecules',
+        },
+        {
+          name: 'Work, energy and power',
+        },
+        {
+          name: 'Doppler effect',
+        },
+        {
+          name: 'Rate and Extent of Reaction',
+        },
+        {
+          name: 'Chemical Equilibrium',
+        },
+        {
+          name: 'Acids and Bases',
+        },
+        {
+          name: 'Electric Circuits',
+        },
+        {
+          name: 'Electrodynamics',
+        },
+        {
+          name: 'Optical phenomena and properties of matter',
+        },
+        {
+          name: 'Electrochemical reactions',
+        },
+        {
+          name: 'The Chemical Industry',
+        },
+      ],
     },
     {
       name: 'Economics',
       minGrade: 70,
-      commitment: '12 months'
+      commitment: '12 months',
+      chapters: [
+        {
+          name: 'Skills for Science',
+        },
+        {
+          name: 'Momentum and Impulse',
+        },
+        {
+          name: 'Vertical Projectile Motion in One Dimension',
+        },
+        {
+          name: 'Organic molecules',
+        },
+        {
+          name: 'Work, energy and power',
+        },
+        {
+          name: 'Doppler effect',
+        },
+        {
+          name: 'Rate and Extent of Reaction',
+        },
+        {
+          name: 'Chemical Equilibrium',
+        },
+        {
+          name: 'Acids and Bases',
+        },
+        {
+          name: 'Electric Circuits',
+        },
+        {
+          name: 'Electrodynamics',
+        },
+        {
+          name: 'Optical phenomena and properties of matter',
+        },
+        {
+          name: 'Electrochemical reactions',
+        },
+        {
+          name: 'The Chemical Industry',
+        },
+      ],
     },
     {
       name: 'Life Sciences',
       minGrade: 70,
-      commitment: '12 months'
+      commitment: '12 months',
+      chapters: [
+        {
+          name: 'Skills for Science',
+        },
+        {
+          name: 'Momentum and Impulse',
+        },
+        {
+          name: 'Vertical Projectile Motion in One Dimension',
+        },
+        {
+          name: 'Organic molecules',
+        },
+        {
+          name: 'Work, energy and power',
+        },
+        {
+          name: 'Doppler effect',
+        },
+        {
+          name: 'Rate and Extent of Reaction',
+        },
+        {
+          name: 'Chemical Equilibrium',
+        },
+        {
+          name: 'Acids and Bases',
+        },
+        {
+          name: 'Electric Circuits',
+        },
+        {
+          name: 'Electrodynamics',
+        },
+        {
+          name: 'Optical phenomena and properties of matter',
+        },
+        {
+          name: 'Electrochemical reactions',
+        },
+        {
+          name: 'The Chemical Industry',
+        },
+      ],
     },
     {
       name: 'Business Studies',
       minGrade: 70,
-      commitment: '12 months'
+      commitment: '12 months',
+      chapters: [
+        {
+          name: 'Skills for Science',
+        },
+        {
+          name: 'Momentum and Impulse',
+        },
+        {
+          name: 'Vertical Projectile Motion in One Dimension',
+        },
+        {
+          name: 'Organic molecules',
+        },
+        {
+          name: 'Work, energy and power',
+        },
+        {
+          name: 'Doppler effect',
+        },
+        {
+          name: 'Rate and Extent of Reaction',
+        },
+        {
+          name: 'Chemical Equilibrium',
+        },
+        {
+          name: 'Acids and Bases',
+        },
+        {
+          name: 'Electric Circuits',
+        },
+        {
+          name: 'Electrodynamics',
+        },
+        {
+          name: 'Optical phenomena and properties of matter',
+        },
+        {
+          name: 'Electrochemical reactions',
+        },
+        {
+          name: 'The Chemical Industry',
+        },
+      ],
     },
   ];
   for (let i = 0; i < courses.length; i++) {
     await createCourse(context, knex, {
-      ...courses[i],
+      name: courses[i].name,
+      minGrade: courses[i].minGrade
     });
   }
 
   const instructors = await Instructor.query();
   for (let i = 0; i < instructors.length; i++) {
-      const courseId = (i + 1) % 7;
-      const instructor = instructors[i];
-      const course  = await Course.query(knex).where('id', courseId === 0 ? 7 : courseId).first();
-      
-      if(course && instructor) {
-        await createOnCourse(context, knex, {
-          instructorId: instructor.id,
-          courseId: course.id
-        })
-      }
+    const courseId = (i + 1) % 7;
+    const instructor = instructors[i];
+    const course = await Course.query(knex)
+      .where('id', courseId === 0 ? 7 : courseId)
+      .first();
+
+    if (course && instructor) {
+      await createOnCourse(context, knex, {
+        instructorId: instructor.id,
+        courseId: course.id,
+      });
     }
+  }
+
+  const theCourses = await Course.query(knex);
+  console.log(theCourses);
+  for (let i = 0; i < courses.length; i++) {
+    for (let j = 0; j < courses[i].chapters.length; j++) {
+      await createChapter(context, knex, {
+        courseId: theCourses[i].id,
+        name: courses[i].chapters[j].name
+      });      
+    }
+  }
+  
 }
