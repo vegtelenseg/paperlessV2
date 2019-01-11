@@ -3,13 +3,15 @@ import {Course} from './course';
 import {BaseModel} from './base';
 
 export class OnCourse extends BaseModel {
+  public instructorId!: number;
+  public courseId!:number;
   static get relationMappings() {
     return {
       instructor: {
         relation: BaseModel.HasManyRelation,
         modelClass: Instructor,
         join: {
-          from: 'on_course.instructor_id',
+          from: 'onCourse.instructor_id',
           to: 'instructor.id',
         },
       },
@@ -17,7 +19,7 @@ export class OnCourse extends BaseModel {
         relation: BaseModel.HasManyRelation,
         modelClass: Course,
         join: {
-          from: 'on_course.course_id',
+          from: 'onCourse.courseId',
           to: 'course.id',
         },
       },

@@ -29,7 +29,7 @@ export async function up(knex: Knex) {
     table.string('name', 128).notNullable();
     table.string('commitment');
     table.string('description');
-    table.decimal('min_grade', 2).notNullable();
+    table.integer('min_grade').notNullable();
   });
 
   await knex.schema.createTable('chapter', (table: TableBuilder) => {
