@@ -5,6 +5,7 @@ export default class Person extends BaseModel {
   public lastName?: string;
   public birthDate?: Date;
   public gender?: string;
+  public title?: string;
   public contactPhone?: string;
   public contactMobile?: string;
   public contactMail?: string;

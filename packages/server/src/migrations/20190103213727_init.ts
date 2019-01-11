@@ -7,9 +7,9 @@ export async function up(knex: Knex) {
     table.string('last_name', 128).notNullable();
     table.date('birth_date').notNullable();
     table.string('gender', 1).notNullable();
-    table.string('contact_phone', 13);
-    table.string('contact_mobile', 13);
-    table.string('contact_mail', 13);
+    table.string('contact_phone');
+    table.string('contact_mobile');
+    table.string('contact_mail');
   });
 
   await knex.schema.createTable('instructor', (table: TableBuilder) => {
@@ -19,9 +19,9 @@ export async function up(knex: Knex) {
     table.string('title', 10);
     table.date('birth_date').notNullable();
     table.string('gender', 1).notNullable();
-    table.string('contact_phone', 13);
-    table.string('contact_mobile', 13);
-    table.string('contact_mail', 13);
+    table.string('contact_phone');
+    table.string('contact_mobile');
+    table.string('contact_mail');
   });
 
   await knex.schema.createTable('course', (table: TableBuilder) => {
