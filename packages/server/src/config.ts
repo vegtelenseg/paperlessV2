@@ -1,6 +1,12 @@
 import convict from 'convict';
 
 const config = convict({
+  env: {
+    doc: 'The paperless environment.',
+    format: ['production', 'development', 'test'],
+    default: 'development',
+    env: 'NODE_ENV',
+  },
   db: {
     host: {
       doc: 'Database host name/IP',

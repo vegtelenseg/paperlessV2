@@ -1,6 +1,6 @@
 /* tslint:disable max-classes-per-file */
 import {default as Knex, Transaction} from 'knex';
-import {Constructor, Model, QueryBuilder, QueryContext} from 'objection';
+import {Constructor, Model, QueryBuilder /*QueryContext*/} from 'objection';
 import {Span} from 'opentracing';
 
 import {knex} from '../db';
@@ -96,31 +96,31 @@ export class BaseModel extends Model {
   public createdBy!: number | undefined;
   public updatedBy!: number | undefined | null;
 
-  public $beforeInsert(queryContext: QueryContext) {
-    // Allow created at to be set by user
-    if (!this.createdAt) {
-      // @ts-ignore
-      this.createdAt = new Date();
-    }
+  // public $beforeInsert(queryContext: QueryContext) {
+  //   // Allow created at to be set by user
+  //   if (!this.createdAt) {
+  //     // @ts-ignore
+  //     this.createdAt = new Date();
+  //   }
 
-    if (!queryContext.user) {
-      throw new Error(
-        `$beforeInsert: User missing from context ${queryContext}.`
-      );
-    }
+  //   if (!queryContext.user) {
+  //     throw new Error(
+  //       `$beforeInsert: User missing from context ${queryContext}.`
+  //     );
+  //   }
 
-    this.createdBy = queryContext.user.id;
-  }
+  //   this.createdBy = queryContext.user.id;
+  // }
 
-  public $beforeUpdate(_opt: any, queryContext: QueryContext) {
-    this.updatedAt = new Date();
+  // public $beforeUpdate(_opt: any, queryContext: QueryContext) {
+  //   this.updatedAt = new Date();
 
-    if (!queryContext.user) {
-      throw new Error(
-        `$beforeUpdate: User missing from context: ${queryContext}.`
-      );
-    }
+  //   if (!queryContext.user) {
+  //     throw new Error(
+  //       `$beforeUpdate: User missing from context: ${queryContext}.`
+  //     );
+  //   }
 
-    this.updatedBy = queryContext.user.id;
-  }
+  //   this.updatedBy = queryContext.user.id;
+  // }
 }
