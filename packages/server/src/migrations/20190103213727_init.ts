@@ -42,23 +42,17 @@ export async function up(knex: Knex) {
     table.string('description');
   });
 
-  await knex.schema.createTable('assessment_type', (table: TableBuilder) => {
-    table.increments().primary();
-    table.string('name', 128).notNullable();
-  });
 
   await knex.schema.createTable('assessment', (table: TableBuilder) => {
     table.increments().primary();
-    table
-      .integer('assessment_type_id')
-      .references('assessment_type.id')
-      .onDelete('CASCADE');
-    table
-      .integer('chapter_id')
-      .references('chapter.id')
-      .onDelete('CASCADE');
     table.integer('max_points').notNullable();
-    table.string('name').notNullable();
+    table.string('kind').notNullable();
+  });
+
+  await knex.schema.createTable('assessment_chapter', (table: TableBuilder) => {
+    table.increments().primary();
+    table.integer('assessment_id').references('assessment.id').onDelete('CASCADE');
+    table.integer('chapter_id').references('chapter.id').onDelete('CASCADE');
   });
 
   await knex.schema.createTable('on_course', (table: TableBuilder) => {
@@ -99,15 +93,14 @@ export async function up(knex: Knex) {
       .references('course_session.id')
       .onDelete('CASCADE');
     table
-      .date('enrollment_date')
+      .date('enrolment_date')
       .notNullable()
-      .defaultTo(knex.fn.now());
     table.integer('status_id').references('status.id');
-    table.string('status_date', 128);
-    table.decimal('final_grade', 2);
+    table.date('status_date');
+    table.decimal('final_grade');
   });
 
-  await knex.schema.createTable('student_results', (table: TableBuilder) => {
+  await knex.schema.createTable('student_result', (table: TableBuilder) => {
     table.increments().primary();
     table
       .integer('student_id')
@@ -117,7 +110,7 @@ export async function up(knex: Knex) {
       .integer('course_id')
       .references('course.id')
       .onDelete('CASCADE');
-    table.decimal('score', 2).notNullable();
+    table.decimal('score').notNullable();
   });
 }
 
@@ -126,7 +119,6 @@ const tables = [
   'instructor',
   'course',
   'chapter',
-  'assessment_type',
   'assessment',
   'on_course',
   'course_session',

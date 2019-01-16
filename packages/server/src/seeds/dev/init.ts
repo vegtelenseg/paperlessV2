@@ -1,6 +1,17 @@
 import Knex from 'knex';
 
-import {Instructor, Student, Course, OnCourse, Chapter} from '../../models/';
+import {
+  Instructor,
+  Student,
+  Course,
+  OnCourse,
+  Chapter,
+  Assessment,
+  CourseSession,
+  Status,
+  EnrolledCourse,
+  AssessmentChapter
+} from '../../models';
 import Context from '../../context';
 import tracer from '../../tracer';
 
@@ -10,6 +21,7 @@ import randomName from 'random-name';
 import randomDate from 'random-date-generator';
 //@ts-ignore
 import Fakerator from 'fakerator';
+import { StudentResult } from '../../models/student-results';
 
 const createSeedContext = async () => {
   return {span: tracer.startSpan('seed')};
@@ -119,16 +131,126 @@ const createOnCourse = async (
     });
 };
 
-const createChapter = async (context: Context, trx: Knex, {
-  courseId,
-  name
-}: {
-  courseId: number,
-  name: string
-}) => {
-  return await Chapter.query(trx).context(context).insertGraph({
+const createChapter = async (
+  context: Context,
+  trx: Knex,
+  {
     courseId,
-    name
+    name,
+  }: {
+    courseId: number;
+    name: string;
+  }
+) => {
+  return await Chapter.query(trx)
+    .context(context)
+    .insertGraph({
+      courseId,
+      name,
+    });
+};
+
+const createAssessment = async (
+  context: Context,
+  trx: Knex,
+  {
+    kind,
+    maxPoints,
+  }: {
+    kind: string;
+    maxPoints: number;
+  }
+) => {
+  return await Assessment.query(trx)
+    .context(context)
+    .insertGraph({
+      kind,
+      maxPoints,
+    });
+};
+
+const createCourseSession = async (
+  context: Context,
+  trx: Knex,
+  {
+    courseId,
+    startDate,
+    endDate,
+  }: {
+    courseId: number;
+    startDate: Date;
+    endDate: Date;
+  }
+) => {
+  return await CourseSession.query(trx)
+    .context(context)
+    .insertGraph({
+      courseId,
+      startDate,
+      endDate,
+    });
+};
+
+const createStatus = async (
+  context: Context,
+  trx: Knex,
+  {name}: {name: string}
+) => {
+  await Status.query(trx)
+    .context(context)
+    .insertGraph({
+      name,
+    });
+};
+
+const createEnrolledCourse = async (context: Context, trx: Knex, {
+  studentId,
+  courseSessionId,
+  statusId,
+  enrolmentDate,
+  statusDate,
+  finalGrade
+}: {
+  studentId: number,
+  courseSessionId: number,
+  statusId: number
+  enrolmentDate: Date,
+  statusDate: Date,
+  finalGrade: number
+}) => {
+  await EnrolledCourse.query(trx).context(context).insertGraph({
+    studentId,
+    courseSessionId,
+    statusId,
+    enrolmentDate,
+    statusDate,
+    finalGrade
+  })
+}
+
+const createAssessmentChapter = async (context: Context, trx: Knex, {
+  assessmentId,
+  chapterId
+}: { assessmentId: number, chapterId: number}) => {
+  return AssessmentChapter.query(trx).context(context).insertGraph({
+    assessmentId,
+    chapterId
+  })
+}
+
+const createStudentResult = async (context: Context, trx: Knex, {
+  studentId,
+  courseId,
+  score
+}: {
+  studentId: number,
+  courseId: number,
+  score: number
+}) => {
+  return StudentResult.query(trx).context(context).insertGraph({
+    studentId,
+    courseId,
+    score
   })
 }
 
@@ -142,6 +264,10 @@ export async function seed(knex: Knex) {
   await knex('course').del();
   await knex('on_course').del();
   await knex('chapter').del();
+  await knex('assessment').del();
+  await knex('course_session').del();
+  await knex('status').del();
+  await knex('enrolled_course').del();
 
   const iStartDate = new Date(1970, 1, 1);
   const iEndDate = new Date(1985, 12, 31);
@@ -532,7 +658,7 @@ export async function seed(knex: Knex) {
   for (let i = 0; i < courses.length; i++) {
     await createCourse(context, knex, {
       name: courses[i].name,
-      minGrade: courses[i].minGrade
+      minGrade: courses[i].minGrade,
     });
   }
 
@@ -552,15 +678,75 @@ export async function seed(knex: Knex) {
     }
   }
 
-  const theCourses = await Course.query(knex);
-  console.log(theCourses);
+  const theCourses = await Course.query(knex); // Be careful, this is used in many places.
   for (let i = 0; i < courses.length; i++) {
     for (let j = 0; j < courses[i].chapters.length; j++) {
       await createChapter(context, knex, {
         courseId: theCourses[i].id,
-        name: courses[i].chapters[j].name
-      });      
+        name: courses[i].chapters[j].name,
+      });
     }
   }
-  
+
+  for (let i = 0; i < courses[0].chapters.length; i++) {
+    for (let j = 0; j < courses[0].chapters.length; j++) {
+      await createAssessment(context, knex, {
+        kind: 'Class Test',
+        maxPoints: 50,
+      });
+    }
+  }
+
+  for (let i = 0; i < theCourses.length; i++) {
+    await createCourseSession(context, knex, {
+      courseId: theCourses[i].id,
+      startDate: new Date(2019, 1, 1),
+      endDate: new Date(2019, 12, 31),
+    });
+  }
+
+  const statuses = ['Passed', 'Dropped Out', 'Failed'];
+
+  for (let i = 0; i < statuses.length; i++) {
+    await createStatus(context, knex, {
+      name: statuses[i]
+    });
+  }
+
+  const students = await Student.query(knex); // Be careful. this is used in multiple places
+  const courseSession = await CourseSession.query(knex);
+  //const status = await Status.query(knex);
+  for (let i = 0; i < students.length; i++) {
+    const finalGrade = fakerator.random.number(1, 100);
+    await createEnrolledCourse(context, knex, {
+      studentId: students[i].id,
+      courseSessionId: courseSession[i % courseSession.length].id,
+      enrolmentDate: new Date(2019, 4, 1),
+      statusDate: new Date(2019, 6, 10),
+      finalGrade,
+      statusId: finalGrade <= 45 ? 3 : 1
+    })
+  }
+
+  const assessments = await Assessment.query(knex);
+  const chapters = await Chapter.query(knex);
+
+  for (let i = 0; i < assessments.length; i++) {
+    const numOfChapters = fakerator.random.number(3, 10);
+    for (let j = 0; j < numOfChapters; j++) {
+      await createAssessmentChapter(context, knex, {
+        assessmentId: assessments[i].id,
+        chapterId: chapters[fakerator.random.number(3, 10)].id
+      })
+    }
+  }
+
+
+  for (let i = 0; i < students.length; i++) {
+    await createStudentResult(context, knex, {
+      studentId: students[i].id,
+      courseId: theCourses[i % theCourses.length].id,
+      score: fakerator.random.number(1, 100)
+    })
+  }
 }

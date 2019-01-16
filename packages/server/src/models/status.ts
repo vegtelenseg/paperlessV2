@@ -1,5 +1,5 @@
 import {BaseModel} from './base';
 
-export class AssessmentType extends BaseModel {
+export class Status extends BaseModel {
   public name!: string;
 }
