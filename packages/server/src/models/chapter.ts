@@ -5,6 +5,7 @@ export class Chapter extends BaseModel {
   public courseId!: number;
   public name!: string;
   public description?: string;
+  public totalPoints!: number;
 
   static get relationMappings() {
     return {

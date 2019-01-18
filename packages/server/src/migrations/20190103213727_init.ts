@@ -29,7 +29,7 @@ export async function up(knex: Knex) {
     table.string('name', 128).notNullable();
     table.string('commitment');
     table.string('description');
-    table.integer('min_grade').notNullable();
+    table.integer('total_points').notNullable();
   });
 
   await knex.schema.createTable('chapter', (table: TableBuilder) => {
@@ -40,12 +40,13 @@ export async function up(knex: Knex) {
       .onDelete('CASCADE');
     table.string('name', 128).notNullable();
     table.string('description');
+    table.decimal('total_points').notNullable();
   });
 
 
   await knex.schema.createTable('assessment', (table: TableBuilder) => {
     table.increments().primary();
-    table.integer('max_points').notNullable();
+    table.integer('total_points').notNullable();
     table.string('kind').notNullable();
   });
 
@@ -110,7 +111,7 @@ export async function up(knex: Knex) {
       .integer('course_id')
       .references('course.id')
       .onDelete('CASCADE');
-    table.decimal('score').notNullable();
+    table.decimal('total_points').notNullable();
   });
 }
 

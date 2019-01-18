@@ -8,3 +8,4 @@ export * from './student';
 export * from './status';
 export * from './enrolled-course';
 export * from './assessment-chapter';
+export * from './student-result';

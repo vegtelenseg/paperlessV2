@@ -1,4 +1,8 @@
 import Knex from 'knex';
+//@ts-ignore
+import randomDate from 'random-date-generator';
+//@ts-ignore
+import Fakerator from 'fakerator';
 
 import {
   Instructor,
@@ -10,18 +14,13 @@ import {
   CourseSession,
   Status,
   EnrolledCourse,
-  AssessmentChapter
+  AssessmentChapter,
+  StudentResult
 } from '../../models';
 import Context from '../../context';
 import tracer from '../../tracer';
+import { courses } from './data/course';
 
-//@ts-ignore
-import randomName from 'random-name';
-//@ts-ignore
-import randomDate from 'random-date-generator';
-//@ts-ignore
-import Fakerator from 'fakerator';
-import { StudentResult } from '../../models/student-results';
 
 const createSeedContext = async () => {
   return {span: tracer.startSpan('seed')};
@@ -95,11 +94,11 @@ const createCourse = async (
   trx: Knex,
   {
     name,
-    minGrade,
+    totalPoints,
     commitment,
   }: {
     name: string;
-    minGrade: number;
+    totalPoints: number;
     commitment?: string;
   }
 ) => {
@@ -107,7 +106,7 @@ const createCourse = async (
     .context(context)
     .insertGraph({
       name,
-      minGrade,
+      totalPoints,
       commitment,
     });
 };
@@ -137,9 +136,11 @@ const createChapter = async (
   {
     courseId,
     name,
+    totalPoints
   }: {
     courseId: number;
     name: string;
+    totalPoints: number
   }
 ) => {
   return await Chapter.query(trx)
@@ -147,6 +148,7 @@ const createChapter = async (
     .insertGraph({
       courseId,
       name,
+      totalPoints
     });
 };
 
@@ -155,17 +157,17 @@ const createAssessment = async (
   trx: Knex,
   {
     kind,
-    maxPoints,
+    totalPoints,
   }: {
     kind: string;
-    maxPoints: number;
+    totalPoints: number;
   }
 ) => {
   return await Assessment.query(trx)
     .context(context)
     .insertGraph({
       kind,
-      maxPoints,
+      totalPoints,
     });
 };
 
@@ -241,16 +243,16 @@ const createAssessmentChapter = async (context: Context, trx: Knex, {
 const createStudentResult = async (context: Context, trx: Knex, {
   studentId,
   courseId,
-  score
+  totalPoints
 }: {
   studentId: number,
   courseId: number,
-  score: number
+  totalPoints: number
 }) => {
   return StudentResult.query(trx).context(context).insertGraph({
     studentId,
     courseId,
-    score
+    totalPoints
   })
 }
 
@@ -268,6 +270,8 @@ export async function seed(knex: Knex) {
   await knex('course_session').del();
   await knex('status').del();
   await knex('enrolled_course').del();
+  await knex('student_result').del();
+  await knex('assessment_chapter').del();
 
   const iStartDate = new Date(1970, 1, 1);
   const iEndDate = new Date(1985, 12, 31);
@@ -285,7 +289,7 @@ export async function seed(knex: Knex) {
       title: gender === 'F' ? 'Mrs' : 'Mr',
       birthDate: randomDate.getRandomDateInRange(iStartDate, iEndDate),
       gender: genders[Math.round(Math.random())],
-      contactPhone: fakerator.phone.number(),
+      contactPhone: fakerator.phone.number(), 
     });
   }
 
@@ -310,355 +314,11 @@ export async function seed(knex: Knex) {
     });
   }
 
-  const courses = [
-    {
-      name: 'Physical Sciences',
-      minGrade: 70,
-      commitment: '12 months',
-      chapters: [
-        {
-          name: 'Skills for Science',
-        },
-        {
-          name: 'Momentum and Impulse',
-        },
-        {
-          name: 'Vertical Projectile Motion in One Dimension',
-        },
-        {
-          name: 'Organic molecules',
-        },
-        {
-          name: 'Work, energy and power',
-        },
-        {
-          name: 'Doppler effect',
-        },
-        {
-          name: 'Rate and Extent of Reaction',
-        },
-        {
-          name: 'Chemical Equilibrium',
-        },
-        {
-          name: 'Acids and Bases',
-        },
-        {
-          name: 'Electric Circuits',
-        },
-        {
-          name: 'Electrodynamics',
-        },
-        {
-          name: 'Optical phenomena and properties of matter',
-        },
-        {
-          name: 'Electrochemical reactions',
-        },
-        {
-          name: 'The Chemical Industry',
-        },
-      ],
-    },
-    {
-      name: 'Geography',
-      minGrade: 70,
-      commitment: '12 months',
-      chapters: [
-        {
-          name: 'Skills for Science',
-        },
-        {
-          name: 'Momentum and Impulse',
-        },
-        {
-          name: 'Vertical Projectile Motion in One Dimension',
-        },
-        {
-          name: 'Organic molecules',
-        },
-        {
-          name: 'Work, energy and power',
-        },
-        {
-          name: 'Doppler effect',
-        },
-        {
-          name: 'Rate and Extent of Reaction',
-        },
-        {
-          name: 'Chemical Equilibrium',
-        },
-        {
-          name: 'Acids and Bases',
-        },
-        {
-          name: 'Electric Circuits',
-        },
-        {
-          name: 'Electrodynamics',
-        },
-        {
-          name: 'Optical phenomena and properties of matter',
-        },
-        {
-          name: 'Electrochemical reactions',
-        },
-        {
-          name: 'The Chemical Industry',
-        },
-      ],
-    },
-    {
-      name: 'Mathematics',
-      minGrade: 70,
-      commitment: '12 months',
-      chapters: [
-        {
-          name: 'Skills for Science',
-        },
-        {
-          name: 'Momentum and Impulse',
-        },
-        {
-          name: 'Vertical Projectile Motion in One Dimension',
-        },
-        {
-          name: 'Organic molecules',
-        },
-        {
-          name: 'Work, energy and power',
-        },
-        {
-          name: 'Doppler effect',
-        },
-        {
-          name: 'Rate and Extent of Reaction',
-        },
-        {
-          name: 'Chemical Equilibrium',
-        },
-        {
-          name: 'Acids and Bases',
-        },
-        {
-          name: 'Electric Circuits',
-        },
-        {
-          name: 'Electrodynamics',
-        },
-        {
-          name: 'Optical phenomena and properties of matter',
-        },
-        {
-          name: 'Electrochemical reactions',
-        },
-        {
-          name: 'The Chemical Industry',
-        },
-      ],
-    },
-    {
-      name: 'Accounting',
-      minGrade: 70,
-      commitment: '12 months',
-      chapters: [
-        {
-          name: 'Skills for Science',
-        },
-        {
-          name: 'Momentum and Impulse',
-        },
-        {
-          name: 'Vertical Projectile Motion in One Dimension',
-        },
-        {
-          name: 'Organic molecules',
-        },
-        {
-          name: 'Work, energy and power',
-        },
-        {
-          name: 'Doppler effect',
-        },
-        {
-          name: 'Rate and Extent of Reaction',
-        },
-        {
-          name: 'Chemical Equilibrium',
-        },
-        {
-          name: 'Acids and Bases',
-        },
-        {
-          name: 'Electric Circuits',
-        },
-        {
-          name: 'Electrodynamics',
-        },
-        {
-          name: 'Optical phenomena and properties of matter',
-        },
-        {
-          name: 'Electrochemical reactions',
-        },
-        {
-          name: 'The Chemical Industry',
-        },
-      ],
-    },
-    {
-      name: 'Economics',
-      minGrade: 70,
-      commitment: '12 months',
-      chapters: [
-        {
-          name: 'Skills for Science',
-        },
-        {
-          name: 'Momentum and Impulse',
-        },
-        {
-          name: 'Vertical Projectile Motion in One Dimension',
-        },
-        {
-          name: 'Organic molecules',
-        },
-        {
-          name: 'Work, energy and power',
-        },
-        {
-          name: 'Doppler effect',
-        },
-        {
-          name: 'Rate and Extent of Reaction',
-        },
-        {
-          name: 'Chemical Equilibrium',
-        },
-        {
-          name: 'Acids and Bases',
-        },
-        {
-          name: 'Electric Circuits',
-        },
-        {
-          name: 'Electrodynamics',
-        },
-        {
-          name: 'Optical phenomena and properties of matter',
-        },
-        {
-          name: 'Electrochemical reactions',
-        },
-        {
-          name: 'The Chemical Industry',
-        },
-      ],
-    },
-    {
-      name: 'Life Sciences',
-      minGrade: 70,
-      commitment: '12 months',
-      chapters: [
-        {
-          name: 'Skills for Science',
-        },
-        {
-          name: 'Momentum and Impulse',
-        },
-        {
-          name: 'Vertical Projectile Motion in One Dimension',
-        },
-        {
-          name: 'Organic molecules',
-        },
-        {
-          name: 'Work, energy and power',
-        },
-        {
-          name: 'Doppler effect',
-        },
-        {
-          name: 'Rate and Extent of Reaction',
-        },
-        {
-          name: 'Chemical Equilibrium',
-        },
-        {
-          name: 'Acids and Bases',
-        },
-        {
-          name: 'Electric Circuits',
-        },
-        {
-          name: 'Electrodynamics',
-        },
-        {
-          name: 'Optical phenomena and properties of matter',
-        },
-        {
-          name: 'Electrochemical reactions',
-        },
-        {
-          name: 'The Chemical Industry',
-        },
-      ],
-    },
-    {
-      name: 'Business Studies',
-      minGrade: 70,
-      commitment: '12 months',
-      chapters: [
-        {
-          name: 'Skills for Science',
-        },
-        {
-          name: 'Momentum and Impulse',
-        },
-        {
-          name: 'Vertical Projectile Motion in One Dimension',
-        },
-        {
-          name: 'Organic molecules',
-        },
-        {
-          name: 'Work, energy and power',
-        },
-        {
-          name: 'Doppler effect',
-        },
-        {
-          name: 'Rate and Extent of Reaction',
-        },
-        {
-          name: 'Chemical Equilibrium',
-        },
-        {
-          name: 'Acids and Bases',
-        },
-        {
-          name: 'Electric Circuits',
-        },
-        {
-          name: 'Electrodynamics',
-        },
-        {
-          name: 'Optical phenomena and properties of matter',
-        },
-        {
-          name: 'Electrochemical reactions',
-        },
-        {
-          name: 'The Chemical Industry',
-        },
-      ],
-    },
-  ];
+  
   for (let i = 0; i < courses.length; i++) {
     await createCourse(context, knex, {
       name: courses[i].name,
-      minGrade: courses[i].minGrade,
+      totalPoints: fakerator.random.number(65, 100),
     });
   }
 
@@ -684,6 +344,7 @@ export async function seed(knex: Knex) {
       await createChapter(context, knex, {
         courseId: theCourses[i].id,
         name: courses[i].chapters[j].name,
+        totalPoints: fakerator.random.number(1, 25)
       });
     }
   }
@@ -692,7 +353,7 @@ export async function seed(knex: Knex) {
     for (let j = 0; j < courses[0].chapters.length; j++) {
       await createAssessment(context, knex, {
         kind: 'Class Test',
-        maxPoints: 50,
+        totalPoints: 50,
       });
     }
   }
@@ -741,12 +402,11 @@ export async function seed(knex: Knex) {
     }
   }
 
-
   for (let i = 0; i < students.length; i++) {
     await createStudentResult(context, knex, {
       studentId: students[i].id,
       courseId: theCourses[i % theCourses.length].id,
-      score: fakerator.random.number(1, 100)
+      totalPoints: fakerator.random.number(1, 100)
     })
   }
 }

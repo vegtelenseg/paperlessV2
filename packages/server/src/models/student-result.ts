@@ -5,7 +5,7 @@ import { Course } from './course';
 export class StudentResult extends BaseModel {
   public studentId!: number;
   public courseId!: number;
-  public score!: number;
+  public totalPoints!: number;
 
   static get relationMappings() {
     return {
