@@ -1,7 +1,7 @@
-export const courses = [
+export const subjects = [
   {
     name: 'Physical Sciences',
-    totalPoints: 70,
+    totalMarks: 70,
     commitment: '12 months',
     chapters: [
       {
@@ -50,7 +50,7 @@ export const courses = [
   },
   {
     name: 'Geography',
-    totalPoints: 70,
+    totalMarks: 70,
     commitment: '12 months',
     chapters: [
       {
@@ -99,7 +99,7 @@ export const courses = [
   },
   {
     name: 'Mathematics',
-    totalPoints: 70,
+    totalMarks: 70,
     commitment: '12 months',
     chapters: [
       {
@@ -148,7 +148,7 @@ export const courses = [
   },
   {
     name: 'Accounting',
-    totalPoints: 70,
+    totalMarks: 70,
     commitment: '12 months',
     chapters: [
       {
@@ -197,7 +197,7 @@ export const courses = [
   },
   {
     name: 'Economics',
-    totalPoints: 70,
+    totalMarks: 70,
     commitment: '12 months',
     chapters: [
       {
@@ -246,7 +246,7 @@ export const courses = [
   },
   {
     name: 'Life Sciences',
-    totalPoints: 70,
+    totalMarks: 70,
     commitment: '12 months',
     chapters: [
       {
@@ -295,7 +295,7 @@ export const courses = [
   },
   {
     name: 'Business Studies',
-    totalPoints: 70,
+    totalMarks: 70,
     commitment: '12 months',
     chapters: [
       {

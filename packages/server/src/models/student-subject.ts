@@ -1,11 +1,11 @@
 import { BaseModel } from './base';
 import { Student } from './student';
-import { Course } from './course';
+import { Subject } from './subject';
 
 export class StudentResult extends BaseModel {
   public studentId!: number;
-  public courseId!: number;
-  public totalPoints!: number;
+  public subjectId!: number;
+  public totalMarks!: number;
 
   static get relationMappings() {
     return {
@@ -13,16 +13,16 @@ export class StudentResult extends BaseModel {
         relation: BaseModel.HasManyRelation,
         modelClass: Student,
         join: {
-          from: 'studentResult.student_id',
+          from: 'studentSubject.student_id',
           to: 'student.id'
         }
       },
-      course: {
+      subject: {
         relation: BaseModel.HasManyRelation,
-        modelClass: Course,
+        modelClass: Subject,
         join: {
-          from: 'studentResult.courseId',
-          to: 'course.id'
+          from: 'studentSubject.subjectId',
+          to: 'subject.id'
         }
       }      
     }

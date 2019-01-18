@@ -1,3 +1,4 @@
 import Person from './person';
 
-export class Instructor extends Person {}
+export class Instructor extends Person {
+}

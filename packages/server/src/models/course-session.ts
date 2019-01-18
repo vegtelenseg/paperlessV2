@@ -1,19 +1,19 @@
 import {BaseModel} from './base';
-import {Course} from './course';
+import {Subject} from './subject';
 
-export class CourseSession extends BaseModel {
-  public courseId!: number;
+export class SubjectSession extends BaseModel {
+  public subjectId!: number;
   public startDate!: Date;
   public endDate?: Date;
 
   static get relationMappings() {
     return {
-      course: {
+      subject: {
         relation: BaseModel.HasManyRelation,
-        modelClass: Course,
+        modelClass: Subject,
         join: {
-          from: 'courseSession.course_id',
-          to: 'course.id',
+          from: 'subjectSession.subject_id',
+          to: 'subject.id',
         },
       },
     };

@@ -1,20 +1,20 @@
 import {BaseModel} from './base';
-import {Course} from './course';
+import {Subject} from './subject';
 
 export class Chapter extends BaseModel {
-  public courseId!: number;
+  public subjectId!: number;
   public name!: string;
   public description?: string;
-  public totalPoints!: number;
+  public totalMarks!: number;
 
   static get relationMappings() {
     return {
-      course: {
+      subject: {
         relation: BaseModel.HasManyRelation,
-        modelClass: Course,
+        modelClass: Subject,
         join: {
-          from: 'chapter.course_id',
-          to: 'course.id',
+          from: 'chapter.subject_id',
+          to: 'subject.id',
         },
       },
     };

@@ -2,7 +2,7 @@ import Knex, {TableBuilder} from 'knex';
 
 export async function up(knex: Knex) {
   await knex.schema.createTable('student', (table: TableBuilder) => {
-    table.increments().primary();
+    table.increments().primary().unsigned();
     table.string('first_name', 128).notNullable();
     table.string('last_name', 128).notNullable();
     table.date('birth_date').notNullable();
@@ -10,10 +10,12 @@ export async function up(knex: Knex) {
     table.string('contact_phone');
     table.string('contact_mobile');
     table.string('contact_mail');
+    table.integer('grade').notNullable().defaultTo(8);
+    table.date('enrolment_date').defaultTo(knex.fn.now());
   });
 
   await knex.schema.createTable('instructor', (table: TableBuilder) => {
-    table.increments().primary();
+    table.increments().primary().unsigned();
     table.string('first_name', 128).notNullable();
     table.string('last_name', 128).notNullable();
     table.string('title', 10);
@@ -22,110 +24,96 @@ export async function up(knex: Knex) {
     table.string('contact_phone');
     table.string('contact_mobile');
     table.string('contact_mail');
+    table.date('employment_date').defaultTo(knex.fn.now());
   });
 
-  await knex.schema.createTable('course', (table: TableBuilder) => {
-    table.increments().primary();
+  await knex.schema.createTable('subject', (table: TableBuilder) => {
+    table.increments().primary().unsigned();
     table.string('name', 128).notNullable();
     table.string('commitment');
     table.string('description');
-    table.integer('total_points').notNullable();
+   // table.integer('total_marks').notNullable();
   });
 
   await knex.schema.createTable('chapter', (table: TableBuilder) => {
-    table.increments().primary();
+    table.increments().primary().unsigned();
     table
-      .integer('course_id')
-      .references('course.id')
+      .integer('subject_id')
+      .references('subject.id')
       .onDelete('CASCADE');
     table.string('name', 128).notNullable();
     table.string('description');
-    table.decimal('total_points').notNullable();
+    table.decimal('total_marks').notNullable();
   });
 
 
   await knex.schema.createTable('assessment', (table: TableBuilder) => {
-    table.increments().primary();
-    table.integer('total_points').notNullable();
+    table.increments().primary().unsigned();
+    table.integer('total_marks').notNullable();
     table.string('kind').notNullable();
+    table.date('start_date').defaultTo(knex.fn.now());
+    table.date('end_date');
   });
 
   await knex.schema.createTable('assessment_chapter', (table: TableBuilder) => {
-    table.increments().primary();
+    table.increments().primary().unsigned();
     table.integer('assessment_id').references('assessment.id').onDelete('CASCADE');
     table.integer('chapter_id').references('chapter.id').onDelete('CASCADE');
   });
 
-  await knex.schema.createTable('on_course', (table: TableBuilder) => {
+  await knex.schema.createTable('assessment_result', (table: TableBuilder) => {
+    table.integer('assessment_id').references('assessment.id');
+    table.decimal('results').notNullable().defaultTo(0);
+    table.decimal('percentage').notNullable().defaultTo(0);
+  });
+
+  await knex.schema.createTable('on_subject', (table: TableBuilder) => {
     table.increments().primary();
     table
-      .integer('instructor_id')
+      .integer('instructor_id').unsigned()
       .references('instructor.id')
       .onDelete('SET NULL');
     table
-      .integer('course_id')
-      .references('course.id')
+      .integer('subject_id')
+      .references('subject.id')
       .onDelete('SET NULL');
   });
 
-  await knex.schema.createTable('course_session', (table: TableBuilder) => {
-    table.increments().primary();
-    table
-      .integer('course_id')
-      .references('course.id')
-      .onDelete('CASCADE');
-    table.date('start_date');
-    table.date('end_date');
-  });
-
-  await knex.schema.createTable('status', (table: TableBuilder) => {
-    table.increments().primary();
-    table.string('name');
-  });
-
-  await knex.schema.createTable('enrolled_course', (table: TableBuilder) => {
-    table.increments().primary();
+  await knex.schema.createTable('student_subject', (table: TableBuilder) => {
+    table.increments().primary().unsigned();
     table
       .integer('student_id')
       .references('student.id')
       .onDelete('CASCADE');
     table
-      .integer('course_session_id')
-      .references('course_session.id')
+      .integer('subject_id')
+      .references('subject.id')
       .onDelete('CASCADE');
-    table
-      .date('enrolment_date')
-      .notNullable()
-    table.integer('status_id').references('status.id');
-    table.date('status_date');
-    table.decimal('final_grade');
   });
 
-  await knex.schema.createTable('student_result', (table: TableBuilder) => {
-    table.increments().primary();
-    table
-      .integer('student_id')
-      .references('student.id')
-      .onDelete('CASCADE');
-    table
-      .integer('course_id')
-      .references('course.id')
-      .onDelete('CASCADE');
-    table.decimal('total_points').notNullable();
+  await knex.schema.createTable('school', (table: TableBuilder) => {
+    table.uuid('id').primary().notNullable();
+    table.string('name').notNullable();
+    table.boolean('active').defaultTo(false);
+    table.date('registered_date').defaultTo(knex.fn.now());
+  });
+
+  // Should be composite key
+  await knex.schema.createTable('school_instructor', (table: TableBuilder) => {
+    table.uuid('school_id').references('school.id');
+    table.integer('instructor_id').references('instructor.id');
+    table.boolean('active').defaultTo(false);
   });
 }
 
 const tables = [
   'student',
   'instructor',
-  'course',
+  'subject',
   'chapter',
   'assessment',
-  'on_course',
-  'course_session',
-  'status',
-  'enrolled_course',
-  'student_results',
+  'on_subject',
+  'student_subject',
 ];
 
 export async function down(knex: Knex) {

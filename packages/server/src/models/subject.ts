@@ -1,8 +1,7 @@
 import {BaseModel} from './base';
 
-export class Course extends BaseModel {
+export class Subject extends BaseModel {
   public name!: string;
   public commitment?: string;
   public description?: string;
-  public totalPoints!: number;
 }
