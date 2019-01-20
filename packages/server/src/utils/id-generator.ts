@@ -11,7 +11,6 @@ export const getFirstFourDigits = (birthDate: Date): string => {
     .split('T')[0]
     .slice(2)
     .replace(/-/g, '');
-  console.log({serialBirthDate});
   return serialBirthDate;
 };
 

@@ -1,5 +1,4 @@
 export const getCheckDigit = (partialIdNumber: string): number => {
-  console.log({partialIdNumber});
   if (parseInt(partialIdNumber)) {
     let i = -1;
     let partialIdNumberSum = 0;
@@ -33,7 +32,6 @@ export const performChecksum = (
   i = 0;
   let tempIdNumberSum = 0;
   const idNumber = partialIdNumber + checkDigit.toString();
-  console.log('ID NUM: ', idNumber);
   while (i < idNumber.length) {
     tempIdNumberSum += parseInt(tempIdNumber[i++]);
   }

@@ -9,7 +9,7 @@ import {
   Instructor,
   Student,
   Subject,
-  OnSubject,
+  SubjectInstructor,
   Chapter,
   Assessment,
   AssessmentChapter,
@@ -108,7 +108,7 @@ const createSubject = async (
 ): Promise<Subject> => {
   return Subject.query(trx)
     .context(context)
-    .insertGraph({
+    .upsertGraphAndFetch({
       name,
       commitment,
     });
@@ -121,13 +121,13 @@ const createStudentSubject = async (
 ): Promise<StudentSubject> => {
   return await StudentSubject.query(trx)
     .context(context)
-    .insertGraph({
+    .upsertGraph({
       studentIdNumber,
       subjectId,
     });
 };
 
-const createOnSubject = async (
+const createSubjectTeacher = async (
   context: Context,
   trx: Knex,
   {
@@ -137,10 +137,10 @@ const createOnSubject = async (
     instructorIdNumber: string;
     subjectId: number;
   }
-): Promise<OnSubject> => {
-  return await OnSubject.query(trx)
+): Promise<SubjectInstructor> => {
+  return await SubjectInstructor.query(trx)
     .context(context)
-    .insertGraph({
+    .upsertGraphAndFetch({
       instructorIdNumber,
       subjectId,
     });
@@ -161,7 +161,7 @@ const createChapter = async (
 ): Promise<Chapter> => {
   return await Chapter.query(trx)
     .context(context)
-    .insertGraph({
+    .upsertGraphAndFetch({
       subjectId,
       name,
       totalMarks,
@@ -185,7 +185,7 @@ const createAssessment = async (
 ): Promise<Assessment> => {
   return await Assessment.query(trx)
     .context(context)
-    .insertGraph({
+    .upsertGraphAndFetch({
       kind,
       totalMarks,
       startDate,
@@ -200,7 +200,7 @@ const createAssessmentChapter = async (
 ): Promise<AssessmentChapter> => {
   return AssessmentChapter.query(trx)
     .context(context)
-    .insertGraph({
+    .upsertGraphAndFetch({
       assessmentId,
       chapterId,
     });
@@ -222,8 +222,7 @@ const createSchool = async (
   }
 ): Promise<School> => {
   return await School.query(trx)
-    .context(context)
-    .insertGraphAndFetch({
+    .context(context).insertGraph({
       name,
       active,
       registeredDate,
@@ -246,7 +245,7 @@ const createAssessmentResult = async (
 ): Promise<AssessmentResult> => {
   return await AssessmentResult.query(trx)
     .context(context)
-    .insertGraph({
+    .upsertGraphAndFetch({
       assessmentId,
       results,
       percentage,
@@ -261,7 +260,7 @@ export async function seed(knex: Knex) {
   await knex('instructor').del();
   await knex('student').del();
   await knex('subject').del();
-  await knex('on_subject').del();
+  await knex('subject_instructor').del();
   await knex('chapter').del();
   await knex('assessment').del();
   await knex('student_subject').del();
@@ -291,7 +290,7 @@ export async function seed(knex: Knex) {
 
   const sStartDate = new Date(1993, 1, 1);
   const sEndDate = new Date(2000, 12, 31);
-  for (let i = 0; i < 100; i++) {
+  for (let i = 0; i < 400; i++) {
     const gender = genders[Math.round(Math.random())];
     const sBirthDate = randomDate.getRandomDateInRange(sStartDate, sEndDate);
     await createStudent(context, knex, {
@@ -327,7 +326,7 @@ export async function seed(knex: Knex) {
       .first();
 
     if (subject && instructor) {
-      await createOnSubject(context, knex, {
+      await createSubjectTeacher(context, knex, {
         instructorIdNumber: instructor.idNumber,
         subjectId: subject.id,
       });
@@ -396,9 +395,9 @@ export async function seed(knex: Knex) {
   }
 
   const students = await Student.query(knex);
-  for (let i = 0; i < students.length; i++) {
+  for (let i = 0; i < students.length * 4; i++) {
     await createStudentSubject(context, knex, {
-      studentIdNumber: students[i].idNumber,
+      studentIdNumber: students[i % students.length].idNumber,
       subjectId: theSubjects[i % theSubjects.length].id,
     });
   }

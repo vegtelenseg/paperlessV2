@@ -103,7 +103,13 @@ export async function up(knex: Knex) {
       .defaultTo(0);
   });
 
-  await knex.schema.createTable('on_subject', (table: TableBuilder) => {
+  await knex.schema.createTable('student_assessment_result', (table: TableBuilder) => {
+    table.increments().primary();
+    table.string('student_id_number').references('student.id_number').onDelete('CASCADE');
+    table.integer('assessment_result_id').references('assessment_result.id').onDelete('CASCADE');
+  });
+
+  await knex.schema.createTable('subject_instructor', (table: TableBuilder) => {
     table.increments().primary();
     table
       .string('instructor_id_number')
@@ -155,7 +161,7 @@ const tables = [
   'subject',
   'chapter',
   'assessment',
-  'on_subject',
+  'subject_instructor',
   'student_subject',
 ];
 
