@@ -3,6 +3,7 @@ import Knex from 'knex';
 import randomDate from 'random-date-generator';
 //@ts-ignore
 import Fakerator from 'fakerator';
+import Uuid from 'uuid';
 
 import {
   Instructor,
@@ -12,11 +13,14 @@ import {
   Chapter,
   Assessment,
   AssessmentChapter,
+  StudentSubject,
 } from '../../models';
 import Context from '../../context';
 import tracer from '../../tracer';
-import { subjects } from './data/subject';
-
+import {subjects} from './data/subject';
+import {School} from '../../models/school';
+import {generateIdNumber} from '../../utils/id-generator';
+import {AssessmentResult} from '../../models/assessment-result';
 
 const createSeedContext = async () => {
   return {span: tracer.startSpan('seed')};
@@ -32,6 +36,7 @@ const createInstructor = async (
     gender,
     contactPhone,
     title,
+    idNumber,
   }: {
     firstName: string;
     lastName: string;
@@ -41,8 +46,9 @@ const createInstructor = async (
     contactMobile?: string;
     contactMail?: string;
     title: string;
+    idNumber: string;
   }
-) => {
+): Promise<Instructor> => {
   return Instructor.query(trx)
     .context(context)
     .insertAndFetch({
@@ -52,6 +58,7 @@ const createInstructor = async (
       gender,
       contactPhone,
       title,
+      idNumber,
     });
 };
 
@@ -64,16 +71,18 @@ const createStudent = async (
     birthDate,
     gender,
     contactPhone,
+    idNumber,
   }: {
     firstName: string;
     lastName: string;
     birthDate: Date;
     gender: string;
+    idNumber: string;
     contactPhone?: string;
     contactMobile?: string;
     contactMail?: string;
   }
-) => {
+): Promise<Student> => {
   return Student.query(trx)
     .context(context)
     .insertAndFetch({
@@ -82,6 +91,7 @@ const createStudent = async (
       birthDate,
       gender,
       contactPhone,
+      idNumber,
     });
 };
 
@@ -95,7 +105,7 @@ const createSubject = async (
     name: string;
     commitment?: string;
   }
-) => {
+): Promise<Subject> => {
   return Subject.query(trx)
     .context(context)
     .insertGraph({
@@ -104,21 +114,34 @@ const createSubject = async (
     });
 };
 
+const createStudentSubject = async (
+  context: Context,
+  trx: Knex,
+  {studentIdNumber, subjectId}: {studentIdNumber: string; subjectId: number}
+): Promise<StudentSubject> => {
+  return await StudentSubject.query(trx)
+    .context(context)
+    .insertGraph({
+      studentIdNumber,
+      subjectId,
+    });
+};
+
 const createOnSubject = async (
   context: Context,
   trx: Knex,
   {
-    instructorId,
+    instructorIdNumber,
     subjectId,
   }: {
-    instructorId: number;
+    instructorIdNumber: string;
     subjectId: number;
   }
-) => {
+): Promise<OnSubject> => {
   return await OnSubject.query(trx)
     .context(context)
     .insertGraph({
-      instructorId,
+      instructorIdNumber,
       subjectId,
     });
 };
@@ -129,19 +152,19 @@ const createChapter = async (
   {
     subjectId,
     name,
-    totalMarks
+    totalMarks,
   }: {
     subjectId: number;
     name: string;
-    totalMarks: number
+    totalMarks: number;
   }
-) => {
+): Promise<Chapter> => {
   return await Chapter.query(trx)
     .context(context)
     .insertGraph({
       subjectId,
       name,
-      totalMarks
+      totalMarks,
     });
 };
 
@@ -151,28 +174,84 @@ const createAssessment = async (
   {
     kind,
     totalMarks,
+    startDate,
+    endDate,
   }: {
     kind: string;
     totalMarks: number;
+    startDate: Date;
+    endDate?: Date;
   }
-) => {
+): Promise<Assessment> => {
   return await Assessment.query(trx)
     .context(context)
     .insertGraph({
       kind,
       totalMarks,
+      startDate,
+      endDate,
     });
 };
 
-const createAssessmentChapter = async (context: Context, trx: Knex, {
-  assessmentId,
-  chapterId
-}: { assessmentId: number, chapterId: number}) => {
-  return AssessmentChapter.query(trx).context(context).insertGraph({
+const createAssessmentChapter = async (
+  context: Context,
+  trx: Knex,
+  {assessmentId, chapterId}: {assessmentId: number; chapterId: number}
+): Promise<AssessmentChapter> => {
+  return AssessmentChapter.query(trx)
+    .context(context)
+    .insertGraph({
+      assessmentId,
+      chapterId,
+    });
+};
+
+const createSchool = async (
+  context: Context,
+  trx: Knex,
+  {
+    name,
+    active,
+    registeredDate,
+    suuid,
+  }: {
+    name: string;
+    active: boolean;
+    registeredDate: Date;
+    suuid: string;
+  }
+): Promise<School> => {
+  return await School.query(trx)
+    .context(context)
+    .insertGraphAndFetch({
+      name,
+      active,
+      registeredDate,
+      suuid,
+    });
+};
+
+const createAssessmentResult = async (
+  context: Context,
+  trx: Knex,
+  {
     assessmentId,
-    chapterId
-  })
-}
+    results,
+    percentage,
+  }: {
+    assessmentId: number;
+    results: number;
+    percentage: number;
+  }
+): Promise<AssessmentResult> => {
+  return await AssessmentResult.query(trx)
+    .context(context)
+    .insertGraph({
+      assessmentId,
+      results,
+      percentage,
+    });
+};
 
 export async function seed(knex: Knex) {
   const fakerator = Fakerator();
@@ -192,7 +271,9 @@ export async function seed(knex: Knex) {
   const iEndDate = new Date(1985, 12, 31);
   for (let i = 0; i < 30; i++) {
     const gender = genders[Math.round(Math.random())];
+    const ibirthDate = randomDate.getRandomDateInRange(iStartDate, iEndDate);
     await createInstructor(context, knex, {
+      idNumber: generateIdNumber(ibirthDate),
       firstName:
         gender === 'F'
           ? fakerator.names.firstNameF()
@@ -202,9 +283,9 @@ export async function seed(knex: Knex) {
           ? fakerator.names.lastNameF()
           : fakerator.names.lastNameM(),
       title: gender === 'F' ? 'Mrs' : 'Mr',
-      birthDate: randomDate.getRandomDateInRange(iStartDate, iEndDate),
+      birthDate: ibirthDate,
       gender: genders[Math.round(Math.random())],
-      contactPhone: fakerator.phone.number(), 
+      contactPhone: fakerator.phone.number(),
     });
   }
 
@@ -212,7 +293,9 @@ export async function seed(knex: Knex) {
   const sEndDate = new Date(2000, 12, 31);
   for (let i = 0; i < 100; i++) {
     const gender = genders[Math.round(Math.random())];
+    const sBirthDate = randomDate.getRandomDateInRange(sStartDate, sEndDate);
     await createStudent(context, knex, {
+      idNumber: generateIdNumber(sBirthDate),
       firstName:
         gender === 'F'
           ? fakerator.names.firstNameF()
@@ -221,7 +304,7 @@ export async function seed(knex: Knex) {
         gender === 'F'
           ? fakerator.names.lastNameF()
           : fakerator.names.lastNameM(),
-      birthDate: randomDate.getRandomDateInRange(sStartDate, sEndDate),
+      birthDate: sBirthDate,
       gender: gender,
       contactPhone: fakerator.phone.number(),
       contactMobile: fakerator.phone.number(),
@@ -229,7 +312,6 @@ export async function seed(knex: Knex) {
     });
   }
 
-  
   for (let i = 0; i < subjects.length; i++) {
     await createSubject(context, knex, {
       name: subjects[i].name,
@@ -246,7 +328,7 @@ export async function seed(knex: Knex) {
 
     if (subject && instructor) {
       await createOnSubject(context, knex, {
-        instructorId: instructor.id,
+        instructorIdNumber: instructor.idNumber,
         subjectId: subject.id,
       });
     }
@@ -258,21 +340,47 @@ export async function seed(knex: Knex) {
       await createChapter(context, knex, {
         subjectId: theSubjects[i].id,
         name: subjects[i].chapters[j].name,
-        totalMarks: fakerator.random.number(1, 25)
+        totalMarks: fakerator.random.number(1, 25),
       });
     }
   }
 
+  const mockAssessments = [
+    {
+      kind: 'Class Test',
+      totalMarks: 50,
+      startDate: new Date(2019, 2, 23),
+      endDate: undefined,
+    },
+    {
+      kind: 'Project',
+      totalMarks: 100,
+      startDate: new Date(2019, 2, 3),
+      endDate: new Date(2019, 2, 10),
+    },
+    {
+      kind: 'Assignment',
+      totalMarks: 50,
+      startDate: new Date(2019, 3, 5),
+      endDate: new Date(2019, 3, 8),
+    },
+    {
+      kind: 'Quater Test',
+      totalMarks: 100,
+      startDate: new Date(2019, 3, 27),
+      endDate: undefined,
+    },
+  ];
   for (let i = 0; i < subjects[0].chapters.length; i++) {
     for (let j = 0; j < subjects[0].chapters.length; j++) {
+      const at = i % mockAssessments.length;
       await createAssessment(context, knex, {
-        kind: 'Class Test',
-        totalMarks: 50,
+        ...mockAssessments[i % mockAssessments.length],
+        startDate: randomDate.getRandomDateInRange(mockAssessments[at].startDate, new Date(2019, 3, 31)),
+        endDate: mockAssessments[at].endDate ? randomDate.getRandomDateInRange(mockAssessments[at].endDate, new Date(2019, 4, 31)) : undefined
       });
     }
   }
-
-
 
   const assessments = await Assessment.query(knex);
   const chapters = await Chapter.query(knex);
@@ -282,8 +390,49 @@ export async function seed(knex: Knex) {
     for (let j = 0; j < numOfChapters; j++) {
       await createAssessmentChapter(context, knex, {
         assessmentId: assessments[i].id,
-        chapterId: chapters[fakerator.random.number(3, 10)].id
-      })
+        chapterId: chapters[fakerator.random.number(3, 10)].id,
+      });
     }
+  }
+
+  const students = await Student.query(knex);
+  for (let i = 0; i < students.length; i++) {
+    await createStudentSubject(context, knex, {
+      studentIdNumber: students[i].idNumber,
+      subjectId: theSubjects[i % theSubjects.length].id,
+    });
+  }
+
+  const theChapters = await Chapter.query(knex);
+  const theAssessments = await Assessment.query();
+  for (let i = 0; i < theChapters.length; i++) {
+    const result = fakerator.random.number(10, 50);
+    const totalMark = theAssessments[i].totalMarks;
+    await createAssessmentResult(context, knex, {
+      assessmentId: theChapters[i].id,
+      results: result,
+      percentage: (result * 100) / totalMark,
+    });
+  }
+  const schools = [
+    "Falcon's High School",
+    'Essa High School',
+    'Evendons High School',
+    'Gateway Academy',
+  ];
+  const registeredDate = {
+    start: new Date(2017, 1, 1),
+    end: new Date(2019, 1, 1),
+  };
+  for (let i = 0; i < schools.length; i++) {
+    await createSchool(context, knex, {
+      suuid: Uuid.v4(),
+      name: schools[i],
+      registeredDate: randomDate.getRandomDateInRange(
+        registeredDate.start,
+        registeredDate.end
+      ),
+      active: false,
+    });
   }
 }

@@ -1,9 +1,9 @@
-import { BaseModel } from './base';
-import { Student } from './student';
-import { Subject } from './subject';
+import {BaseModel} from './base';
+import {Student} from './student';
+import {Subject} from './subject';
 
-export class StudentResult extends BaseModel {
-  public studentId!: number;
+export class StudentSubject extends BaseModel {
+  public studentIdNumber!: string;
   public subjectId!: number;
   public totalMarks!: number;
 
@@ -13,18 +13,18 @@ export class StudentResult extends BaseModel {
         relation: BaseModel.HasManyRelation,
         modelClass: Student,
         join: {
-          from: 'studentSubject.student_id',
-          to: 'student.id'
-        }
+          from: 'studentSubject.studentIdNumber',
+          to: 'student.idNumber',
+        },
       },
       subject: {
         relation: BaseModel.HasManyRelation,
         modelClass: Subject,
         join: {
           from: 'studentSubject.subjectId',
-          to: 'subject.id'
-        }
-      }      
-    }
+          to: 'subject.id',
+        },
+      },
+    };
   }
 }

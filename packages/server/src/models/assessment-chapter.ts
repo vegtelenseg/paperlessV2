@@ -1,6 +1,6 @@
-import { BaseModel } from  './base';
-import { Assessment } from './assessment';
-import { Chapter } from './chapter';
+import {BaseModel} from './base';
+import {Assessment} from './assessment';
+import {Chapter} from './chapter';
 
 export class AssessmentChapter extends BaseModel {
   public assessmentId!: number;
@@ -13,17 +13,17 @@ export class AssessmentChapter extends BaseModel {
         modelClass: Assessment,
         join: {
           from: 'assessmentChapter.assessmentId',
-          to: 'assessment.id'
-        }
+          to: 'assessment.id',
+        },
       },
       chapter: {
         relation: BaseModel.HasManyRelation,
         modelClass: Chapter,
         join: {
           from: 'assessmentChapter.chapterId',
-          to: 'chapter.id'
-        }
-      }
-    }
+          to: 'chapter.id',
+        },
+      },
+    };
   }
 }

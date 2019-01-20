@@ -3,7 +3,7 @@ import {Subject} from './subject';
 import {BaseModel} from './base';
 
 export class OnSubject extends BaseModel {
-  public instructorId!: number;
+  public instructorIdNumber!: string;
   public subjectId!: number;
   static get relationMappings() {
     return {
@@ -11,8 +11,8 @@ export class OnSubject extends BaseModel {
         relation: BaseModel.HasManyRelation,
         modelClass: Instructor,
         join: {
-          from: 'onSubject.instructor_id',
-          to: 'instructor.id',
+          from: 'onSubject.instructorIdNumber',
+          to: 'instructor.idNumber',
         },
       },
       subject: {
