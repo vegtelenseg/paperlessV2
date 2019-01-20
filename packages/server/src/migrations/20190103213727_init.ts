@@ -103,11 +103,20 @@ export async function up(knex: Knex) {
       .defaultTo(0);
   });
 
-  await knex.schema.createTable('student_assessment_result', (table: TableBuilder) => {
-    table.increments().primary();
-    table.string('student_id_number').references('student.id_number').onDelete('CASCADE');
-    table.integer('assessment_result_id').references('assessment_result.id').onDelete('CASCADE');
-  });
+  await knex.schema.createTable(
+    'student_assessment_result',
+    (table: TableBuilder) => {
+      table.increments().primary();
+      table
+        .string('student_id_number')
+        .references('student.id_number')
+        .onDelete('CASCADE');
+      table
+        .integer('assessment_result_id')
+        .references('assessment_result.id')
+        .onDelete('CASCADE');
+    }
+  );
 
   await knex.schema.createTable('subject_instructor', (table: TableBuilder) => {
     table.increments().primary();
@@ -161,12 +170,17 @@ const tables = [
   'subject',
   'chapter',
   'assessment',
-  'subject_instructor',
+  'assessment_chapter',
+  'assessment_result',
+  'student_assessment_result',
   'student_subject',
+  'school',
+  'school_instructor',
+  'subject_instructor',
 ];
 
 export async function down(knex: Knex) {
-  tables.map(async function(table: string) {
-    await knex.schema.dropTableIfExists(table);
-  });
+  for (let i = 0; i < tables.length; i++) {
+    await knex.schema.dropTableIfExists(tables[i]);
+  }
 }

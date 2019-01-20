@@ -5,251 +5,26 @@ import randomDate from 'random-date-generator';
 import Fakerator from 'fakerator';
 import Uuid from 'uuid';
 
-import {
-  Instructor,
-  Student,
-  Subject,
-  SubjectInstructor,
-  Chapter,
-  Assessment,
-  AssessmentChapter,
-  StudentSubject,
-} from '../../models';
-import Context from '../../context';
+import {Instructor, Student, Subject, Chapter, Assessment} from '../../models';
 import tracer from '../../tracer';
-import {subjects} from './data/subject';
-import {School} from '../../models/school';
+import {subjects} from './subject.data';
 import {generateIdNumber} from '../../utils/id-generator';
-import {AssessmentResult} from '../../models/assessment-result';
+import {mockAssessments} from './assessment.data';
+import {
+  createStudent,
+  createInstructor,
+  createSubject,
+  createChapter,
+  createAssessment,
+  createSchool,
+  createSubjectInstructor,
+  createAssessmentResult,
+  createStudentSubject,
+  createAssessmentChapter,
+} from './index';
 
 const createSeedContext = async () => {
   return {span: tracer.startSpan('seed')};
-};
-
-const createInstructor = async (
-  context: Context,
-  trx: Knex,
-  {
-    firstName,
-    lastName,
-    birthDate,
-    gender,
-    contactPhone,
-    title,
-    idNumber,
-  }: {
-    firstName: string;
-    lastName: string;
-    birthDate: Date;
-    gender: string;
-    contactPhone?: string;
-    contactMobile?: string;
-    contactMail?: string;
-    title: string;
-    idNumber: string;
-  }
-): Promise<Instructor> => {
-  return Instructor.query(trx)
-    .context(context)
-    .insertAndFetch({
-      firstName,
-      lastName,
-      birthDate,
-      gender,
-      contactPhone,
-      title,
-      idNumber,
-    });
-};
-
-const createStudent = async (
-  context: Context,
-  trx: Knex,
-  {
-    firstName,
-    lastName,
-    birthDate,
-    gender,
-    contactPhone,
-    idNumber,
-  }: {
-    firstName: string;
-    lastName: string;
-    birthDate: Date;
-    gender: string;
-    idNumber: string;
-    contactPhone?: string;
-    contactMobile?: string;
-    contactMail?: string;
-  }
-): Promise<Student> => {
-  return Student.query(trx)
-    .context(context)
-    .insertAndFetch({
-      firstName,
-      lastName,
-      birthDate,
-      gender,
-      contactPhone,
-      idNumber,
-    });
-};
-
-const createSubject = async (
-  context: Context,
-  trx: Knex,
-  {
-    name,
-    commitment,
-  }: {
-    name: string;
-    commitment?: string;
-  }
-): Promise<Subject> => {
-  return Subject.query(trx)
-    .context(context)
-    .upsertGraphAndFetch({
-      name,
-      commitment,
-    });
-};
-
-const createStudentSubject = async (
-  context: Context,
-  trx: Knex,
-  {studentIdNumber, subjectId}: {studentIdNumber: string; subjectId: number}
-): Promise<StudentSubject> => {
-  return await StudentSubject.query(trx)
-    .context(context)
-    .upsertGraph({
-      studentIdNumber,
-      subjectId,
-    });
-};
-
-const createSubjectTeacher = async (
-  context: Context,
-  trx: Knex,
-  {
-    instructorIdNumber,
-    subjectId,
-  }: {
-    instructorIdNumber: string;
-    subjectId: number;
-  }
-): Promise<SubjectInstructor> => {
-  return await SubjectInstructor.query(trx)
-    .context(context)
-    .upsertGraphAndFetch({
-      instructorIdNumber,
-      subjectId,
-    });
-};
-
-const createChapter = async (
-  context: Context,
-  trx: Knex,
-  {
-    subjectId,
-    name,
-    totalMarks,
-  }: {
-    subjectId: number;
-    name: string;
-    totalMarks: number;
-  }
-): Promise<Chapter> => {
-  return await Chapter.query(trx)
-    .context(context)
-    .upsertGraphAndFetch({
-      subjectId,
-      name,
-      totalMarks,
-    });
-};
-
-const createAssessment = async (
-  context: Context,
-  trx: Knex,
-  {
-    kind,
-    totalMarks,
-    startDate,
-    endDate,
-  }: {
-    kind: string;
-    totalMarks: number;
-    startDate: Date;
-    endDate?: Date;
-  }
-): Promise<Assessment> => {
-  return await Assessment.query(trx)
-    .context(context)
-    .upsertGraphAndFetch({
-      kind,
-      totalMarks,
-      startDate,
-      endDate,
-    });
-};
-
-const createAssessmentChapter = async (
-  context: Context,
-  trx: Knex,
-  {assessmentId, chapterId}: {assessmentId: number; chapterId: number}
-): Promise<AssessmentChapter> => {
-  return AssessmentChapter.query(trx)
-    .context(context)
-    .upsertGraphAndFetch({
-      assessmentId,
-      chapterId,
-    });
-};
-
-const createSchool = async (
-  context: Context,
-  trx: Knex,
-  {
-    name,
-    active,
-    registeredDate,
-    suuid,
-  }: {
-    name: string;
-    active: boolean;
-    registeredDate: Date;
-    suuid: string;
-  }
-): Promise<School> => {
-  return await School.query(trx)
-    .context(context).insertGraph({
-      name,
-      active,
-      registeredDate,
-      suuid,
-    });
-};
-
-const createAssessmentResult = async (
-  context: Context,
-  trx: Knex,
-  {
-    assessmentId,
-    results,
-    percentage,
-  }: {
-    assessmentId: number;
-    results: number;
-    percentage: number;
-  }
-): Promise<AssessmentResult> => {
-  return await AssessmentResult.query(trx)
-    .context(context)
-    .upsertGraphAndFetch({
-      assessmentId,
-      results,
-      percentage,
-    });
 };
 
 export async function seed(knex: Knex) {
@@ -326,7 +101,7 @@ export async function seed(knex: Knex) {
       .first();
 
     if (subject && instructor) {
-      await createSubjectTeacher(context, knex, {
+      await createSubjectInstructor(context, knex, {
         instructorIdNumber: instructor.idNumber,
         subjectId: subject.id,
       });
@@ -344,39 +119,21 @@ export async function seed(knex: Knex) {
     }
   }
 
-  const mockAssessments = [
-    {
-      kind: 'Class Test',
-      totalMarks: 50,
-      startDate: new Date(2019, 2, 23),
-      endDate: undefined,
-    },
-    {
-      kind: 'Project',
-      totalMarks: 100,
-      startDate: new Date(2019, 2, 3),
-      endDate: new Date(2019, 2, 10),
-    },
-    {
-      kind: 'Assignment',
-      totalMarks: 50,
-      startDate: new Date(2019, 3, 5),
-      endDate: new Date(2019, 3, 8),
-    },
-    {
-      kind: 'Quater Test',
-      totalMarks: 100,
-      startDate: new Date(2019, 3, 27),
-      endDate: undefined,
-    },
-  ];
   for (let i = 0; i < subjects[0].chapters.length; i++) {
     for (let j = 0; j < subjects[0].chapters.length; j++) {
       const at = i % mockAssessments.length;
       await createAssessment(context, knex, {
         ...mockAssessments[i % mockAssessments.length],
-        startDate: randomDate.getRandomDateInRange(mockAssessments[at].startDate, new Date(2019, 3, 31)),
-        endDate: mockAssessments[at].endDate ? randomDate.getRandomDateInRange(mockAssessments[at].endDate, new Date(2019, 4, 31)) : undefined
+        startDate: randomDate.getRandomDateInRange(
+          mockAssessments[at].startDate,
+          new Date(2019, 3, 31)
+        ),
+        endDate: mockAssessments[at].endDate
+          ? randomDate.getRandomDateInRange(
+              mockAssessments[at].endDate,
+              new Date(2019, 4, 31)
+            )
+          : undefined,
       });
     }
   }
