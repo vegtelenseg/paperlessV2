@@ -4,6 +4,7 @@ import Context from '../../context';
 import dbCall from '../dbCall';
 import {Instructor} from './Instructor.graphql';
 import {Subject} from './Subject.graphql';
+import {School} from './school.graphql';
 
 export default new GraphQLObjectType({
   name: 'Viewer',
@@ -28,6 +29,15 @@ export default new GraphQLObjectType({
     },
     subject: {
       type: new GraphQLList(Subject),
+      resolve: (
+        parent: any,
+        args: {[key: string]: any},
+        context: Context,
+        resolveInfo: GraphQLResolveInfo
+      ) => dbCall(parent, args, context, resolveInfo),
+    },
+    school: {
+      type: new GraphQLList(School),
       resolve: (
         parent: any,
         args: {[key: string]: any},

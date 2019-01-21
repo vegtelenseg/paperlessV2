@@ -8,3 +8,5 @@ export * from './student-subject';
 export * from './student';
 export * from './subject-instructor';
 export * from './subject';
+export * from './school';
+export * from './school-instructor';
