@@ -1,4 +1,4 @@
-import { GraphQLNonNull, GraphQLString, GraphQLInt, GraphQLList } from 'graphql';
+import {GraphQLNonNull, GraphQLString, GraphQLInt, GraphQLList} from 'graphql';
 import {GraphQLDate} from 'graphql-iso-date';
 import {Subject} from './Subject.graphql';
 import {newJoinMonsterGraphQLObjectType} from '../../utils/joinMonster-graphql14.fix';

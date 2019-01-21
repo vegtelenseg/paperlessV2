@@ -5,11 +5,18 @@ import randomDate from 'random-date-generator';
 import Fakerator from 'fakerator';
 import Uuid from 'uuid';
 
-import {Instructor, Student, Subject, Chapter, Assessment} from '../../models';
-import tracer from '../../tracer';
-import {subjects} from './subject.data';
-import {generateIdNumber} from '../../utils/id-generator';
-import {mockAssessments} from './assessment.data';
+import {
+  Instructor,
+  Student,
+  Subject,
+  Chapter,
+  Assessment,
+  School,
+} from '../models';
+import tracer from '../tracer';
+import {subjects} from './dev/subject.data';
+import {generateIdNumber} from '../utils/id-generator';
+import {mockAssessments} from './dev/assessment.data';
 import {
   createStudent,
   createInstructor,
@@ -21,7 +28,8 @@ import {
   createAssessmentResult,
   createStudentSubject,
   createAssessmentChapter,
-} from '.';
+  createSchoolInstructor,
+} from './dev';
 
 const createSeedContext = async () => {
   return {span: tracer.startSpan('seed')};
@@ -92,7 +100,7 @@ export async function seed(knex: Knex) {
     });
   }
 
-  const instructors = await Instructor.query();
+  const instructors = await Instructor.query(); // This is also being used on the school instructor table
   for (let i = 0; i < instructors.length; i++) {
     const subjectId = (i + 1) % 7;
     const instructor = instructors[i];
@@ -188,6 +196,15 @@ export async function seed(knex: Knex) {
         registeredDate.start,
         registeredDate.end
       ),
+      active: false,
+    });
+  }
+
+  const schoolList = await School.query(knex);
+  for (let i = 0; i < instructors.length * 4; i++) {
+    await createSchoolInstructor(context, knex, {
+      schoolId: schoolList[i % schoolList.length].suuid,
+      instructorIdNumber: instructors[i % instructors.length].idNumber,
       active: false,
     });
   }

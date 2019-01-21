@@ -6,3 +6,5 @@ export * from './subject-instructor';
 export * from './student';
 export * from './assessment-chapter';
 export * from './student-subject';
+export * from './school-instructor';
+export * from './school';

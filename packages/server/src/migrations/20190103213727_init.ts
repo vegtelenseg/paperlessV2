@@ -158,8 +158,9 @@ export async function up(knex: Knex) {
 
   // Should be composite key
   await knex.schema.createTable('school_instructor', (table: TableBuilder) => {
+    table.increments().primary();
     table.uuid('school_id').references('school.suuid');
-    table.string('instructorIdNumber').references('instructor.id_number');
+    table.string('instructor_id_number').references('instructor.id_number');
     table.boolean('active').defaultTo(false);
   });
 }
