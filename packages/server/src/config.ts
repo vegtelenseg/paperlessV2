@@ -30,13 +30,13 @@ const config = convict({
       doc: 'Database Port',
       env: 'POSTGRES_PORT',
       format: Number,
-      default: 5433,
+      default: 5432,
     },
     password: {
       doc: 'Database password',
       format: String,
       env: 'POSTGRES_PASSWORD',
-      default: '',
+      default: 'password',
       sensitive: true,
     },
     debug: {

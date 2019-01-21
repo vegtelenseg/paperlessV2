@@ -10,11 +10,11 @@ export const School = newJoinMonsterGraphQLObjectType({
   sqlTable: 'school',
   uniqueKey: 'suuid',
   fields: () => ({
-    schoolName: {
+    name: {
       type: GraphQLNonNull(GraphQLString),
       sqlColumn: 'name',
     },
-    isSchoolActive: {
+    isActive: {
       type: GraphQLNonNull(GraphQLString),
       sqlColumn: 'active',
     },
