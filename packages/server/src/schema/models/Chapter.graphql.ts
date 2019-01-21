@@ -1,12 +1,14 @@
 import {
-  GraphQLObjectType,
   GraphQLNonNull,
   GraphQLString,
   GraphQLInt,
 } from 'graphql';
+import { newJoinMonsterGraphQLObjectType } from '../../utils/joinMonster-graphql14.fix';
 
-export const Chapter = new GraphQLObjectType({
+export const Chapter = newJoinMonsterGraphQLObjectType({
   name: 'Chapter',
+  sqlTable: 'chapter',
+  uniqueKey: 'id',
   fields: () => ({
     name: {
       type: GraphQLNonNull(GraphQLString),
@@ -18,9 +20,3 @@ export const Chapter = new GraphQLObjectType({
     },
   }),
 });
-
-// @ts-ignore
-Chapter._typeConfig = {
-  uniqueKey: 'id',
-  sqlTable: 'chapter',
-};

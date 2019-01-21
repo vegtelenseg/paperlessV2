@@ -1,13 +1,13 @@
 import {GraphQLNonNull, GraphQLObjectType, GraphQLSchema} from 'graphql';
 
 import {nodeField} from './Relay';
-import Viewer from './models/Viewer.graphql';
+import RootQuery from './models/root-query.graphql';
 
 const query = new GraphQLObjectType({
   name: 'Query',
   fields: () => ({
     viewer: {
-      type: new GraphQLNonNull(Viewer),
+      type: new GraphQLNonNull(RootQuery),
       resolve: () => ({}),
     },
     node: nodeField,

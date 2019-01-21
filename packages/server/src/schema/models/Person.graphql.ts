@@ -1,8 +1,8 @@
 import {
-  GraphQLObjectType,
   GraphQLString,
   GraphQLNonNull,
   GraphQLInt,
+  GraphQLObjectType,
 } from 'graphql';
 import {GraphQLDate} from 'graphql-iso-date';
 
@@ -46,9 +46,3 @@ export const Person = new GraphQLObjectType({
     },
   }),
 });
-
-// @ts-ignore
-Person._typeConfig = {
-  sqlTable: 'student',
-  uniqueKey: 'id_number',
-};

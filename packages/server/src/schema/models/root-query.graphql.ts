@@ -7,7 +7,7 @@ import {Subject} from './Subject.graphql';
 import {School} from './school.graphql';
 
 export default new GraphQLObjectType({
-  name: 'Viewer',
+  name: 'RootQuery',
   fields: () => ({
     student: {
       type: new GraphQLList(Student),
