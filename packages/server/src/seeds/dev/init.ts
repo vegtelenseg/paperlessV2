@@ -21,7 +21,7 @@ import {
   createAssessmentResult,
   createStudentSubject,
   createAssessmentChapter,
-} from './index';
+} from '.';
 
 const createSeedContext = async () => {
   return {span: tracer.startSpan('seed')};

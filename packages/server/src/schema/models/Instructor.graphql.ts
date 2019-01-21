@@ -1,13 +1,12 @@
-import {
-  GraphQLObjectType,
-  GraphQLNonNull,
-  GraphQLString,
-  GraphQLInt,
-} from 'graphql';
+import { GraphQLNonNull, GraphQLString, GraphQLInt, GraphQLList } from 'graphql';
 import {GraphQLDate} from 'graphql-iso-date';
+import {Subject} from './Subject.graphql';
+import {newJoinMonsterGraphQLObjectType} from '../../utils/joinMonster-graphql14.fix';
 
-export const Student = new GraphQLObjectType({
-  name: 'Student',
+export const Instructor = newJoinMonsterGraphQLObjectType({
+  name: 'Instructor',
+  sqlTable: 'instructor',
+  uniqueKey: 'id_number',
   fields: () => ({
     firstName: {
       type: GraphQLNonNull(GraphQLString),
@@ -41,15 +40,21 @@ export const Student = new GraphQLObjectType({
       type: GraphQLNonNull(GraphQLInt),
       sqlColumn: 'grade',
     },
-    enrolmentDate: {
+    employmentDate: {
       type: GraphQLNonNull(GraphQLDate),
-      sqlColumn: 'enrolment_date',
+      sqlColumn: 'employment_date',
+    },
+    subject: {
+      type: new GraphQLList(Subject),
+      junction: {
+        sqlTable: 'subject_instructor',
+        sqlJoins: [
+          (instructorTable, junctionTable) =>
+            `${instructorTable}.id_number = ${junctionTable}.instructor_id_number`,
+          (junctionTable, subject) =>
+            `${junctionTable}.subject_id = ${subject}.id`,
+        ],
+      },
     },
   }),
 });
-
-// @ts-ignore
-Student._typeConfig = {
-  sqlTable: 'student',
-  uniqueKey: 'id_number',
-};

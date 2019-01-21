@@ -2,6 +2,7 @@ import {Raw} from 'knex';
 
 import Context from '../context';
 import {knex} from '../db';
+import tracer from '../tracer';
 
 export default class SqlService {
   public static async raw(
@@ -9,7 +10,7 @@ export default class SqlService {
     sql: string,
     bindings?: any
   ): Promise<Raw> {
-    const span = context.span.tracer().startSpan('knex raw query', {
+    const span = tracer.startSpan('knex raw query', {
       childOf: context.span,
       tags: {
         sql,
