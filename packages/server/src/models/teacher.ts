@@ -1,6 +1,6 @@
 import Person from './person';
 
-export class Instructor extends Person {
+export class Teacher extends Person {
   public idNumber!: string;
 
   static get idColumn() {

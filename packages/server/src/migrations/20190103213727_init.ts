@@ -20,7 +20,7 @@ export async function up(knex: Knex) {
     table.date('enrolment_date').defaultTo(knex.fn.now());
   });
 
-  await knex.schema.createTable('instructor', (table: TableBuilder) => {
+  await knex.schema.createTable('teacher', (table: TableBuilder) => {
     table
       .string('id_number')
       .primary()
@@ -118,12 +118,12 @@ export async function up(knex: Knex) {
     }
   );
 
-  await knex.schema.createTable('subject_instructor', (table: TableBuilder) => {
+  await knex.schema.createTable('subject_teacher', (table: TableBuilder) => {
     table.increments().primary();
     table
-      .string('instructor_id_number')
+      .string('teacher_id_number')
       .unsigned()
-      .references('instructor.id_number')
+      .references('teacher.id_number')
       .onDelete('SET NULL');
     table
       .integer('subject_id')
@@ -157,17 +157,17 @@ export async function up(knex: Knex) {
   });
 
   // Should be composite key
-  await knex.schema.createTable('school_instructor', (table: TableBuilder) => {
+  await knex.schema.createTable('school_teacher', (table: TableBuilder) => {
     table.increments().primary();
     table.uuid('school_id').references('school.suuid');
-    table.string('instructor_id_number').references('instructor.id_number');
+    table.string('teacher_id_number').references('teacher.id_number');
     table.boolean('active').defaultTo(false);
   });
 }
 
 const tables = [
   'student',
-  'instructor',
+  'teacher',
   'subject',
   'chapter',
   'assessment',
@@ -176,8 +176,8 @@ const tables = [
   'student_assessment_result',
   'student_subject',
   'school',
-  'school_instructor',
-  'subject_instructor',
+  'school_teacher',
+  'subject_teacher',
 ];
 
 export async function down(knex: Knex) {

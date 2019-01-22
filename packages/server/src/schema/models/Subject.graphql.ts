@@ -12,7 +12,7 @@ export const Subject = newJoinMonsterGraphQLObjectType({
       type: GraphQLNonNull(GraphQLString),
       sqlColumn: 'name',
     },
-    chapter: {
+    chapters: {
       type: new GraphQLList(Chapter),
       sqlJoin: (subjectTable: string, chapterTable: string) =>
         `${subjectTable}.id = ${chapterTable}.subject_id`,

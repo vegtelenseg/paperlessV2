@@ -1,10 +1,6 @@
-import {
-  GraphQLNonNull,
-  GraphQLString,
-  GraphQLInt,
-} from 'graphql';
+import {GraphQLNonNull, GraphQLString, GraphQLInt} from 'graphql';
 import {GraphQLDate} from 'graphql-iso-date';
-import { newJoinMonsterGraphQLObjectType } from '../../utils/joinMonster-graphql14.fix';
+import {newJoinMonsterGraphQLObjectType} from '../../utils/joinMonster-graphql14.fix';
 
 export const Student = newJoinMonsterGraphQLObjectType({
   name: 'Student',

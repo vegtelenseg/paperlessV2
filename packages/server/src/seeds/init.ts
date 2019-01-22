@@ -6,7 +6,7 @@ import Fakerator from 'fakerator';
 import Uuid from 'uuid';
 
 import {
-  Instructor,
+  Teacher,
   Student,
   Subject,
   Chapter,
@@ -19,16 +19,16 @@ import {generateIdNumber} from '../utils/id-generator';
 import {mockAssessments} from './dev/assessment.data';
 import {
   createStudent,
-  createInstructor,
+  createTeacher,
   createSubject,
   createChapter,
   createAssessment,
   createSchool,
-  createSubjectInstructor,
+  createSubjectTeacher,
   createAssessmentResult,
   createStudentSubject,
   createAssessmentChapter,
-  createSchoolInstructor,
+  createSchoolTeacher,
 } from './dev';
 
 const createSeedContext = async () => {
@@ -40,10 +40,10 @@ export async function seed(knex: Knex) {
   const genders = ['F', 'M'];
   const context = await createSeedContext();
 
-  await knex('instructor').del();
+  await knex('teacher').del();
   await knex('student').del();
   await knex('subject').del();
-  await knex('subject_instructor').del();
+  await knex('subject_teacher').del();
   await knex('chapter').del();
   await knex('assessment').del();
   await knex('student_subject').del();
@@ -54,7 +54,7 @@ export async function seed(knex: Knex) {
   for (let i = 0; i < 30; i++) {
     const gender = genders[Math.round(Math.random())];
     const ibirthDate = randomDate.getRandomDateInRange(iStartDate, iEndDate);
-    await createInstructor(context, knex, {
+    await createTeacher(context, knex, {
       idNumber: generateIdNumber(ibirthDate),
       firstName:
         gender === 'F'
@@ -100,17 +100,17 @@ export async function seed(knex: Knex) {
     });
   }
 
-  const instructors = await Instructor.query(); // This is also being used on the school instructor table
-  for (let i = 0; i < instructors.length; i++) {
+  const teachers = await Teacher.query(); // This is also being used on the school teacher table
+  for (let i = 0; i < teachers.length; i++) {
     const subjectId = (i + 1) % 7;
-    const instructor = instructors[i];
+    const teacher = teachers[i];
     const subject = await Subject.query(knex)
       .where('id', subjectId === 0 ? 7 : subjectId)
       .first();
 
-    if (subject && instructor) {
-      await createSubjectInstructor(context, knex, {
-        instructorIdNumber: instructor.idNumber,
+    if (subject && teacher) {
+      await createSubjectTeacher(context, knex, {
+        teacherIdNumber: teacher.idNumber,
         subjectId: subject.id,
       });
     }
@@ -201,10 +201,10 @@ export async function seed(knex: Knex) {
   }
 
   const schoolList = await School.query(knex);
-  for (let i = 0; i < instructors.length * 4; i++) {
-    await createSchoolInstructor(context, knex, {
+  for (let i = 0; i < teachers.length * 4; i++) {
+    await createSchoolTeacher(context, knex, {
       schoolId: schoolList[i % schoolList.length].suuid,
-      instructorIdNumber: instructors[i % instructors.length].idNumber,
+      teacherIdNumber: teachers[i % teachers.length].idNumber,
       active: false,
     });
   }

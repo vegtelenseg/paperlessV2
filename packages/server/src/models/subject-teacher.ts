@@ -1,25 +1,25 @@
-import {Instructor} from './instructor';
+import {Teacher} from './teacher';
 import {Subject} from './subject';
 import {BaseModel} from './base';
 
-export class SubjectInstructor extends BaseModel {
-  public instructorIdNumber!: string;
+export class SubjectTeacher extends BaseModel {
+  public teacherIdNumber!: string;
   public subjectId!: number;
   static get relationMappings() {
     return {
-      instructor: {
+      teacher: {
         relation: BaseModel.HasManyRelation,
-        modelClass: Instructor,
+        modelClass: Teacher,
         join: {
-          from: 'subjectInstructor.instructorIdNumber',
-          to: 'instructor.idNumber',
+          from: 'subjectTeacher.teacherIdNumber',
+          to: 'teacher.idNumber',
         },
       },
       subject: {
         relation: BaseModel.HasManyRelation,
         modelClass: Subject,
         join: {
-          from: 'subjectInstructor.subjectId',
+          from: 'subjectTeacher.subjectId',
           to: 'subject.id',
         },
       },

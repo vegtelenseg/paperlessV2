@@ -1,25 +1,25 @@
 import Context from '../../context';
 import Knex from 'knex';
-import {SchoolInstructor} from '../../models';
+import {SchoolTeacher} from '../../models';
 
-export const createSchoolInstructor = async (
+export const createSchoolTeacher = async (
   context: Context,
   trx: Knex,
   {
     schoolId,
-    instructorIdNumber,
+    teacherIdNumber,
     active,
   }: {
     schoolId: string;
-    instructorIdNumber: string;
+    teacherIdNumber: string;
     active: boolean;
   }
-): Promise<SchoolInstructor> => {
-  return await SchoolInstructor.query(trx)
+): Promise<SchoolTeacher> => {
+  return await SchoolTeacher.query(trx)
     .context(context)
     .upsertGraphAndFetch({
       schoolId,
-      instructorIdNumber,
+      teacherIdNumber,
       active,
     });
 };

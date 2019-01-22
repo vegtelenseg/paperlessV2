@@ -1,10 +1,10 @@
 import {BaseModel} from './base';
 import {School} from './school';
-import {Instructor} from './instructor';
+import {Teacher} from './teacher';
 
-export class SchoolInstructor extends BaseModel {
+export class SchoolTeacher extends BaseModel {
   public schoolId!: string;
-  public instructorIdNumber!: string;
+  public teacherIdNumber!: string;
   public active!: boolean;
 
   static get relationMappings() {
@@ -13,16 +13,16 @@ export class SchoolInstructor extends BaseModel {
         relation: BaseModel.HasManyRelation,
         modelClass: School,
         join: {
-          from: 'schoolInstructor.schoolId',
+          from: 'schoolTeacher.schoolId',
           to: 'school.suuid',
         },
       },
-      instructor: {
+      teacher: {
         relation: BaseModel.HasManyRelation,
-        modelClass: Instructor,
+        modelClass: Teacher,
         join: {
-          from: 'schoolInstructor.instructorIdNumber',
-          to: 'instructor.id_number',
+          from: 'schoolTeacher.teacherIdNumber',
+          to: 'teacher.id_number',
         },
       },
     };

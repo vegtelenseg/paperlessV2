@@ -2,9 +2,9 @@ import {GraphQLObjectType, GraphQLResolveInfo, GraphQLList} from 'graphql';
 import {Student} from './Student.graphql';
 import Context from '../../context';
 import dbCall from '../dbCall';
-import {Instructor} from './Instructor.graphql';
-import {Subject} from './Subject.graphql';
-import {School} from './school.graphql';
+import {Teacher} from './Teacher.graphql';
+//import {Subject} from './Subject.graphql';
+import {School} from './School.graphql';
 
 export default new GraphQLObjectType({
   name: 'RootQuery',
@@ -18,8 +18,8 @@ export default new GraphQLObjectType({
         resolveInfo: GraphQLResolveInfo
       ) => dbCall(parent, args, context, resolveInfo),
     },
-    instructor: {
-      type: new GraphQLList(Instructor),
+    teacher: {
+      type: new GraphQLList(Teacher),
       resolve: (
         parent: any,
         args: {[key: string]: any},
@@ -27,15 +27,15 @@ export default new GraphQLObjectType({
         resolveInfo: GraphQLResolveInfo
       ) => dbCall(parent, args, context, resolveInfo),
     },
-    subject: {
-      type: new GraphQLList(Subject),
-      resolve: (
-        parent: any,
-        args: {[key: string]: any},
-        context: Context,
-        resolveInfo: GraphQLResolveInfo
-      ) => dbCall(parent, args, context, resolveInfo),
-    },
+    // subjects: {
+    //   type: new GraphQLList(Subject),
+    //   resolve: (
+    //     parent: any,
+    //     args: {[key: string]: any},
+    //     context: Context,
+    //     resolveInfo: GraphQLResolveInfo
+    //   ) => dbCall(parent, args, context, resolveInfo),
+    // },
     school: {
       type: new GraphQLList(School),
       resolve: (

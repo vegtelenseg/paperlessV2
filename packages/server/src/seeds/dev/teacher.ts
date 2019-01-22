@@ -1,8 +1,8 @@
 import Context from '../../context';
 import Knex from 'knex';
-import {Instructor} from '../../models';
+import {Teacher} from '../../models';
 
-export const createInstructor = async (
+export const createTeacher = async (
   context: Context,
   trx: Knex,
   {
@@ -24,8 +24,8 @@ export const createInstructor = async (
     title: string;
     idNumber: string;
   }
-): Promise<Instructor> => {
-  return Instructor.query(trx)
+): Promise<Teacher> => {
+  return Teacher.query(trx)
     .context(context)
     .insertAndFetch({
       firstName,
