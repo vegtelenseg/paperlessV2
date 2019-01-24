@@ -12,7 +12,7 @@ export class AssessmentResult extends BaseModel {
         relation: BaseModel.HasOneRelation,
         modelClass: Assessment,
         join: {
-          from: 'assessmentResult.assessment_id',
+          from: 'assessmentResult.assessmentId',
           to: 'assessment.id',
         },
       },

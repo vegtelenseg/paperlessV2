@@ -2,8 +2,10 @@ import {GraphQLNonNull, GraphQLString, GraphQLInt, GraphQLList} from 'graphql';
 import {GraphQLDate} from 'graphql-iso-date';
 import {Subject} from './Subject.graphql';
 import {newJoinMonsterGraphQLObjectType} from '../../utils/joinMonster-graphql14.fix';
+import {School} from './School.graphql';
+import {GraphQLObjectType} from 'graphql/type/definition';
 
-export const Teacher = newJoinMonsterGraphQLObjectType({
+export const Teacher: GraphQLObjectType = newJoinMonsterGraphQLObjectType({
   name: 'Teacher',
   sqlTable: 'teacher',
   uniqueKey: 'id_number',
@@ -53,6 +55,18 @@ export const Teacher = newJoinMonsterGraphQLObjectType({
             `${teacherTable}.id_number = ${junctionTable}.teacher_id_number`,
           (junctionTable, subject) =>
             `${junctionTable}.subject_id = ${subject}.id`,
+        ],
+      },
+    },
+    school: {
+      type: School,
+      junction: {
+        sqlTable: 'school_teacher',
+        sqlJoins: [
+          (teacherTable, junctionTable) =>
+            `${teacherTable}.id_number = ${junctionTable}.teacher_id_number`,
+          (junctionTable, schooldTable) =>
+            `${junctionTable}.school_id = ${schooldTable}.suuid`,
         ],
       },
     },

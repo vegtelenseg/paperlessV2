@@ -3,7 +3,6 @@ import {Student} from './Student.graphql';
 import Context from '../../context';
 import dbCall from '../dbCall';
 import {Teacher} from './Teacher.graphql';
-//import {Subject} from './Subject.graphql';
 import {School} from './School.graphql';
 
 export default new GraphQLObjectType({
