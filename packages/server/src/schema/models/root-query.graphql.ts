@@ -8,7 +8,7 @@ import {School} from './School.graphql';
 export default new GraphQLObjectType({
   name: 'RootQuery',
   fields: () => ({
-    student: {
+    students: {
       type: new GraphQLList(Student),
       resolve: (
         parent: any,
@@ -17,7 +17,7 @@ export default new GraphQLObjectType({
         resolveInfo: GraphQLResolveInfo
       ) => dbCall(parent, args, context, resolveInfo),
     },
-    teacher: {
+    teachers: {
       type: new GraphQLList(Teacher),
       resolve: (
         parent: any,
@@ -26,7 +26,7 @@ export default new GraphQLObjectType({
         resolveInfo: GraphQLResolveInfo
       ) => dbCall(parent, args, context, resolveInfo),
     },
-    school: {
+    schools: {
       type: new GraphQLList(School),
       resolve: (
         parent: any,

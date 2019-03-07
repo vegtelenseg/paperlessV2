@@ -44,7 +44,7 @@ export const Student = newJoinMonsterGraphQLObjectType({
       type: GraphQLNonNull(GraphQLDate),
       sqlColumn: 'enrolment_date',
     },
-    subject: {
+    subjects: {
       type: GraphQLList(Subject),
       junction: {
         sqlTable: 'student_subject',

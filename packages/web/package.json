@@ -1,15 +1,30 @@
 {
-  "name": "paperless",
-  "version": "1.0.0",
-  "main": "index.js",
-  "license": "MIT",
+  "name": "web",
+  "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "graphql-relay": "^0.6.0",
-    "react": "^16.7.0",
-    "react-relay": "^1.7.0",
-    "react-router": "^4.3.1",
-    "relay": "^0.8.0-1",
-    "relay-runtime": "^1.7.0"
-  }
+    "@types/jest": "24.0.9",
+    "@types/node": "11.10.5",
+    "@types/react": "16.8.7",
+    "@types/react-dom": "16.8.2",
+    "react": "^16.8.4",
+    "react-dom": "^16.8.4",
+    "react-scripts": "2.1.8",
+    "typescript": "3.3.3333"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }
