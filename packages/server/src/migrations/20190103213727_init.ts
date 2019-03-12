@@ -205,7 +205,7 @@ const tables = [
 export async function down(knex: Knex) {
   for (let i = 0; i < tables.length; i++) {
     await knex.raw(`
-      DROP TABLE IF EXISTS ${tables[0]} CASCADE
+      DROP TABLE IF EXISTS ${tables[i]} CASCADE
     `);
   }
 }
