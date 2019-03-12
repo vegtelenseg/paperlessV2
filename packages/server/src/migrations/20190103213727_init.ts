@@ -198,6 +198,7 @@ const tables = [
   'school',
   'school_teacher',
   'subject_teacher',
+  'grade',
   'school_grade',
   'subject_grade',
 ];
