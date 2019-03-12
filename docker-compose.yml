@@ -8,7 +8,7 @@ services:
       POSTGRES_PASSWORD: password
       POSTGRES_DB: test
     ports:
-      - "5431:5431"
+      - "5432:5432"
     volumes:
       - "./dumps:/dumps"
       - db-postgres:/var/opt/postgres

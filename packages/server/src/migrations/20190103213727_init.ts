@@ -106,7 +106,7 @@ export async function up(knex: Knex) {
   await knex.schema.createTable(
     'student_assessment_result',
     (table: TableBuilder) => {
-      table.increments().primary();
+      table.increments().unsigned().primary();
       table
         .string('student_id_number')
         .references('student.id_number')
@@ -119,7 +119,7 @@ export async function up(knex: Knex) {
   );
 
   await knex.schema.createTable('subject_teacher', (table: TableBuilder) => {
-    table.increments().primary();
+    table.increments().unsigned().primary();
     table
       .string('teacher_id_number')
       .unsigned()
@@ -158,10 +158,30 @@ export async function up(knex: Knex) {
 
   // Should be composite key
   await knex.schema.createTable('school_teacher', (table: TableBuilder) => {
-    table.increments().primary();
+    table.increments().unsigned().primary();
     table.uuid('school_id').references('school.suuid');
     table.string('teacher_id_number').references('teacher.id_number');
     table.boolean('active').defaultTo(false);
+  });
+
+  // Grade should belong to a school
+  await knex.schema.createTable('grade', (table: TableBuilder) => {
+    table.increments().unsigned().primary();
+    table.string('name').defaultTo('8').unsigned();
+
+  });
+
+  await knex.schema.createTable('school_grade', (table: TableBuilder) => {
+    table.increments().unsigned().primary();
+    table.uuid('school_id').references('school.suuid').onDelete('CASCADE');
+    table.integer('grade_id').references('grade.id').onDelete('CASCADE');
+  });
+
+  // TODO: Rethink this table and later add objection model and seeds for it
+  await knex.schema.createTable('subject_grade', (table: TableBuilder) => {
+    table.increments().unsigned().primary();
+    table.integer('subject_id').references('subject.id').onDelete('CASCADE');
+    table.integer('grade_id').references('grade.id').onDelete('CASCADE');
   });
 }
 
@@ -178,10 +198,14 @@ const tables = [
   'school',
   'school_teacher',
   'subject_teacher',
+  'school_grade',
+  'subject_grade',
 ];
 
 export async function down(knex: Knex) {
   for (let i = 0; i < tables.length; i++) {
-    await knex.schema.dropTableIfExists(tables[i]);
+    await knex.raw(`
+      DROP TABLE IF EXISTS ${tables[0]} CASCADE
+    `);
   }
 }
