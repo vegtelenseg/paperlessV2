@@ -1,7 +1,7 @@
 export const mockAssessments = [
   {
     kind: 'Class Test',
-    totalMarks: 50,
+    totalMarks: 25,
     startDate: new Date(2019, 2, 23),
     endDate: undefined,
   },
@@ -13,13 +13,13 @@ export const mockAssessments = [
   },
   {
     kind: 'Assignment',
-    totalMarks: 50,
+    totalMarks: 75,
     startDate: new Date(2019, 3, 5),
     endDate: new Date(2019, 3, 8),
   },
   {
     kind: 'Quater Test',
-    totalMarks: 100,
+    totalMarks: 50,
     startDate: new Date(2019, 3, 27),
     endDate: undefined,
   },
