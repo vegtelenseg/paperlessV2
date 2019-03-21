@@ -31,8 +31,10 @@ import {
   createAssessmentChapter,
   createSchoolTeacher,
   createSchoolGrade,
-  createGrade
+  createGrade,
+  createStudentAssessmentResult
 } from './dev';
+import { AssessmentResult } from '../models/assessment-result';
 
 const createSeedContext = async () => {
   return {span: tracer.startSpan('seed')};
@@ -175,10 +177,10 @@ export async function seed(knex: Knex) {
     }
   }
 
-  const students = await Student.query(knex);
-  for (let i = 0; i < students.length * 4; i++) {
+  const studentList = await Student.query(knex);
+  for (let i = 0; i < studentList.length * 4; i++) {
     await createStudentSubject(context, knex, {
-      studentIdNumber: students[i % students.length].idNumber,
+      studentIdNumber: studentList[i % studentList.length].idNumber,
       subjectId: theSubjects[i % theSubjects.length].id,
     });
   }
@@ -240,6 +242,16 @@ export async function seed(knex: Knex) {
           schoolId: schoolList[i].suuid
       })
     }
-    
+  }
+
+  const assessmentResultList = await AssessmentResult.query(knex).context(context);
+  for (let i = 0; i < studentList.length; i++) {
+    for (let j = 0; j < assessmentResultList.length; j++) {
+      await createStudentAssessmentResult(context, knex, {
+        studentIdNumber: studentList[i].idNumber,
+        assessmentResultId: assessmentResultList[j].id
+      })
+    }
+
   }
 }
