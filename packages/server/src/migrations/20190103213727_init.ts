@@ -173,15 +173,15 @@ export async function up(knex: Knex) {
 
   await knex.schema.createTable('school_grade', (table: TableBuilder) => {
     table.increments().unsigned().primary();
-    table.uuid('school_id').references('school.suuid').onDelete('CASCADE');
-    table.integer('grade_id').references('grade.id').onDelete('CASCADE');
+    table.uuid('school_id').references('school.suuid').onDelete('CASCADE').notNullable();
+    table.integer('grade_id').references('grade.id').onDelete('CASCADE').notNullable();
   });
 
   // TODO: Rethink this table and later add objection model and seeds for it
   await knex.schema.createTable('subject_grade', (table: TableBuilder) => {
     table.increments().unsigned().primary();
-    table.integer('subject_id').references('subject.id').onDelete('CASCADE');
-    table.integer('grade_id').references('grade.id').onDelete('CASCADE');
+    table.integer('subject_id').references('subject.id').onDelete('CASCADE').notNullable();
+    table.integer('grade_id').references('grade.id').onDelete('CASCADE').notNullable();
   });
 }
 

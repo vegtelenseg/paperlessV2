@@ -9,4 +9,7 @@ export * from './student';
 export * from './subject-teacher';
 export * from './subject';
 export * from './school';
+export * from './grade';
 export * from './school-teacher';
+export * from './school-grade';
+export * from './student-assessment-result';

@@ -12,6 +12,7 @@ import {
   Chapter,
   Assessment,
   School,
+  Grade,
 } from '../models';
 import tracer from '../tracer';
 import {subjects} from './dev/subject.data';
@@ -29,7 +30,11 @@ import {
   createStudentSubject,
   createAssessmentChapter,
   createSchoolTeacher,
+  createSchoolGrade,
+  createGrade,
+  createStudentAssessmentResult
 } from './dev';
+import { AssessmentResult } from '../models/assessment-result';
 
 const createSeedContext = async () => {
   return {span: tracer.startSpan('seed')};
@@ -39,15 +44,28 @@ export async function seed(knex: Knex) {
   const fakerator = Fakerator();
   const genders = ['F', 'M'];
   const context = await createSeedContext();
+  const tables = [
+    'student',
+    'teacher',
+    'subject',
+    'chapter',
+    'assessment',
+    'assessment_chapter',
+    'assessment_result',
+    'student_assessment_result',
+    'student_subject',
+    'school',
+    'school_teacher',
+    'subject_teacher',
+    'grade',
+    'school_grade',
+    'subject_grade',
+  ];
 
-  await knex('teacher').del();
-  await knex('student').del();
-  await knex('subject').del();
-  await knex('subject_teacher').del();
-  await knex('chapter').del();
-  await knex('assessment').del();
-  await knex('student_subject').del();
-  await knex('assessment_chapter').del();
+  // We need to do this otherwise the db gets dirty
+  for (let i = 0; i < tables.length; i++) {
+    await knex(tables[i]).del();
+  }
 
   const iStartDate = new Date(1970, 1, 1);
   const iEndDate = new Date(1985, 12, 31);
@@ -159,10 +177,10 @@ export async function seed(knex: Knex) {
     }
   }
 
-  const students = await Student.query(knex);
-  for (let i = 0; i < students.length * 4; i++) {
+  const studentList = await Student.query(knex);
+  for (let i = 0; i < studentList.length * 4; i++) {
     await createStudentSubject(context, knex, {
-      studentIdNumber: students[i % students.length].idNumber,
+      studentIdNumber: studentList[i % studentList.length].idNumber,
       subjectId: theSubjects[i % theSubjects.length].id,
     });
   }
@@ -200,12 +218,39 @@ export async function seed(knex: Knex) {
     });
   }
 
-  const schoolList = await School.query(knex);
+  const schoolList = await School.query(knex).context(context);
   for (let i = 0; i < teachers.length * 4; i++) {
     await createSchoolTeacher(context, knex, {
       schoolId: schoolList[i % schoolList.length].suuid,
       teacherIdNumber: teachers[i % teachers.length].idNumber,
       active: false,
     });
+  }
+
+  const grades = ['8', '9', '10', '11', '12'];
+  for (let i = 0; i < grades.length; i++) {
+    await createGrade(context, knex, {
+      name: grades[i]
+    })
+  }
+
+  const gradeList = await Grade.query(knex).context(context);
+  for (let i = 0; i < schoolList.length; i++) {
+    for (let j = 0; j < grades.length; j++) {
+      await createSchoolGrade(context, knex, {
+          gradeId: gradeList[j].id,
+          schoolId: schoolList[i].suuid
+      })
+    }
+  }
+
+  const assessmentResultList = await AssessmentResult.query(knex).context(context);
+  for (let i = 0; i < studentList.length; i++) {
+    for (let j = 0; j < assessmentResultList.length; j++) {
+      await createStudentAssessmentResult(context, knex, {
+        studentIdNumber: studentList[i].idNumber,
+        assessmentResultId: assessmentResultList[j].id
+      })
+    }
   }
 }
