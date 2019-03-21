@@ -252,5 +252,6 @@ export async function seed(knex: Knex) {
         assessmentResultId: assessmentResultList[j].id
       })
     }
+
   }
 }
