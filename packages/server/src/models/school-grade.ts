@@ -1,6 +1,6 @@
 import {BaseModel} from './base';
 import {Grade} from './grade';
-import { School } from './school';
+import {School} from './school';
 
 export class SchoolGrade extends BaseModel {
   public gradeId!: number;

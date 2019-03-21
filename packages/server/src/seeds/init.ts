@@ -26,15 +26,13 @@ import {
   createAssessment,
   createSchool,
   createSubjectTeacher,
-  createAssessmentResult,
   createStudentSubject,
   createAssessmentChapter,
   createSchoolTeacher,
   createSchoolGrade,
   createGrade,
-  createStudentAssessmentResult
+  createStudentAssessmentResult,
 } from './dev';
-import { AssessmentResult } from '../models/assessment-result';
 
 const createSeedContext = async () => {
   return {span: tracer.startSpan('seed')};
@@ -51,7 +49,6 @@ export async function seed(knex: Knex) {
     'chapter',
     'assessment',
     'assessment_chapter',
-    'assessment_result',
     'student_assessment_result',
     'student_subject',
     'school',
@@ -91,7 +88,7 @@ export async function seed(knex: Knex) {
 
   const sStartDate = new Date(1993, 1, 1);
   const sEndDate = new Date(2000, 12, 31);
-  for (let i = 0; i < 400; i++) {
+  for (let i = 0; i < 100; i++) {
     const gender = genders[Math.round(Math.random())];
     const sBirthDate = randomDate.getRandomDateInRange(sStartDate, sEndDate);
     await createStudent(context, knex, {
@@ -134,11 +131,11 @@ export async function seed(knex: Knex) {
     }
   }
 
-  const theSubjects = await Subject.query(knex); // Be careful, this is used in many places.
+  const subjectList = await Subject.query(knex); // Be careful, this is used in many places.
   for (let i = 0; i < subjects.length; i++) {
     for (let j = 0; j < subjects[i].chapters.length; j++) {
       await createChapter(context, knex, {
-        subjectId: theSubjects[i].id,
+        subjectId: subjectList[i].id,
         name: subjects[i].chapters[j].name,
         totalMarks: fakerator.random.number(1, 25),
       });
@@ -181,21 +178,10 @@ export async function seed(knex: Knex) {
   for (let i = 0; i < studentList.length * 4; i++) {
     await createStudentSubject(context, knex, {
       studentIdNumber: studentList[i % studentList.length].idNumber,
-      subjectId: theSubjects[i % theSubjects.length].id,
+      subjectId: subjectList[i % subjectList.length].id,
     });
   }
 
-  const theChapters = await Chapter.query(knex);
-  const theAssessments = await Assessment.query();
-  for (let i = 0; i < theChapters.length; i++) {
-    const result = fakerator.random.number(10, 50);
-    const totalMark = theAssessments[i].totalMarks;
-    await createAssessmentResult(context, knex, {
-      assessmentId: theChapters[i].id,
-      results: result,
-      percentage: (result * 100) / totalMark,
-    });
-  }
   const schools = [
     "Falcon's High School",
     'Essa High School',
@@ -230,28 +216,32 @@ export async function seed(knex: Knex) {
   const grades = ['8', '9', '10', '11', '12'];
   for (let i = 0; i < grades.length; i++) {
     await createGrade(context, knex, {
-      name: grades[i]
-    })
+      name: grades[i],
+    });
   }
 
   const gradeList = await Grade.query(knex).context(context);
   for (let i = 0; i < schoolList.length; i++) {
     for (let j = 0; j < grades.length; j++) {
       await createSchoolGrade(context, knex, {
-          gradeId: gradeList[j].id,
-          schoolId: schoolList[i].suuid
-      })
+        gradeId: gradeList[j].id,
+        schoolId: schoolList[i].suuid,
+      });
     }
   }
 
-  const assessmentResultList = await AssessmentResult.query(knex).context(context);
-  for (let i = 0; i < studentList.length; i++) {
-    for (let j = 0; j < assessmentResultList.length; j++) {
+  //const assessmentResultList = await AssessmentResult.query(knex).context(context);
+  for (let i = 0; i < studentList.length / 3; i++) {
+    for (let j = 0; j < assessments.length / 3; j++) {
+      let result = Math.floor(
+        assessments[j].totalMarks - fakerator.random.number(15, 100)
+      );
+      result = result < 0 ? 0 : result;
       await createStudentAssessmentResult(context, knex, {
         studentIdNumber: studentList[i].idNumber,
-        assessmentResultId: assessmentResultList[j].id
-      })
+        assessmentId: assessments[j].id,
+        result,
+      });
     }
-
   }
 }

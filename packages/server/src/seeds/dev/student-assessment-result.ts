@@ -7,16 +7,19 @@ export const createStudentAssessmentResult = async (
   trx: Knex,
   {
     studentIdNumber,
-    assessmentResultId,
+    assessmentId,
+    result,
   }: {
     studentIdNumber: string;
-    assessmentResultId: number;
+    assessmentId: number;
+    result: number;
   }
 ): Promise<StudentAssessmentResult> => {
   return await StudentAssessmentResult.query(trx)
     .context(context)
     .upsertGraphAndFetch({
       studentIdNumber,
-      assessmentResultId
+      assessmentId,
+      result,
     });
 };
