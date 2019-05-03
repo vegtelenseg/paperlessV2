@@ -1,10 +1,79 @@
+const express = require('express');
 import {Request} from 'express';
 import {ApolloServer} from 'apollo-server-express';
-const express = require('express');
+// import passport from 'passport';
+// import GoogleStrategy from 'passport-google-oauth20';
+
+// import config from '../config';
+// const {clientId, clientSecret} = config.get('oauth.google');
+// const {api: apiUrl} = config.get('url');
 //import graphqlHTTP from 'express-graphql';
 import schema from '../schema';
 
+//const autoRegister = true;
+
 const app = express();
+
+// class CustomGoogleStrategy extends GoogleStrategy {
+//   // eslint-disable-next-line
+//   public authorizationParams(options: any) {
+//     const params = super.authorizationParams(options);
+
+//     if (options.state) {
+//       // @ts-ignore
+//       params.state = options.state;
+//     }
+
+//     return params;
+//   }
+// }
+
+// passport.use(  new CustomGoogleStrategy(
+//   {
+//     passReqToCallback: true,
+//     clientID: clientId,
+//     clientSecret,
+//     scope: ['email', 'openid'],
+//     // OpenId Connect
+//     userProfileURL: 'https://www.googleapis.com/oauth2/v3/userinfo',
+//     callbackURL: `${apiUrl}/auth/google/callback`,
+//   },
+//   async (
+//     req: Request,
+//     _accessToken: string,
+//     _refreshToken: string,
+//     profile: any,
+//     cb: any
+//   ) => {
+//     // TODO check if email has been verified
+//     const [{value: email /* verified */}] = profile.emails;
+
+//     const context = createContext(req);
+
+//     try {
+//       const user = await UserService.findByUsername(context, email);
+
+//       if (user) {
+//         return cb(null, user);
+//       } else if (autoRegister) {
+//         // tslint:disable-next-line no-console
+//         console.log('Auto Registering User...');
+//         // TODO whitelist stackworx.io for admin roles
+//         // TODO
+//         // user = await userService.create(context, {username: email});
+//         return cb(null, user);
+//       }
+
+//       return cb(new Error(`User ${email} not found.`));
+//     } catch (ex) {
+//       return cb(ex);
+//     }
+//   }
+// ));
+
+// @ts-ignore
+app.post('/login', (req, res) => console.log('Yup'));
+
 const apolloServer = new ApolloServer({
   schema,
   subscriptions: {},
@@ -30,10 +99,8 @@ const apolloServer = new ApolloServer({
   //   () => new LoggingGraphQLExtension(),
   // ],
 });
-
 apolloServer.applyMiddleware({app, path: '/graphql'});
-
-const port = 4000;
+const port = 5000;
 
 app.listen(port, () =>
   console.log(`🚀 Server ready at http://localhost:${port}/graphql`)
