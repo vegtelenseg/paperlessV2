@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Button, Col, Container, Input, InputGroup, InputGroupAddon, InputGroupText, Row } from 'reactstrap';
 
-class Page500 extends Component {
+class Page500 extends React.Component {
   render() {
     return (
       <div className="app flex-row align-items-center">

@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React from 'react';
 
-class DefaultFooter extends Component {
+class DefaultFooter extends React.Component {
   render() {
 
     return (

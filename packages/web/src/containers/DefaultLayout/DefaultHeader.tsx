@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { Badge, DropdownItem, DropdownMenu, DropdownToggle, Nav, NavItem } from 'reactstrap';
 
@@ -10,7 +10,7 @@ interface Props {
   onLogout: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
-class DefaultHeader extends Component<Props> {
+class DefaultHeader extends React.Component<Props> {
   render() {
 
     return (

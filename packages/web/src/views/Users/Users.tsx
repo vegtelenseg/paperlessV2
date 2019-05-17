@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { Badge, Card, CardBody, CardHeader, Col, Row, Table } from 'reactstrap';
 
@@ -27,7 +27,7 @@ function UserRow(props) {
   )
 }
 
-class Users extends Component {
+class Users extends React.Component {
 
   render() {
 

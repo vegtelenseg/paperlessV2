@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Card, CardBody, CardHeader, Col, Row, Table } from 'reactstrap';
 
 import usersData from './UsersData'
@@ -11,7 +11,7 @@ interface Props {
   }
 }
 
-class User extends Component<Props> {
+class User extends React.Component<Props> {
 
   render() {
 

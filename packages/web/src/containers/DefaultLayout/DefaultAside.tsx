@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Nav, NavItem, NavLink, Progress, TabContent, TabPane, ListGroup, ListGroupItem } from 'reactstrap';
 import classNames from 'classnames';
 import { AppSwitch } from '@coreui/react'
@@ -7,7 +7,7 @@ interface State {
   activeTab: string;
 }
 
-class DefaultAside extends Component<{}, State> {
+class DefaultAside extends React.Component<{}, State> {
 
   constructor(props) {
     super(props);
