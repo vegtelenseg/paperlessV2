@@ -49,10 +49,12 @@ class DefaultLayout extends Component<Props> {
           <AppSidebar fixed display="lg">
             <AppSidebarHeader />
             <AppSidebarForm />
-            // @ts-ignore
-            <Suspense>
-            <AppSidebarNav navConfig={navigation} {...this.props} />
-            </Suspense>
+            {
+              // @ts-ignore
+              <Suspense>
+              <AppSidebarNav navConfig={navigation} {...this.props} />
+              </Suspense>
+            }
             <AppSidebarFooter />
             <AppSidebarMinimizer />
           </AppSidebar>
