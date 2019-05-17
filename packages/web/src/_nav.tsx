@@ -28,14 +28,14 @@ export default {
     //   url: '/theme/typography',
     //   icon: 'icon-pencil',
     // },
-    {
-      title: true,
-      name: 'Components',
-      wrapper: {
-        element: '',
-        attributes: {},
-      },
-    },
+    // {
+    //   title: true,
+    //   name: 'Components',
+    //   wrapper: {
+    //     element: '',
+    //     attributes: {},
+    //   },
+    // },
     // {
     //   name: 'Base',
     //   url: '/base',
@@ -212,15 +212,15 @@ export default {
     //     },
     //   ],
     // },
-    {
-      name: 'Widgets',
-      url: '/widgets',
-      icon: 'icon-calculator',
-      badge: {
-        variant: 'info',
-        text: 'NEW',
-      },
-    },
+    // {
+    //   name: 'Widgets',
+    //   url: '/widgets',
+    //   icon: 'icon-calculator',
+    //   badge: {
+    //     variant: 'info',
+    //     text: 'NEW',
+    //   },
+    // },
     {
       divider: true,
     },
