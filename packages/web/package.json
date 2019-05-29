@@ -12,40 +12,38 @@
     "url": "git@github.com:coreui/coreui-free-react-admin-template.git"
   },
   "dependencies": {
-    "@fortawesome/fontawesome": "^1.1.8",
-    "@fortawesome/fontawesome-svg-core": "^1.2.17",
-    "@fortawesome/free-solid-svg-icons": "^5.8.1",
-    "@fortawesome/react-fontawesome": "^0.1.4",
-    "@material-ui/core": "^3.9.3",
-    "@stackworx/react": "^0.0.27",
-    "axios": "^0.18.0",
+    "@coreui/coreui": "^2.1.9",
+    "@coreui/coreui-plugin-chartjs-custom-tooltips": "^1.3.0",
+    "@coreui/icons": "0.3.0",
+    "@coreui/react": "~2.1.7",
+    "@types/jest": "^24.0.13",
+    "@types/node": "^12.0.2",
+    "@types/react": "^16.8.17",
+    "@types/react-dom": "^16.8.4",
+    "bootstrap": "^4.3.1",
+    "chart.js": "^2.8.0",
     "classnames": "^2.2.6",
-    "formik": "^1.5.4",
-    "formik-material-ui": "^0.0.16",
-    "got": "^9.6.0",
-    "material-ui": "^0.20.2",
-    "react": "^16.8.4",
-    "react-dom": "^16.8.4",
-    "react-relay-network-modern": "^3.0.2",
-    "react-router": "^5.0.0",
-    "react-router-dom": "^5.0.0",
-    "react-scripts": "2.1.8",
-    "relay-runtime": "^3.0.0",
-    "typescript": "3.3.3333",
-    "yup": "^0.27.0"
+    "core-js": "^2.6.5",
+    "font-awesome": "^4.7.0",
+    "node-sass": "^4.12.0",
+    "react": "^16.8.6",
+    "react-app-polyfill": "^1.0.1",
+    "react-chartjs-2": "^2.7.6",
+    "react-dom": "^16.8.6",
+    "react-router-config": "^4.4.0-beta.8",
+    "react-router-dom": "~4.3.1",
+    "reactstrap": "^7.1.0",
+    "simple-line-icons": "^2.4.1",
+    "typescript": "^3.4.5"
+  },
+  "devDependencies": {
+    "react-scripts": "^3.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "prettier": "prettier --write \"./src/**/*.{tsx,ts,js}\""
-  },
-  "prettier": {
-    "singleQuote": true,
-    "trailingComma": "es5",
-    "arrowParens": "always",
-    "bracketSpacing": false
+    "eject": "react-scripts eject"
   },
   "bugs": {
     "url": "https://github.com/coreui/coreui-free-react-admin-template/issues"
@@ -59,17 +57,12 @@
     "not ie <= 9",
     "not op_mini all"
   ],
-  "devDependencies": {
-    "@types/axios": "^0.14.0",
-    "@types/classnames": "^2.2.7",
-    "@types/got": "^9.4.4",
-    "@types/jest": "24.0.9",
-    "@types/material-ui": "^0.21.6",
-    "@types/node": "11.10.5",
-    "@types/react": "16.8.7",
-    "@types/react-dom": "16.8.2",
-    "@types/react-router-dom": "^4.3.2",
-    "@types/relay-runtime": "^1.3.12",
-    "prettier": "^1.17.0"
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx}",
+      "!**/*index.js",
+      "!src/serviceWorker.js",
+      "!src/polyfill.js"
+    ]
   }
 }

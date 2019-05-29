@@ -13,7 +13,6 @@ export async function up(knex: Knex) {
     table.string('gender', 1).notNullable();
     table.string('contact_phone');
     table.string('contact_mobile');
-    table.string('contact_mail');
     table
       .integer('grade')
       .notNullable()
@@ -35,7 +34,6 @@ export async function up(knex: Knex) {
     table.string('gender', 1).notNullable();
     table.string('contact_phone');
     table.string('contact_mobile');
-    table.string('contact_mail');
     table.date('employment_date').defaultTo(knex.fn.now());
     table.uuid('suuid').notNullable();
     table.boolean('active').defaultTo(false);
@@ -111,11 +109,24 @@ export async function up(knex: Knex) {
       .onDelete('CASCADE');
   });
 
+  await knex.schema.createTable('province', (table: TableBuilder) => {
+    table
+      .increments()
+      .unsigned()
+      .primary();
+    table.string('name').notNullable();
+  });
+
   await knex.schema.createTable('school', (table: TableBuilder) => {
     table
       .uuid('suuid')
       .primary()
       .notNullable();
+    table
+      .integer('province_id')
+      .references('province.id')
+      .notNullable()
+      .onDelete('CASCADE');
     table.string('name').notNullable();
     table.boolean('active').defaultTo(false);
     table.date('registered_date').defaultTo(knex.fn.now());
@@ -205,20 +216,33 @@ export async function up(knex: Knex) {
     }
   );
 
-  await knex.schema.createTable('province', (table: TableBuilder) => {
+  await knex.schema.createTable('role', (table: TableBuilder) => {
     table
       .increments()
-      .unsigned()
-      .primary();
+      .primary()
+      .unsigned();
+    table.enum('role', ['PRINCIPAL', 'TEACHER', 'ADMIN']);
+  });
+
+  await knex.schema.createTable('users', (table: TableBuilder) => {
+    table
+      .increments()
+      .primary()
+      .unsigned();
+    table.string('password').notNullable();
+    table
+      .string('id_number')
+      .notNullable()
+      .unique();
+    table.string('contact_mail').notNullable();
     table
       .uuid('school_id')
       .references('school.suuid')
-      .notNullable()
       .onDelete('CASCADE');
     table
-      .string('name')
-      .notNullable()
-      .defaultTo('Gauteng');
+      .integer('role_id')
+      .references('role.id')
+      .onDelete('CASCADE');
   });
 }
 
@@ -237,6 +261,8 @@ const tables = [
   'subject_grade',
   'student_assessment_chapter',
   'province',
+  'users',
+  'role',
 ];
 
 export async function down(knex: Knex) {
