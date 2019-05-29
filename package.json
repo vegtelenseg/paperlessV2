@@ -1,5 +1,0 @@
-{
-  "devDependencies": {
-    "@types/passport-google-oauth2": "^0.1.2"
-  }
-}

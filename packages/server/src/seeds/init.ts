@@ -194,7 +194,6 @@ export async function seed(knex: Knex) {
   };
   for (let i = 0; i < schools.length; i++) {
     await createSchool(context, knex, {
-      suuid: Uuid.v4(),
       name: schools[i],
       registeredDate: randomDate.getRandomDateInRange(
         registeredDate.start,
@@ -207,7 +206,6 @@ export async function seed(knex: Knex) {
   const schoolList = await School.query(knex).context(context);
   for (let i = 0; i < teachers.length * 4; i++) {
     await createSchoolTeacher(context, knex, {
-      schoolId: schoolList[i % schoolList.length].suuid,
       teacherIdNumber: teachers[i % teachers.length].idNumber,
       active: false,
     });
@@ -225,7 +223,6 @@ export async function seed(knex: Knex) {
     for (let j = 0; j < grades.length; j++) {
       await createSchoolGrade(context, knex, {
         gradeId: gradeList[j].id,
-        schoolId: schoolList[i].suuid,
       });
     }
   }

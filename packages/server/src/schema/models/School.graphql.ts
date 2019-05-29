@@ -8,7 +8,7 @@ import {Teacher} from './Teacher.graphql';
 export const School = newJoinMonsterGraphQLObjectType({
   name: 'School',
   sqlTable: 'school',
-  uniqueKey: 'suuid',
+  uniqueKey: 'id',
   fields: () => ({
     name: {
       type: GraphQLNonNull(GraphQLString),
@@ -28,7 +28,7 @@ export const School = newJoinMonsterGraphQLObjectType({
         sqlTable: 'school_teacher',
         sqlJoins: [
           (schoolTable, junctionTable) =>
-            `${schoolTable}.suuid = ${junctionTable}.school_id`,
+            `${schoolTable}.id = ${junctionTable}.school_id`,
           (junctionTable, teacher) =>
             `${junctionTable}.teacher_id_number = ${teacher}.id_number`,
         ],

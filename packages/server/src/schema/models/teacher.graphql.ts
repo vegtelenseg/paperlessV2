@@ -66,7 +66,7 @@ export const Teacher: GraphQLObjectType = newJoinMonsterGraphQLObjectType({
           (teacherTable, junctionTable) =>
             `${teacherTable}.id_number = ${junctionTable}.teacher_id_number`,
           (junctionTable, schooldTable) =>
-            `${junctionTable}.school_id = ${schooldTable}.suuid`,
+            `${junctionTable}.school_id = ${schooldTable}.id`,
         ],
       },
     },

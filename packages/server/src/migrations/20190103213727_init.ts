@@ -18,7 +18,7 @@ export async function up(knex: Knex) {
       .notNullable()
       .defaultTo(8);
     table.date('enrolment_date').defaultTo(knex.fn.now());
-    table.uuid('suuid').notNullable();
+    table.increments('id').notNullable();
     table.boolean('active').defaultTo(false);
   });
 
@@ -35,7 +35,7 @@ export async function up(knex: Knex) {
     table.string('contact_phone');
     table.string('contact_mobile');
     table.date('employment_date').defaultTo(knex.fn.now());
-    table.uuid('suuid').notNullable();
+    table.increments('id').notNullable();
     table.boolean('active').defaultTo(false);
   });
 
@@ -119,7 +119,7 @@ export async function up(knex: Knex) {
 
   await knex.schema.createTable('school', (table: TableBuilder) => {
     table
-      .uuid('suuid')
+      .increments()
       .primary()
       .notNullable();
     table
@@ -138,7 +138,7 @@ export async function up(knex: Knex) {
       .increments()
       .unsigned()
       .primary();
-    table.uuid('school_id').references('school.suuid');
+    table.increments('school_id').references('school.id');
     table.string('teacher_id_number').references('teacher.id_number');
     table.boolean('active').defaultTo(false);
   });
@@ -161,8 +161,8 @@ export async function up(knex: Knex) {
       .unsigned()
       .primary();
     table
-      .uuid('school_id')
-      .references('school.suuid')
+      .increments('school_id')
+      .references('school.id')
       .onDelete('CASCADE')
       .notNullable();
     table
@@ -236,8 +236,8 @@ export async function up(knex: Knex) {
       .unique();
     table.string('contact_mail').notNullable();
     table
-      .uuid('school_id')
-      .references('school.suuid')
+      .increments('school_id')
+      .references('school.id')
       .onDelete('CASCADE');
     table
       .integer('role_id')
