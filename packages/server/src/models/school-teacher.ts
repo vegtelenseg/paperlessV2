@@ -14,7 +14,7 @@ export class SchoolTeacher extends BaseModel {
         modelClass: School,
         join: {
           from: 'schoolTeacher.schoolId',
-          to: 'school.suuid',
+          to: 'school.id',
         },
       },
       teacher: {

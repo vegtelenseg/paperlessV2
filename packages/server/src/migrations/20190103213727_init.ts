@@ -139,7 +139,7 @@ export async function up(knex: Knex) {
 
   await knex.schema.createTable('school', (table: TableBuilder) => {
     table
-      .uuid('suuid')
+      .increments()
       .primary()
       .notNullable();
     table.string('name').notNullable();
@@ -153,7 +153,7 @@ export async function up(knex: Knex) {
       .increments()
       .unsigned()
       .primary();
-    table.uuid('school_id').references('school.suuid');
+    table.increments('school_id').references('school.id');
     table.string('teacher_id_number').references('teacher.id_number');
     table.boolean('active').defaultTo(false);
   });
@@ -176,8 +176,8 @@ export async function up(knex: Knex) {
       .unsigned()
       .primary();
     table
-      .uuid('school_id')
-      .references('school.suuid')
+      .increments('school_id')
+      .references('school.id')
       .onDelete('CASCADE')
       .notNullable();
     table

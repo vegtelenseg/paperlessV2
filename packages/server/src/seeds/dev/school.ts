@@ -9,12 +9,12 @@ export const createSchool = async (
     name,
     active,
     registeredDate,
-    suuid,
+    id,
   }: {
     name: string;
     active: boolean;
     registeredDate: Date;
-    suuid: string;
+    id: string;
   }
 ): Promise<School> => {
   return await School.query(trx)
@@ -23,6 +23,6 @@ export const createSchool = async (
       name,
       active,
       registeredDate,
-      suuid,
+      id,
     });
 };
