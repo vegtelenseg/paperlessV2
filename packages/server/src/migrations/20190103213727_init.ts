@@ -207,7 +207,7 @@ const tables = [
   'school_grade',
   'subject_grade',
   'student_assessment_chapter',
-  'province'
+  'province',
 ];
 
 export async function down(knex: Knex) {

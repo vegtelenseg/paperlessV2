@@ -17,7 +17,6 @@ const Page500 = React.lazy(() => import('./views/Pages/Page500/Page500'));
 class App extends React.Component {
 
   render() {
-    const {auth, loading, environment} = this.state;
     return (
       <HashRouter>
           <React.Suspense fallback={loading()}>

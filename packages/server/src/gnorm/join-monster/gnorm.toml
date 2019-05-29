@@ -1,0 +1,100 @@
+# ConnStr is the connection string for the database.  Any environment variables
+# in this string will be expanded, so for example dbname=$MY_DDB will do the
+# right thing.
+# MySQL example:
+# ConnStr = "root:admin@tcp/"
+# Postgres example:
+ConnStr = "dbname=test host=127.0.0.1 sslmode=disable user=postgres password=password"
+
+DBType = "postgres"
+
+Schemas = ["public"]
+
+# PluginDirs a list of paths that will be used for finding plugins.  The list
+# will be traversed in order, looking for a specifically named plugin. The first
+# plugin that is found will be the one used.
+PluginDirs = ["plugins"]
+
+# TODO: add linting
+# PostRun = ["../scripts/post-process.sh", "objection", "$GNORMFILE"]
+
+NameConversion = "{{camel .}}"
+
+# This will output the files in a subdirectory called "gnorm".  You can change
+# this, but if you do, change the RootPkg definition below to match what the
+# package name should be.
+OutputDir = "../../schema/models"
+
+ExcludeTables = ["knex_migrations", "knex_migrations_lock", "public"]
+
+# PluginDirs = ["./templates/plugin"]
+
+[Params]
+# RootPkg is the package declaration for the output dir. It should match the
+
+[SchemaPaths]
+"index.ts" = "templates/table_index.hbs"
+# "{{toLower .Schema}}/extend/index.ts" = "templates/table_stub_index.hbs"
+# "{{toLower .Schema}}/enums/index.ts" = "templates/enum_index.hbs"
+
+[TablePaths]
+"{{pascal .Table}}.graphql.ts" = "templates/table.hbs"
+# "{{toLower .Schema}}/{{pascal .Table}}.ts" = "templates/table_stub.hbs"
+
+[EnumPaths]
+# "{{toLower .Schema}}/enums/{{pascal .Enum}}.ts" = "templates/enum.hbs"
+
+[TypeMap]
+"timestamp with time zone" = "Date"
+"timestamp without time zone" = "Date"
+"timestamptz" = "Date"
+"timestamp" = "time.Time"
+"boolean" = "boolean" 
+"date" = "Date"
+"varchar" = "string"
+"text" = "string"
+"uuid" = "string"
+"character varying" = "string"
+"character" = "string"
+"smallint" = "number"
+"integer" = "number"
+"int4" = "number"
+"int8" = "number"
+"numeric" = "number"
+"bigint" = "???"
+# TODO
+"hstore" = "any"
+# TODO
+"jsonb" = "any"
+# TODO
+"bytea" = "any"
+# TODO: real column
+"tstzrange" = "string"
+# Replace with your own enums
+"book_type" = "enums.BookType"
+
+[NullableTypeMap]
+"timestamp with time zone" = "Date | null"
+"timestamp without time zone" = "Date | null"
+"timestamptz" = "Date | null"
+"date" = "Date | null"
+"varchar" = "string | null"
+"text" = "string | null"
+"boolean" = "boolean | null"
+"uuid" = "string | null"
+"character varying" = "string | null"
+"character" = "string | null"
+"smallint" = "number | null"
+"integer" = "number | null"
+"int4" = "number | null"
+"int8" = "number | null"
+"numeric" = "number | null"
+"bigint" = "???"
+# TODO
+"hstore" = "any"
+# TODO
+"jsonb" = "any"
+# TODO
+"bytea" = "any"
+# TODO: real column
+"tstzrange" = "string"
