@@ -18,7 +18,6 @@ export async function up(knex: Knex) {
       .notNullable()
       .defaultTo(8);
     table.date('enrolment_date').defaultTo(knex.fn.now());
-    table.increments('id').notNullable();
     table.boolean('active').defaultTo(false);
   });
 
@@ -35,7 +34,6 @@ export async function up(knex: Knex) {
     table.string('contact_phone');
     table.string('contact_mobile');
     table.date('employment_date').defaultTo(knex.fn.now());
-    table.increments('id').notNullable();
     table.boolean('active').defaultTo(false);
   });
 
@@ -138,7 +136,7 @@ export async function up(knex: Knex) {
       .increments()
       .unsigned()
       .primary();
-    table.increments('school_id').references('school.id');
+    table.integer('school_id').references('school.id');
     table.string('teacher_id_number').references('teacher.id_number');
     table.boolean('active').defaultTo(false);
   });
@@ -161,7 +159,7 @@ export async function up(knex: Knex) {
       .unsigned()
       .primary();
     table
-      .increments('school_id')
+      .integer('school_id')
       .references('school.id')
       .onDelete('CASCADE')
       .notNullable();
@@ -236,7 +234,7 @@ export async function up(knex: Knex) {
       .unique();
     table.string('contact_mail').notNullable();
     table
-      .increments('school_id')
+      .integer('school_id')
       .references('school.id')
       .onDelete('CASCADE');
     table

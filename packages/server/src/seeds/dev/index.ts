@@ -1,4 +1,3 @@
-export * from './assessment-chapter';
 export * from './assessment';
 export * from './chapter';
 export * from './teacher';

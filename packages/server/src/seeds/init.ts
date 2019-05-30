@@ -3,17 +3,8 @@ import Knex from 'knex';
 import randomDate from 'random-date-generator';
 //@ts-ignore
 import Fakerator from 'fakerator';
-import Uuid from 'uuid';
 
-import {
-  Teacher,
-  Student,
-  Subject,
-  Chapter,
-  Assessment,
-  School,
-  Grade,
-} from '../models';
+import {Teacher, Student, Subject, Assessment, School, Grade} from '../models';
 import tracer from '../tracer';
 import {subjects} from './dev/subject.data';
 import {generateIdNumber} from '../utils/id-generator';
@@ -27,7 +18,6 @@ import {
   createSchool,
   createSubjectTeacher,
   createStudentSubject,
-  createAssessmentChapter,
   createSchoolTeacher,
   createSchoolGrade,
   createGrade,
@@ -42,6 +32,21 @@ export async function seed(knex: Knex) {
   const fakerator = Fakerator();
   const genders = ['F', 'M'];
   const context = await createSeedContext();
+  const iStartDate = new Date(1970, 1, 1);
+  const iEndDate = new Date(1985, 12, 31);
+  const sStartDate = new Date(1993, 1, 1);
+  const sEndDate = new Date(2000, 12, 31);
+  const schools = [
+    "Falcon's High School",
+    'Essa High School',
+    'Evendons High School',
+    'Gateway Academy',
+  ];
+  const registeredDate = {
+    start: new Date(2017, 1, 1),
+    end: new Date(2019, 1, 1),
+  };
+  const grades = ['8', '9', '10', '11', '12'];
   const tables = [
     'student',
     'teacher',
@@ -64,8 +69,6 @@ export async function seed(knex: Knex) {
     await knex(tables[i]).del();
   }
 
-  const iStartDate = new Date(1970, 1, 1);
-  const iEndDate = new Date(1985, 12, 31);
   for (let i = 0; i < 30; i++) {
     const gender = genders[Math.round(Math.random())];
     const ibirthDate = randomDate.getRandomDateInRange(iStartDate, iEndDate);
@@ -86,8 +89,6 @@ export async function seed(knex: Knex) {
     });
   }
 
-  const sStartDate = new Date(1993, 1, 1);
-  const sEndDate = new Date(2000, 12, 31);
   for (let i = 0; i < 100; i++) {
     const gender = genders[Math.round(Math.random())];
     const sBirthDate = randomDate.getRandomDateInRange(sStartDate, sEndDate);
@@ -115,13 +116,14 @@ export async function seed(knex: Knex) {
     });
   }
 
+  const subjectList = await Subject.query(knex); // Be careful, this is used in many places.
   const teachers = await Teacher.query(); // This is also being used on the school teacher table
   for (let i = 0; i < teachers.length; i++) {
     const subjectId = (i + 1) % 7;
     const teacher = teachers[i];
-    const subject = await Subject.query(knex)
-      .where('id', subjectId === 0 ? 7 : subjectId)
-      .first();
+    const subject = subjectList.find((subject) =>
+      subjectId === 0 ? subject.id === 7 : subject.id === subjectId
+    );
 
     if (subject && teacher) {
       await createSubjectTeacher(context, knex, {
@@ -131,7 +133,6 @@ export async function seed(knex: Knex) {
     }
   }
 
-  const subjectList = await Subject.query(knex); // Be careful, this is used in many places.
   for (let i = 0; i < subjects.length; i++) {
     for (let j = 0; j < subjects[i].chapters.length; j++) {
       await createChapter(context, knex, {
@@ -162,17 +163,6 @@ export async function seed(knex: Knex) {
   }
 
   const assessments = await Assessment.query(knex);
-  const chapters = await Chapter.query(knex);
-
-  for (let i = 0; i < assessments.length; i++) {
-    const numOfChapters = fakerator.random.number(3, 10);
-    for (let j = 0; j < numOfChapters; j++) {
-      await createAssessmentChapter(context, knex, {
-        assessmentId: assessments[i].id,
-        chapterId: chapters[fakerator.random.number(3, 10)].id,
-      });
-    }
-  }
 
   const studentList = await Student.query(knex);
   for (let i = 0; i < studentList.length * 4; i++) {
@@ -182,16 +172,6 @@ export async function seed(knex: Knex) {
     });
   }
 
-  const schools = [
-    "Falcon's High School",
-    'Essa High School',
-    'Evendons High School',
-    'Gateway Academy',
-  ];
-  const registeredDate = {
-    start: new Date(2017, 1, 1),
-    end: new Date(2019, 1, 1),
-  };
   for (let i = 0; i < schools.length; i++) {
     await createSchool(context, knex, {
       name: schools[i],
@@ -211,7 +191,6 @@ export async function seed(knex: Knex) {
     });
   }
 
-  const grades = ['8', '9', '10', '11', '12'];
   for (let i = 0; i < grades.length; i++) {
     await createGrade(context, knex, {
       name: grades[i],
