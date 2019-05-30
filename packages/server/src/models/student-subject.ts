@@ -13,8 +13,8 @@ export class StudentSubject extends BaseModel {
         relation: BaseModel.HasManyRelation,
         modelClass: Student,
         join: {
-          from: 'studentSubject.studentIdNumber',
-          to: 'student.idNumber',
+          from: 'studentSubject.studentId',
+          to: 'student.id',
         },
       },
       subject: {
