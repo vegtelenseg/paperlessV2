@@ -90,7 +90,6 @@ export class BaseModel extends Model {
     return this.name.slice(0, 1).toLocaleLowerCase() + this.name.slice(1);
   }
 
-  public readonly id!: number;
   public readonly createdAt!: Date;
   public updatedAt!: Date | undefined | null;
   public createdBy!: number | undefined;

@@ -12,7 +12,7 @@ export class SubjectTeacher extends BaseModel {
         modelClass: Teacher,
         join: {
           from: 'subjectTeacher.teacherIdNumber',
-          to: 'teacher.idNumber',
+          to: 'teacher.id',
         },
       },
       subject: {

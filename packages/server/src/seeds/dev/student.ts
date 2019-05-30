@@ -11,13 +11,13 @@ export const createStudent = async (
     birthDate,
     gender,
     contactPhone,
-    idNumber,
+    id,
   }: {
     firstName: string;
     lastName: string;
     birthDate: Date;
     gender: string;
-    idNumber: string;
+    id: string;
     contactPhone?: string;
     contactMobile?: string;
     contactMail?: string;
@@ -31,6 +31,6 @@ export const createStudent = async (
       birthDate,
       gender,
       contactPhone,
-      idNumber,
+      id,
     });
 };
