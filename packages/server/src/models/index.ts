@@ -8,5 +8,6 @@ export * from './student-subject';
 export * from './school-teacher';
 export * from './school';
 export * from './grade';
+export * from './province';
 export * from './school-grade';
 export * from './student-assessment-chapter';

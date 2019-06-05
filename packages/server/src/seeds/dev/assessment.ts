@@ -9,11 +9,13 @@ export const createAssessment = async (
     kind,
     totalMarks,
     startDate,
+    subjectId,
     endDate,
   }: {
     kind: string;
     totalMarks: number;
     startDate: Date;
+    subjectId: number;
     endDate?: Date;
   }
 ): Promise<Assessment> => {
@@ -23,6 +25,7 @@ export const createAssessment = async (
       kind,
       totalMarks,
       startDate,
+      subjectId,
       endDate,
     });
 };

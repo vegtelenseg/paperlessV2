@@ -4,25 +4,26 @@ import randomDate from 'random-date-generator';
 //@ts-ignore
 import Fakerator from 'fakerator';
 
-import {Teacher, Student, Subject, Assessment, School, Grade} from '../models';
+import {Teacher, Student, Subject, School, Grade} from '../models';
 import tracer from '../tracer';
 import {subjects} from './dev/subject.data';
 import {generateIdNumber} from '../utils/id-generator';
-import {mockAssessments} from './dev/assessment.data';
+//import {mockAssessments} from './dev/assessment.data';
 import {
   createStudent,
   createTeacher,
   createSubject,
   createChapter,
-  createAssessment,
+  //  createAssessment,
   createSchool,
   createSubjectTeacher,
   createStudentSubject,
   createSchoolTeacher,
   createSchoolGrade,
   createGrade,
-  createStudentAssessmentResult,
 } from './dev';
+import {createProvince} from './dev/province';
+import {Province} from '../models/province';
 
 const createSeedContext = async () => {
   return {span: tracer.startSpan('seed')};
@@ -53,8 +54,7 @@ export async function seed(knex: Knex) {
     'subject',
     'chapter',
     'assessment',
-    'assessment_chapter',
-    'student_assessment_result',
+    'student_assessment_chapter',
     'student_subject',
     'school',
     'school_teacher',
@@ -136,59 +136,82 @@ export async function seed(knex: Knex) {
   for (let i = 0; i < subjects.length; i++) {
     for (let j = 0; j < subjects[i].chapters.length; j++) {
       await createChapter(context, knex, {
-        subjectId: subjectList[i].id,
         name: subjects[i].chapters[j].name,
-        totalMarks: fakerator.random.number(1, 25),
       });
     }
   }
 
-  for (let i = 0; i < subjects[0].chapters.length; i++) {
-    for (let j = 0; j < subjects[0].chapters.length; j++) {
-      const at = i % mockAssessments.length;
-      await createAssessment(context, knex, {
-        ...mockAssessments[i % mockAssessments.length],
-        startDate: randomDate.getRandomDateInRange(
-          mockAssessments[at].startDate,
-          new Date(2019, 3, 31)
-        ),
-        endDate: mockAssessments[at].endDate
-          ? randomDate.getRandomDateInRange(
-              mockAssessments[at].endDate,
-              new Date(2019, 4, 31)
-            )
-          : undefined,
-      });
-    }
-  }
+  // for (let i = 0; i < subjects[0].chapters.length; i++) {
+  //   for (let j = 0; j < subjects[0].chapters.length; j++) {
+  //     const at = i % mockAssessments.length;
+  //     await createAssessment(context, knex, {
+  //       ...mockAssessments[i % mockAssessments.length],
+  //       startDate: randomDate.getRandomDateInRange(
+  //         mockAssessments[at].startDate,
+  //         new Date(2019, 3, 31)
+  //       ),
+  //       subjectId: subjec
+  //       endDate: mockAssessments[at].endDate
+  //         ? randomDate.getRandomDateInRange(
+  //             mockAssessments[at].endDate,
+  //             new Date(2019, 4, 31)
+  //           )
+  //         : undefined,
+  //     });
+  //   }
+  // }
 
-  const assessments = await Assessment.query(knex);
+  //const assessments = await Assessment.query(knex);
 
-  const studentList = await Student.query(knex);
+  const studentList = await Student.query(knex).context(context);
   for (let i = 0; i < studentList.length * 4; i++) {
     await createStudentSubject(context, knex, {
-      studentIdNumber: studentList[i % studentList.length].idNumber,
+      studentId: studentList[i % studentList.length].id,
       subjectId: subjectList[i % subjectList.length].id,
     });
   }
 
-  for (let i = 0; i < schools.length; i++) {
-    await createSchool(context, knex, {
-      name: schools[i],
-      registeredDate: randomDate.getRandomDateInRange(
-        registeredDate.start,
-        registeredDate.end
-      ),
-      active: false,
+  const provinces = [
+    'Eastern Cape',
+    'Free State',
+    'Gauteng',
+    'KwaZulu-Natal',
+    'Limpopo',
+    'Mpumalanga',
+    'Northern Cape',
+    'North West',
+    'Western Cape',
+  ];
+  for (let i = 0; i < provinces.length; i++) {
+    createProvince(context, knex, {
+      name: provinces[i],
     });
   }
 
+  const provinceList = await Province.query(knex).context(context);
+  for (let i = 0; i < provinces.length; i++) {
+    for (let j = 0; j < schools.length; j++) {
+      await createSchool(context, knex, {
+        name: schools[j],
+        registeredDate: randomDate.getRandomDateInRange(
+          registeredDate.start,
+          registeredDate.end
+        ),
+        provinceId: provinceList[j % provinceList.length].id,
+        active: false,
+      });
+    }
+  }
+
   const schoolList = await School.query(knex).context(context);
-  for (let i = 0; i < teachers.length * 4; i++) {
-    await createSchoolTeacher(context, knex, {
-      teacherIdNumber: teachers[i % teachers.length].idNumber,
-      active: false,
-    });
+  for (let i = 0; i < schoolList.length * 4; i++) {
+    for (let j = 0; j < teachers.length; j++) {
+      await createSchoolTeacher(context, knex, {
+        teacherIdNumber: teachers[j % teachers.length].idNumber,
+        schoolId: schoolList[i % schoolList.length].id,
+        active: false,
+      });
+    }
   }
 
   for (let i = 0; i < grades.length; i++) {
@@ -201,22 +224,8 @@ export async function seed(knex: Knex) {
   for (let i = 0; i < schoolList.length; i++) {
     for (let j = 0; j < grades.length; j++) {
       await createSchoolGrade(context, knex, {
-        gradeId: gradeList[j].id,
-      });
-    }
-  }
-
-  //const assessmentResultList = await AssessmentResult.query(knex).context(context);
-  for (let i = 0; i < studentList.length / 3; i++) {
-    for (let j = 0; j < assessments.length / 3; j++) {
-      let result = Math.floor(
-        assessments[j].totalMarks - fakerator.random.number(15, 100)
-      );
-      result = result < 0 ? 0 : result;
-      await createStudentAssessmentResult(context, knex, {
-        studentIdNumber: studentList[i].idNumber,
-        assessmentId: assessments[j].id,
-        result,
+        gradeId: gradeList[j % gradeList.length].id,
+        schoolId: schoolList[i % schoolList.length].id,
       });
     }
   }

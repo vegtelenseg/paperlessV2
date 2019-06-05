@@ -11,7 +11,7 @@ export const createStudentAssessmentChapter = async (
     chapterMark,
   }: {
     chaperId: number;
-    studentId: string;
+    studentId: number;
     chapterMark: number;
   }
 ): Promise<StudentAssessmentChapter> => {

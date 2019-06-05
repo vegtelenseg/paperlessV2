@@ -4,5 +4,5 @@ export class Subject extends BaseModel {
   public name!: string;
   public commitment?: string;
   public description?: string;
-  public id!: number;
+  public readonly id!: number;
 }

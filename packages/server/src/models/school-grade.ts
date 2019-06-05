@@ -4,7 +4,7 @@ import {School} from './school';
 
 export class SchoolGrade extends BaseModel {
   public gradeId!: number;
-  public schoolId!: string;
+  public schoolId!: number;
 
   static get relationMappings() {
     return {

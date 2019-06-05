@@ -22,6 +22,9 @@ export async function up(knex: Knex) {
   });
 
   await knex.schema.createTable('teacher', (table: TableBuilder) => {
+    // id === idNumber of a teacher.
+    // We do it this way because ojection
+    //returns back id field upon pushing data into DB
     table
       .string('id_number')
       .primary()
@@ -73,7 +76,7 @@ export async function up(knex: Knex) {
       .unsigned();
     table.string('name', 128).notNullable();
     table.string('description');
-    table.decimal('contribution').notNullable();
+    table.decimal('contribution');
   });
 
   await knex.schema.createTable('subject_teacher', (table: TableBuilder) => {
@@ -136,8 +139,14 @@ export async function up(knex: Knex) {
       .increments()
       .unsigned()
       .primary();
-    table.integer('school_id').references('school.id');
-    table.string('teacher_id_number').references('teacher.id_number');
+    table
+      .integer('school_id')
+      .references('school.id')
+      .onDelete('CASCADE');
+    table
+      .string('teacher_id_number')
+      .references('teacher.id_number')
+      .onDelete('CASCADE');
     table.boolean('active').defaultTo(false);
   });
 

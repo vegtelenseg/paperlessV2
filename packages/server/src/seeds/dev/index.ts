@@ -10,4 +10,4 @@ export * from './school';
 export * from './grade';
 export * from './school-teacher';
 export * from './school-grade';
-export * from './student-assessment-result';
+export * from './student-assessment-chapter';

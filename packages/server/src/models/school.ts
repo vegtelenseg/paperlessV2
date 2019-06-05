@@ -1,12 +1,23 @@
 import {BaseModel} from './base';
+import {Province} from '../models';
 
 export class School extends BaseModel {
   public name!: string;
   public active!: boolean;
   public registeredDate!: Date;
-  public suuid!: string;
+  public provinceId!: number;
+  public id!: number;
 
-  static get idColumn() {
-    return 'suuid';
+  public static relationMappings() {
+    return {
+      province: {
+        relation: BaseModel.HasManyRelation,
+        modelClass: Province,
+        join: {
+          from: 'school.provinceId',
+          to: 'province.id',
+        },
+      },
+    };
   }
 }

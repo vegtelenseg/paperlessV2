@@ -9,17 +9,20 @@ export const createSchool = async (
     name,
     active,
     registeredDate,
+    provinceId,
   }: {
     name: string;
     active: boolean;
     registeredDate: Date;
+    provinceId: number;
   }
 ): Promise<School> => {
   return await School.query(trx)
     .context(context)
-    .insertGraph({
+    .upsertGraph({
       name,
       active,
       registeredDate,
+      provinceId,
     });
 };
