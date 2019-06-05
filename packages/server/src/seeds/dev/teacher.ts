@@ -12,7 +12,7 @@ export const createTeacher = async (
     gender,
     contactPhone,
     title,
-    id,
+    idNumber,
   }: {
     firstName: string;
     lastName: string;
@@ -22,7 +22,7 @@ export const createTeacher = async (
     contactMobile?: string;
     contactMail?: string;
     title: string;
-    id: string;
+    idNumber: string;
   }
 ): Promise<Teacher> => {
   return Teacher.query(trx)
@@ -34,6 +34,6 @@ export const createTeacher = async (
       gender,
       contactPhone,
       title,
-      id,
+      idNumber,
     });
 };

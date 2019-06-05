@@ -7,6 +7,7 @@ export class Assessment extends BaseModel {
   public startDate!: Date;
   public endDate?: Date;
   public subjectId!: number;
+  public id!: number;
 
   public static relationMappings() {
     return {

@@ -1,4 +1,3 @@
-export * from './assessment-chapter';
 export * from './assessment';
 export * from './chapter';
 export * from './teacher';
@@ -11,4 +10,4 @@ export * from './school';
 export * from './grade';
 export * from './school-teacher';
 export * from './school-grade';
-export * from './student-assessment-result';
+export * from './student-assessment-chapter';

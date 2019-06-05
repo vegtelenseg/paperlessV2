@@ -5,12 +5,12 @@ import {StudentSubject} from '../../models';
 export const createStudentSubject = async (
   context: Context,
   trx: Knex,
-  {studentIdNumber, subjectId}: {studentIdNumber: string; subjectId: number}
+  {studentId, subjectId}: {studentId: number; subjectId: number}
 ): Promise<StudentSubject> => {
   return await StudentSubject.query(trx)
     .context(context)
     .upsertGraph({
-      studentIdNumber,
+      studentId,
       subjectId,
     });
 };

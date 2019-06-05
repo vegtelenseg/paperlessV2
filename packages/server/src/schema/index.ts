@@ -1,6 +1,5 @@
 import {GraphQLNonNull, GraphQLObjectType, GraphQLSchema} from 'graphql';
 
-import {nodeField} from './Relay';
 import RootQuery from './models/root-query.graphql';
 
 const query = new GraphQLObjectType({
@@ -10,7 +9,6 @@ const query = new GraphQLObjectType({
       type: new GraphQLNonNull(RootQuery),
       resolve: () => ({}),
     },
-    node: nodeField,
   }),
 });
 

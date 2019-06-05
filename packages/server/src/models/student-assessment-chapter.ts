@@ -5,7 +5,7 @@ import {Chapter} from './chapter';
 
 export class StudentAssessmentChapter extends BaseModel {
   public chaperId!: number;
-  public studentId!: string;
+  public studentId!: number;
   public chapterMark!: number;
 
   static get relationMappings() {

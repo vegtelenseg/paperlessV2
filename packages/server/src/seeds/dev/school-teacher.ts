@@ -7,9 +7,11 @@ export const createSchoolTeacher = async (
   trx: Knex,
   {
     teacherIdNumber,
+    schoolId,
     active,
   }: {
     teacherIdNumber: string;
+    schoolId: number;
     active: boolean;
   }
 ): Promise<SchoolTeacher> => {
@@ -17,6 +19,7 @@ export const createSchoolTeacher = async (
     .context(context)
     .upsertGraphAndFetch({
       teacherIdNumber,
+      schoolId,
       active,
     });
 };

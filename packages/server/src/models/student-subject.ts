@@ -3,7 +3,7 @@ import {Student} from './student';
 import {Subject} from './subject';
 
 export class StudentSubject extends BaseModel {
-  public studentIdNumber!: string;
+  public studentId!: number;
   public subjectId!: number;
   public totalMarks!: number;
 

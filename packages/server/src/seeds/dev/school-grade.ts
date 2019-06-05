@@ -7,13 +7,16 @@ export const createSchoolGrade = async (
   trx: Knex,
   {
     gradeId,
+    schoolId,
   }: {
     gradeId: number;
+    schoolId: number;
   }
 ): Promise<SchoolGrade> => {
   return await SchoolGrade.query(trx)
     .context(context)
     .insert({
       gradeId,
+      schoolId,
     });
 };

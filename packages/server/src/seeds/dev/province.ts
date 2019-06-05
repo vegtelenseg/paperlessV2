@@ -1,8 +1,8 @@
 import Context from '../../context';
 import Knex from 'knex';
-import {Chapter} from '../../models';
+import {Province} from '../../models';
 
-export const createChapter = async (
+export const createProvince = async (
   context: Context,
   trx: Knex,
   {
@@ -10,8 +10,8 @@ export const createChapter = async (
   }: {
     name: string;
   }
-): Promise<Chapter> => {
-  return await Chapter.query(trx)
+): Promise<Province> => {
+  return await Province.query(trx)
     .context(context)
     .upsertGraphAndFetch({
       name,
