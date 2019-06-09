@@ -1,7 +1,8 @@
 import {GraphQLNonNull, GraphQLString, GraphQLInt, GraphQLList} from 'graphql';
 import {GraphQLDate} from 'graphql-iso-date';
 import {newJoinMonsterGraphQLObjectType} from '../../utils/joinMonster-graphql14.fix';
-import {Subject} from './Subject.graphql';
+import {Subject} from './subject.graphql';
+//import {Subject} from './Subject.graphql';
 
 export const Student = newJoinMonsterGraphQLObjectType({
   name: 'Student',
@@ -45,12 +46,12 @@ export const Student = newJoinMonsterGraphQLObjectType({
       sqlColumn: 'enrolment_date',
     },
     subjects: {
-      type: GraphQLList(Subject),
+      type: new GraphQLList(Subject),
       junction: {
         sqlTable: 'student_subject',
         sqlJoins: [
           (studentTable, junctionTable) =>
-            `${studentTable}.id_number = ${junctionTable}.student_id_number`,
+            `${studentTable}.id = ${junctionTable}.student_id`,
           (junctionTable, subject) =>
             `${junctionTable}.subject_id = ${subject}.id`,
         ],

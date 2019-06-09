@@ -6,11 +6,13 @@ export const createStudentAssessmentChapter = async (
   context: Context,
   trx: Knex,
   {
-    chaperId,
+    chapterId,
+    assessmentId,
     studentId,
     chapterMark,
   }: {
-    chaperId: number;
+    chapterId: number;
+    assessmentId: number;
     studentId: number;
     chapterMark: number;
   }
@@ -18,7 +20,8 @@ export const createStudentAssessmentChapter = async (
   return await StudentAssessmentChapter.query(trx)
     .context(context)
     .upsertGraphAndFetch({
-      chaperId,
+      chapterId,
+      assessmentId,
       studentId,
       chapterMark,
     });

@@ -4,8 +4,9 @@ import {Assessment} from '.';
 import {Chapter} from './chapter';
 
 export class StudentAssessmentChapter extends BaseModel {
-  public chaperId!: number;
+  public chapterId!: number;
   public studentId!: number;
+  public assessmentId!: number;
   public chapterMark!: number;
 
   static get relationMappings() {

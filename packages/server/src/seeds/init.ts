@@ -4,26 +4,35 @@ import randomDate from 'random-date-generator';
 //@ts-ignore
 import Fakerator from 'fakerator';
 
-import {Teacher, Student, Subject, School, Grade} from '../models';
+import {
+  Teacher,
+  Student,
+  Subject,
+  School,
+  Grade,
+  Chapter,
+  Assessment,
+} from '../models';
 import tracer from '../tracer';
 import {subjects} from './dev/subject.data';
 import {generateIdNumber} from '../utils/id-generator';
-//import {mockAssessments} from './dev/assessment.data';
 import {
   createStudent,
   createTeacher,
   createSubject,
   createChapter,
-  //  createAssessment,
   createSchool,
   createSubjectTeacher,
   createStudentSubject,
   createSchoolTeacher,
   createSchoolGrade,
   createGrade,
+  createStudentAssessmentChapter,
+  createAssessment,
 } from './dev';
 import {createProvince} from './dev/province';
 import {Province} from '../models/province';
+import {mockAssessments} from './dev/assessment.data';
 
 const createSeedContext = async () => {
   return {span: tracer.startSpan('seed')};
@@ -124,13 +133,10 @@ export async function seed(knex: Knex) {
     const subject = subjectList.find((subject) =>
       subjectId === 0 ? subject.id === 7 : subject.id === subjectId
     );
-
-    if (subject && teacher) {
-      await createSubjectTeacher(context, knex, {
-        teacherIdNumber: teacher.idNumber,
-        subjectId: subject.id,
-      });
-    }
+    await createSubjectTeacher(context, knex, {
+      teacherIdNumber: teacher.idNumber,
+      subjectId: (subject && subject.id) || Math.floor(Math.random() * 100) % 4,
+    });
   }
 
   for (let i = 0; i < subjects.length; i++) {
@@ -141,25 +147,26 @@ export async function seed(knex: Knex) {
     }
   }
 
-  // for (let i = 0; i < subjects[0].chapters.length; i++) {
-  //   for (let j = 0; j < subjects[0].chapters.length; j++) {
-  //     const at = i % mockAssessments.length;
-  //     await createAssessment(context, knex, {
-  //       ...mockAssessments[i % mockAssessments.length],
-  //       startDate: randomDate.getRandomDateInRange(
-  //         mockAssessments[at].startDate,
-  //         new Date(2019, 3, 31)
-  //       ),
-  //       subjectId: subjec
-  //       endDate: mockAssessments[at].endDate
-  //         ? randomDate.getRandomDateInRange(
-  //             mockAssessments[at].endDate,
-  //             new Date(2019, 4, 31)
-  //           )
-  //         : undefined,
-  //     });
-  //   }
-  // }
+  // TODO: Fix subject iteration
+  for (let i = 0; i < subjects[0].chapters.length; i++) {
+    for (let j = 0; j < subjects[0].chapters.length; j++) {
+      const at = i % mockAssessments.length;
+      await createAssessment(context, knex, {
+        ...mockAssessments[i % mockAssessments.length],
+        startDate: randomDate.getRandomDateInRange(
+          mockAssessments[at].startDate,
+          new Date(2019, 3, 31)
+        ),
+        subjectId: subjectList[i % subjectList.length].id,
+        endDate: mockAssessments[at].endDate
+          ? randomDate.getRandomDateInRange(
+              mockAssessments[at].endDate,
+              new Date(2019, 4, 31)
+            )
+          : undefined,
+      });
+    }
+  }
 
   //const assessments = await Assessment.query(knex);
 
@@ -183,7 +190,7 @@ export async function seed(knex: Knex) {
     'Western Cape',
   ];
   for (let i = 0; i < provinces.length; i++) {
-    createProvince(context, knex, {
+    await createProvince(context, knex, {
       name: provinces[i],
     });
   }
@@ -228,5 +235,16 @@ export async function seed(knex: Knex) {
         schoolId: schoolList[i % schoolList.length].id,
       });
     }
+  }
+
+  const chapterList = await Chapter.query(knex).context(context);
+  const assessmentList = await Assessment.query(knex).context(context);
+  for (let i = 0; i < chapterList.length; i++) {
+    await createStudentAssessmentChapter(context, knex, {
+      chapterId: chapterList[i % chapterList.length].id!!,
+      assessmentId: assessmentList[i % assessmentList.length].id!!,
+      studentId: studentList[i % studentList.length].id!!,
+      chapterMark: Math.floor(Math.random() * 100),
+    });
   }
 }

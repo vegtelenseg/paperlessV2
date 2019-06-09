@@ -1,9 +1,8 @@
 import {GraphQLNonNull, GraphQLString, GraphQLList} from 'graphql';
 import {newJoinMonsterGraphQLObjectType} from '../../utils/joinMonster-graphql14.fix';
-import {Chapter} from './Chapter.graphql';
-import {Teacher} from './Teacher.graphql';
-//import { Student } from './Student.graphql';
 import {GraphQLObjectType} from 'graphql/type/definition';
+import {Teacher} from './teacher.graphql';
+import {Student} from './student.graphql';
 
 export const Subject: GraphQLObjectType = newJoinMonsterGraphQLObjectType({
   name: 'Subject',
@@ -14,10 +13,17 @@ export const Subject: GraphQLObjectType = newJoinMonsterGraphQLObjectType({
       type: GraphQLNonNull(GraphQLString),
       sqlColumn: 'name',
     },
-    chapters: {
-      type: new GraphQLList(Chapter),
-      sqlJoin: (subjectTable: string, chapterTable: string) =>
-        `${subjectTable}.id = ${chapterTable}.subject_id`,
+    students: {
+      type: new GraphQLList(Student),
+      junction: {
+        sqlTable: 'student_subject',
+        sqlJoins: [
+          (subjectTable, junctionTable) =>
+            `${subjectTable}.id = ${junctionTable}.subject_id`,
+          (junctionTable, studentTable) =>
+            `${junctionTable}.student_id = ${studentTable}.id`,
+        ],
+      },
     },
     teacher: {
       type: Teacher,

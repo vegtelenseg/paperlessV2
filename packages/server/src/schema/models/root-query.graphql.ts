@@ -1,5 +1,5 @@
 import {GraphQLObjectType, GraphQLResolveInfo, GraphQLList} from 'graphql';
-import {Student} from './Student.graphql';
+import {Student} from './student.graphql';
 import Context from '../../context';
 import dbCall from '../dbCall';
 import {Teacher} from './teacher.graphql';
