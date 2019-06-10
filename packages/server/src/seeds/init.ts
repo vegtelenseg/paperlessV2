@@ -29,6 +29,7 @@ import {
   createGrade,
   createStudentAssessmentChapter,
   createAssessment,
+  createSubjectGrade,
 } from './dev';
 import {createProvince} from './dev/province';
 import {Province} from '../models/province';
@@ -131,6 +132,7 @@ export async function seed(knex: Knex) {
     const subjectId = (i + 1) % 7;
     const teacher = teachers[i];
     const subject = subjectList.find((subject) =>
+      // TODO: Fix IDs to always work
       subjectId === 0 ? subject.id === 7 : subject.id === subjectId
     );
     await createSubjectTeacher(context, knex, {
@@ -204,7 +206,7 @@ export async function seed(knex: Knex) {
           registeredDate.start,
           registeredDate.end
         ),
-        provinceId: provinceList[j % provinceList.length].id,
+        provinceId: provinceList[i % provinceList.length].id,
         active: false,
       });
     }
@@ -239,12 +241,24 @@ export async function seed(knex: Knex) {
 
   const chapterList = await Chapter.query(knex).context(context);
   const assessmentList = await Assessment.query(knex).context(context);
-  for (let i = 0; i < chapterList.length; i++) {
-    await createStudentAssessmentChapter(context, knex, {
-      chapterId: chapterList[i % chapterList.length].id!!,
-      assessmentId: assessmentList[i % assessmentList.length].id!!,
-      studentId: studentList[i % studentList.length].id!!,
-      chapterMark: Math.floor(Math.random() * 100),
-    });
+  for (let i = 0; i < assessmentList.length; i++) {
+    for (let j = 0; j < chapterList.length; j++) {
+      await createStudentAssessmentChapter(context, knex, {
+        chapterId: chapterList[j % chapterList.length].id!!,
+        assessmentId: assessmentList[i % assessmentList.length].id!!,
+        studentId: studentList[i % studentList.length].id!!,
+        // TODO: Assign plausible chapter marks
+        chapterMark: Math.floor(Math.random() * 10),
+      });
+    }
+  }
+
+  for (let i = 0; i < gradeList.length; i++) {
+    for (let j = 0; j < subjectList.length; j++) {
+      await createSubjectGrade(context, knex, {
+        subjectId: subjectList[j].id,
+        gradeId: gradeList[i].id,
+      });
+    }
   }
 }

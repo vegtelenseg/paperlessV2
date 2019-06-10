@@ -5,6 +5,7 @@ export * from './school';
 export * from './student-subject';
 export * from './student';
 export * from './subject-teacher';
+export * from './subject-grade';
 export * from './subject';
 export * from './school';
 export * from './grade';

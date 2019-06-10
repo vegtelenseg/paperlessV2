@@ -4,6 +4,7 @@ import {GraphQLNonNull, GraphQLString, GraphQLInt, GraphQLList} from 'graphql';
 import {GraphQLDate} from 'graphql-iso-date';
 import {newJoinMonsterGraphQLObjectType} from '../../utils/joinMonster-graphql14.fix';
 //import {Teacher} from './Teacher.graphql';
+import {Grade} from './grade.graphql';
 
 export const School = newJoinMonsterGraphQLObjectType({
   name: 'School',
@@ -21,6 +22,18 @@ export const School = newJoinMonsterGraphQLObjectType({
     registeredDate: {
       type: GraphQLNonNull(GraphQLString),
       sqlColumn: 'registered_date',
+    },
+    grades: {
+      type: GraphQLNonNull(new GraphQLList(Grade)),
+      junction: {
+        sqlTable: 'school_grade',
+        sqlJoins: [
+          (schoolTable, junctionTable) =>
+            `${schoolTable}.id = ${junctionTable}.school_id`,
+          (junctionTable, gradeTable) =>
+            `${junctionTable}.grade_id = ${gradeTable}.id`,
+        ],
+      },
     },
     // teachers: {
     //   type: new GraphQLList(Teacher),

@@ -6,6 +6,7 @@ export const Assessment = newJoinMonsterGraphQLObjectType({
   name: 'Assessment',
   sqlTable: 'assessment',
   uniqueKey: 'id',
+  // @ts-ignore
   fields: () => ({
     totalMarks: {
       type: GraphQLNonNull(GraphQLInt),
@@ -23,5 +24,14 @@ export const Assessment = newJoinMonsterGraphQLObjectType({
       type: GraphQLDate,
       sqlColumn: 'end_date',
     },
+    // chapterMark: {
+    //   type: GraphQLInt,
+    //   sqlExpr: (assessmentTable) => {
+    //     return `
+    //       (SELECT chapter_mark from student_assessment_chapter
+    //       WHERE ${assessmentTable}.id = assessment_id
+    //     )`
+    //   }
+    // },
   }),
 });

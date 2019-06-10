@@ -3,7 +3,8 @@ import {Subject} from './subject';
 import {Grade} from './grade';
 
 export class SubjectGrade extends BaseModel {
-  public name!: string;
+  public subjectId!: number;
+  public gradeId!: number;
 
   public static relationMappings() {
     return {
