@@ -1,6 +1,7 @@
 import {newJoinMonsterGraphQLObjectType} from '../../utils/joinMonster-graphql14.fix';
-import {GraphQLNonNull, GraphQLInt, GraphQLString} from 'graphql';
+import {GraphQLNonNull, GraphQLInt, GraphQLString, GraphQLList} from 'graphql';
 import {GraphQLDate} from 'graphql-iso-date';
+import { Chapter } from './Chapter.graphql';
 
 export const Assessment = newJoinMonsterGraphQLObjectType({
   name: 'Assessment',
@@ -23,14 +24,18 @@ export const Assessment = newJoinMonsterGraphQLObjectType({
       type: GraphQLDate,
       sqlColumn: 'end_date',
     },
-    // chapterMark: {
-    //   type: GraphQLInt,
-    //   sqlExpr: (assessmentTable) => {
-    //     return `
-    //       (SELECT chapter_mark from student_assessment_chapter
-    //       WHERE ${assessmentTable}.id = assessment_id
-    //     )`
-    //   }
-    // },
+    chapters: {
+      type: GraphQLNonNull(new GraphQLList(Chapter)),
+      junction: {
+        sqlTable: 'student_assessment_chapter',
+
+        sqlJoins: [
+          (assessmentTable, junctionTable) =>
+            `${assessmentTable}.id = ${junctionTable}.assessment_id`,
+          (junctionTable, chapterTable) =>
+            `${junctionTable}.chapter_id = ${chapterTable}.id`,
+        ],
+      }
+    },
   }),
 });

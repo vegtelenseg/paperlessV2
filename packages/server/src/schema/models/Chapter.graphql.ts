@@ -11,5 +11,18 @@ export const Chapter = newJoinMonsterGraphQLObjectType({
       type: GraphQLNonNull(GraphQLString),
       sqlColumn: 'name',
     },
+    description: {
+      type: GraphQLNonNull(GraphQLString),
+      sqlColumn: 'description',
+    },
+    contribution: {
+      type: GraphQLNonNull(GraphQLString),
+      sqlColumn: 'contribution',
+    },
+    // totalMarks: {
+    //   type: GraphQLNonNull(new GraphQLList(StudentAssessmentChapterMark)),
+    //   sqlJoin: (chapterTable, studentAssessmentChapterTable) =>
+    //   `${chapterTable}.id = ${studentAssessmentChapterTable}.chapter_id`
+    // }
   }),
 });

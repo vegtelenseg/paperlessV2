@@ -79,7 +79,7 @@ export async function seed(knex: Knex) {
     await knex(tables[i]).del();
   }
 
-  for (let i = 0; i < 30; i++) {
+  for (let i = 0; i < 4; i++) {
     const gender = genders[Math.round(Math.random())];
     const ibirthDate = randomDate.getRandomDateInRange(iStartDate, iEndDate);
     await createTeacher(context, knex, {
@@ -99,7 +99,7 @@ export async function seed(knex: Knex) {
     });
   }
 
-  for (let i = 0; i < 100; i++) {
+  for (let i = 0; i < 4; i++) {
     const gender = genders[Math.round(Math.random())];
     const sBirthDate = randomDate.getRandomDateInRange(sStartDate, sEndDate);
     await createStudent(context, knex, {
@@ -173,7 +173,7 @@ export async function seed(knex: Knex) {
   //const assessments = await Assessment.query(knex);
 
   const studentList = await Student.query(knex).context(context);
-  for (let i = 0; i < studentList.length * 4; i++) {
+  for (let i = 0; i < studentList.length * 3; i++) {
     await createStudentSubject(context, knex, {
       studentId: studentList[i % studentList.length].id,
       subjectId: subjectList[i % subjectList.length].id,
@@ -186,10 +186,7 @@ export async function seed(knex: Knex) {
     'Gauteng',
     'KwaZulu-Natal',
     'Limpopo',
-    'Mpumalanga',
-    'Northern Cape',
-    'North West',
-    'Western Cape',
+    'Mpumalanga'
   ];
   for (let i = 0; i < provinces.length; i++) {
     await createProvince(context, knex, {
@@ -213,7 +210,7 @@ export async function seed(knex: Knex) {
   }
 
   const schoolList = await School.query(knex).context(context);
-  for (let i = 0; i < schoolList.length * 4; i++) {
+  for (let i = 0; i < schoolList.length * 2; i++) {
     for (let j = 0; j < teachers.length; j++) {
       await createSchoolTeacher(context, knex, {
         teacherIdNumber: teachers[j % teachers.length].idNumber,
