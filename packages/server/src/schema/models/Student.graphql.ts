@@ -56,11 +56,7 @@ export const Student = newJoinMonsterGraphQLObjectType({
           (junctionTable, assessmentTable) =>
             `${junctionTable}.assessment_id = ${assessmentTable}.id`,
         ],
-      },
-      resolve: (data) => {
-        console.log(data);
-        return data;
-      },
+      }
     },
   }),
 });

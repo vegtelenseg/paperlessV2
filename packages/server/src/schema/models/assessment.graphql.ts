@@ -6,7 +6,6 @@ export const Assessment = newJoinMonsterGraphQLObjectType({
   name: 'Assessment',
   sqlTable: 'assessment',
   uniqueKey: 'id',
-  // @ts-ignore
   fields: () => ({
     totalMarks: {
       type: GraphQLNonNull(GraphQLInt),
