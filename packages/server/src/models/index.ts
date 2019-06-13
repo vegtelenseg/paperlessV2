@@ -10,4 +10,4 @@ export * from './school';
 export * from './grade';
 export * from './province';
 export * from './school-grade';
-export * from './student-assessment-chapter';
+export * from './subject-assessment';

@@ -8,14 +8,6 @@ export class SchoolGrade extends BaseModel {
 
   static get relationMappings() {
     return {
-      grade: {
-        relation: BaseModel.HasManyRelation,
-        modelClass: Grade,
-        join: {
-          from: 'schoolGrade.gradeId',
-          to: 'grade.id',
-        },
-      },
       school: {
         relation: BaseModel.HasManyRelation,
         modelClass: School,
@@ -24,6 +16,14 @@ export class SchoolGrade extends BaseModel {
           to: 'school.id',
         },
       },
+      grade: {
+        relation: BaseModel.HasManyRelation,
+        modelClass: Grade,
+        join: {
+          from: 'schoolGrade.gradeId',
+          to: 'grade.id',
+        },
+      }
     };
   }
 }

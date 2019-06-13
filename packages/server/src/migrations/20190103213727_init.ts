@@ -26,8 +26,11 @@ export async function up(knex: Knex) {
     // We do it this way because ojection
     //returns back id field upon pushing data into DB
     table
+      .increments()
+      .unsigned()
+      .primary();
+    table
       .string('id_number')
-      .primary()
       .notNullable();
     table.string('first_name', 128).notNullable();
     table.string('last_name', 128).notNullable();
@@ -50,6 +53,16 @@ export async function up(knex: Knex) {
     table.string('description');
   });
 
+  await knex.schema.createTable('chapter', (table: TableBuilder) => {
+    table
+      .increments()
+      .primary()
+      .unsigned();
+    table.string('name', 128).notNullable();
+    table.string('description');
+    table.decimal('max_points');
+  });
+
   await knex.schema.createTable('assessment', (table: TableBuilder) => {
     table
       .increments()
@@ -62,21 +75,59 @@ export async function up(knex: Knex) {
     table.string('kind').notNullable();
     table.date('start_date').defaultTo(knex.fn.now());
     table.date('end_date');
+  });
+
+  await knex.schema.createTable('assessment_chapter', (table: TableBuilder) => {
     table
-      .integer('subject_id')
-      .references('subject.id')
-      .notNullable()
+      .increments()
+      .unsigned()
+      .primary();
+    table
+      .integer('assessment_id')
+      .unsigned()
+      .references('assessment.id')
+      .onDelete('CASCADE');
+    table
+      .integer('chapter_id')
+      .references('chapter.id')
       .onDelete('CASCADE');
   });
 
-  await knex.schema.createTable('chapter', (table: TableBuilder) => {
+  await knex.schema.createTable('student_results', (table: TableBuilder) => {
     table
       .increments()
-      .primary()
-      .unsigned();
-    table.string('name', 128).notNullable();
-    table.string('description');
-    table.decimal('contribution');
+      .unsigned()
+      .primary();
+    table
+      .integer('assessment_chapter_id')
+      .unsigned()
+      .references('assessment_chapter.id')
+      .onDelete('CASCADE');
+    table
+      .integer("student_id")
+      .references("student.id")
+    table
+      .integer('score').defaultTo(0);
+  });
+
+  await knex.schema.createTable('subject_assessment', (table: TableBuilder) => {
+    table
+      .increments()
+      .unsigned()
+      .primary();
+    table
+      .integer('subject_id')
+      .unsigned()
+      .references('subject.id')
+      .onDelete('CASCADE');
+    table
+      .integer('assessment_id')
+      .references('assessment.id')
+      .onDelete('CASCADE')
+    table
+      .integer('teacher_id')
+      .references('teacher.id')
+      .onDelete('CASCADE')
   });
 
   await knex.schema.createTable('subject_teacher', (table: TableBuilder) => {
@@ -85,9 +136,9 @@ export async function up(knex: Knex) {
       .unsigned()
       .primary();
     table
-      .string('teacher_id_number')
+      .integer('teacher_id')
       .unsigned()
-      .references('teacher.id_number')
+      .references('teacher.id')
       .onDelete('SET NULL');
     table
       .integer('subject_id')
@@ -124,10 +175,9 @@ export async function up(knex: Knex) {
       .primary()
       .notNullable();
     table
-      .integer('province_id')
-      .references('province.id')
-      .notNullable()
-      .onDelete('CASCADE');
+      .integer("province_id")
+      .references("province.id")
+      .onDelete('CASCADE')
     table.string('name').notNullable();
     table.boolean('active').defaultTo(false);
     table.date('registered_date').defaultTo(knex.fn.now());
@@ -144,8 +194,8 @@ export async function up(knex: Knex) {
       .references('school.id')
       .onDelete('CASCADE');
     table
-      .string('teacher_id_number')
-      .references('teacher.id_number')
+      .integer('teacher_id')
+      .references('teacher.id')
       .onDelete('CASCADE');
     table.boolean('active').defaultTo(false);
   });
@@ -196,61 +246,6 @@ export async function up(knex: Knex) {
       .onDelete('CASCADE')
       .notNullable();
   });
-
-  await knex.schema.createTable(
-    'student_assessment_chapter',
-    (table: TableBuilder) => {
-      table
-        .increments()
-        .unsigned()
-        .primary();
-      table
-        .integer('assessment_id')
-        .references('assessment.id')
-        .notNullable()
-        .onDelete('CASCADE');
-      table
-        .integer('chapter_id')
-        .references('chapter.id')
-        .notNullable()
-        .onDelete('CASCADE');
-      table
-        .integer('student_id')
-        .references('student.id')
-        .notNullable()
-        .onDelete('CASCADE');
-      table.integer('chapter_mark').defaultTo(0);
-    }
-  );
-
-  await knex.schema.createTable('role', (table: TableBuilder) => {
-    table
-      .increments()
-      .primary()
-      .unsigned();
-    table.enum('role', ['PRINCIPAL', 'TEACHER', 'ADMIN']);
-  });
-
-  await knex.schema.createTable('users', (table: TableBuilder) => {
-    table
-      .increments()
-      .primary()
-      .unsigned();
-    table.string('password').notNullable();
-    table
-      .string('id_number')
-      .notNullable()
-      .unique();
-    table.string('contact_mail').notNullable();
-    table
-      .integer('school_id')
-      .references('school.id')
-      .onDelete('CASCADE');
-    table
-      .integer('role_id')
-      .references('role.id')
-      .onDelete('CASCADE');
-  });
 }
 
 const tables = [
@@ -259,17 +254,17 @@ const tables = [
   'subject',
   'chapter',
   'assessment',
+  'assessment_chapter',
   'student_subject',
   'school',
   'school_teacher',
+  'subject_assessment',
+  'student_results',
   'subject_teacher',
   'grade',
   'school_grade',
   'subject_grade',
-  'student_assessment_chapter',
   'province',
-  'users',
-  'role',
 ];
 
 export async function down(knex: Knex) {

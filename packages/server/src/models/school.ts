@@ -2,11 +2,11 @@ import {BaseModel} from './base';
 import {Province} from '../models';
 
 export class School extends BaseModel {
+  public id!: number;
+  public provinceId!: number;
   public name!: string;
   public active!: boolean;
   public registeredDate!: Date;
-  public provinceId!: number;
-  public id!: number;
 
   public static relationMappings() {
     return {

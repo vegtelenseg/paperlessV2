@@ -4,7 +4,7 @@ import {Teacher} from './teacher';
 
 export class SchoolTeacher extends BaseModel {
   public schoolId!: number;
-  public teacherIdNumber!: string;
+  public teacherId!: number;
   public active!: boolean;
 
   static get relationMappings() {
@@ -21,8 +21,8 @@ export class SchoolTeacher extends BaseModel {
         relation: BaseModel.HasManyRelation,
         modelClass: Teacher,
         join: {
-          from: 'schoolTeacher.teacherIdNumber',
-          to: 'teacher.idNumber',
+          from: 'schoolTeacher.teacherId',
+          to: 'teacher.id',
         },
       },
     };

@@ -1,10 +1,12 @@
 import {Teacher} from './teacher';
 import {Subject} from './subject';
 import {BaseModel} from './base';
+import { Assessment } from './assessment';
 
-export class SubjectTeacher extends BaseModel {
-  public teacherId!: number;
+export class SubjectAssessment extends BaseModel {
   public subjectId!: number;
+  public assessmentId!: number;
+  public teacherId!: number;
 
   static get relationMappings() {
     return {
@@ -12,7 +14,7 @@ export class SubjectTeacher extends BaseModel {
         relation: BaseModel.HasManyRelation,
         modelClass: Teacher,
         join: {
-          from: 'subjectTeacher.teacherId',
+          from: 'subjectAssessment.teacherId',
           to: 'teacher.id',
         },
       },
@@ -20,8 +22,17 @@ export class SubjectTeacher extends BaseModel {
         relation: BaseModel.HasManyRelation,
         modelClass: Subject,
         join: {
-          from: 'subjectTeacher.subjectId',
+          from: 'subjectAssessment.subjectId',
           to: 'subject.id',
+        },
+      },
+
+      assessment: {
+        relation: BaseModel.HasManyRelation,
+        modelClass: Assessment,
+        join: {
+          from: 'subjectAssessment.assessmentId',
+          to: 'assessment.id',
         },
       },
     };
