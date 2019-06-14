@@ -21,7 +21,7 @@ export const createAssessment = async (
 ): Promise<Assessment> => {
   return await Assessment.query(trx)
     .context(context)
-    .upsertGraphAndFetch({
+    .insertGraph({
       kind,
       totalMarks,
       startDate,

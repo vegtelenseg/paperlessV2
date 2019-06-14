@@ -9,6 +9,6 @@ export const AssessmentChapterMark = newJoinMonsterGraphQLObjectType({
     totalMarks: {
       type: GraphQLInt,
       sqlColumn: 'chapter_mark',
-    }
+    },
   }),
 });

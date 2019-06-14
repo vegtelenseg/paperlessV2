@@ -15,7 +15,7 @@ export const subjects = [
       },
       {
         name: 'Organic molecules',
-      }
+      },
     ],
   },
   {
@@ -34,7 +34,7 @@ export const subjects = [
       },
       {
         name: 'Organic molecules',
-      }
+      },
     ],
   },
   {
@@ -53,7 +53,7 @@ export const subjects = [
       },
       {
         name: 'Organic molecules',
-      }
+      },
     ],
   },
   {
@@ -72,7 +72,7 @@ export const subjects = [
       },
       {
         name: 'Organic molecules',
-      }
+      },
     ],
   },
   {
@@ -91,7 +91,7 @@ export const subjects = [
       },
       {
         name: 'Organic molecules',
-      }
+      },
     ],
-  }
+  },
 ];

@@ -15,7 +15,7 @@ export const createSubject = async (
 ): Promise<Subject> => {
   return Subject.query(trx)
     .context(context)
-    .upsertGraphAndFetch({
+    .insertGraph({
       name,
       commitment,
     });

@@ -1,6 +1,6 @@
 import {BaseModel} from './base';
-import { Assessment } from './assessment';
-import { Chapter } from './chapter';
+import {Assessment} from './assessment';
+import {Chapter} from './chapter';
 
 export class AssessmentChapter extends BaseModel {
   public assessmentId!: number;

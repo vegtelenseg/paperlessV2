@@ -1,5 +1,7 @@
 import {BaseModel} from './base';
-import {Subject} from './subject';
+//import {Subject} from './subject';
+import {Chapter} from './chapter';
+//import { Teacher } from './teacher';
 
 export class Assessment extends BaseModel {
   public totalMarks!: number;
@@ -9,14 +11,18 @@ export class Assessment extends BaseModel {
   public subjectId!: number;
   public id!: number;
 
-  public static relationMappings() {
+  public static get relationMappings() {
     return {
-      subject: {
-        relation: BaseModel.HasOneRelation,
-        modelClass: Subject,
+      chapter: {
+        relation: BaseModel.ManyToManyRelation,
+        modelClass: Chapter,
         join: {
-          from: 'assessment.subjectId',
-          to: 'subject.id',
+          from: 'assessment.id',
+          through: {
+            from: 'assessmentChapter.assessmentId',
+            to: 'assessmentChapter.chapterId',
+          },
+          to: 'chapter.id',
         },
       },
     };
