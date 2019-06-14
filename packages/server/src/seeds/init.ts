@@ -188,14 +188,13 @@ export async function seed(knex: Knex) {
     for (let i = 0; i < grades.length; i++) {
       await Grade.query(knex)
         .context({context})
+        // @ts-ignore
         .insertGraph({
           name: grades[i],
-          subjects: [
-            {
-              // @ts-ignore
-              '#dbRef': subjects[i].id,
-            },
-          ],
+          subjects: subjects.map((subject) => ({
+            // @ts-ignore
+            '#dbRef': subject.id,
+          })),
         });
     }
   });
@@ -214,8 +213,7 @@ export async function seed(knex: Knex) {
               registeredDate.start,
               registeredDate.end
             ),
-            // @ts-ignore
-            grades: [{'#dbRef': grades[j].id}],
+            grades: grades.map((grade) => ({'#dbRef': grade.id})),
             provinceId: provinces[i % provinces.length].id,
             active: false,
           });
