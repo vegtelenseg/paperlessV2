@@ -11,21 +11,4 @@ export class Subject extends BaseModel {
   static get tableName() {
     return 'subject';
   }
-
-  public static get relationMappings() {
-    return {
-      assessment: {
-        relation: BaseModel.ManyToManyRelation,
-        modelClass: Assessment,
-        join: {
-          from: 'subject.id',
-          through: {
-            from: 'subjectAssessment.subjectId',
-            to: 'subjectAssessment.assessmentId',
-          },
-          to: 'assessment.id',
-        },
-      },
-    };
-  }
 }

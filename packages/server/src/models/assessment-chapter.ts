@@ -5,6 +5,7 @@ import {Chapter} from './chapter';
 export class AssessmentChapter extends BaseModel {
   public assessmentId!: number;
   public chapterId!: number;
+  public readonly id!: number;
 
   static get relationMappings() {
     return {

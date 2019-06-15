@@ -3,11 +3,16 @@ import {Subject} from './subject';
 
 export class Student extends Person {
   public readonly id!: number;
+  public subjects!: Subject[];
   public grade!: number;
+
+  static get tableName() {
+    return 'student';
+  }
 
   public static get relationMappings() {
     return {
-      subject: {
+      subjects: {
         relation: Person.ManyToManyRelation,
         modelClass: Subject,
         join: {
