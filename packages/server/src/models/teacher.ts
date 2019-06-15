@@ -1,32 +1,45 @@
 import Person from './person';
-import {Assessment} from './assessment';
 import {Subject} from './subject';
+import {School} from './school';
 
 export class Teacher extends Person {
   public idNumber!: string;
+  public subjectId!: number;
+  public schools!: School[];
+  public subjects!: Subject[];
+  public readonly id!: number;
 
-  static get idColumn() {
-    return 'id_number';
-  }
   static get tableName() {
     return 'teacher';
   }
 
   public static get relationMappings() {
     return {
-      assessment: {
+      schools: {
         relation: Person.ManyToManyRelation,
-        modelClass: Assessment,
+        modelClass: School,
         join: {
           from: 'teacher.id',
           through: {
-            from: 'subjectAssessment.teacherId',
-            to: 'subjectAssessment.assessmentId',
+            from: 'schoolTeacher.teacherId',
+            to: 'schoolTeacher.schoolId',
           },
-          to: 'assessment.id',
+          to: 'school.id',
         },
       },
-      subject: {
+      subjects: {
+        relation: Person.ManyToManyRelation,
+        modelClass: Subject,
+        join: {
+          from: 'teacher.id',
+          through: {
+            from: 'subjectTeacher.teacherId',
+            to: 'subjectTeacher.subjectId',
+          },
+          to: 'subject.id',
+        },
+      },
+      assessments: {
         relation: Person.ManyToManyRelation,
         modelClass: Subject,
         join: {

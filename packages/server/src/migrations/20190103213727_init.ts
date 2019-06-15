@@ -12,6 +12,7 @@ export async function up(knex: Knex) {
     table.date('birth_date').notNullable();
     table.string('gender', 1).notNullable();
     table.string('contact_phone');
+    table.string('contact_mail');
     table.string('contact_mobile');
     table
       .integer('grade')
@@ -19,6 +20,16 @@ export async function up(knex: Knex) {
       .defaultTo(8);
     table.date('enrolment_date').defaultTo(knex.fn.now());
     table.boolean('active').defaultTo(false);
+  });
+
+  await knex.schema.createTable('subject', (table: TableBuilder) => {
+    table
+      .increments()
+      .primary()
+      .unsigned();
+    table.string('name', 128).notNullable();
+    table.string('commitment');
+    table.string('description');
   });
 
   await knex.schema.createTable('teacher', (table: TableBuilder) => {
@@ -41,14 +52,19 @@ export async function up(knex: Knex) {
     table.boolean('active').defaultTo(false);
   });
 
-  await knex.schema.createTable('subject', (table: TableBuilder) => {
+  await knex.schema.createTable('subject_teacher', (table) => {
     table
       .increments()
-      .primary()
-      .unsigned();
-    table.string('name', 128).notNullable();
-    table.string('commitment');
-    table.string('description');
+      .unsigned()
+      .primary();
+    table
+      .integer('subject_id')
+      .references('subject.id')
+      .onDelete('CASCADE');
+    table
+      .integer('teacher_id')
+      .references('teacher.id')
+      .onDelete('CASCADE');
   });
 
   await knex.schema.createTable('chapter', (table: TableBuilder) => {
@@ -58,7 +74,7 @@ export async function up(knex: Knex) {
       .unsigned();
     table.string('name', 128).notNullable();
     table.string('description');
-    table.decimal('max_points');
+    table.integer('max_score');
   });
 
   await knex.schema.createTable('assessment', (table: TableBuilder) => {
@@ -91,7 +107,7 @@ export async function up(knex: Knex) {
       .onDelete('CASCADE');
   });
 
-  await knex.schema.createTable('student_results', (table: TableBuilder) => {
+  await knex.schema.createTable('student_result', (table: TableBuilder) => {
     table
       .increments()
       .unsigned()
@@ -119,26 +135,6 @@ export async function up(knex: Knex) {
       .integer('assessment_id')
       .references('assessment.id')
       .onDelete('CASCADE');
-    table
-      .integer('teacher_id')
-      .references('teacher.id')
-      .onDelete('CASCADE');
-  });
-
-  await knex.schema.createTable('subject_teacher', (table: TableBuilder) => {
-    table
-      .increments()
-      .unsigned()
-      .primary();
-    table
-      .integer('teacher_id')
-      .unsigned()
-      .references('teacher.id')
-      .onDelete('SET NULL');
-    table
-      .integer('subject_id')
-      .references('subject.id')
-      .onDelete('SET NULL');
   });
 
   await knex.schema.createTable('student_subject', (table: TableBuilder) => {
@@ -192,7 +188,6 @@ export async function up(knex: Knex) {
       .integer('teacher_id')
       .references('teacher.id')
       .onDelete('CASCADE');
-    table.boolean('active').defaultTo(false);
   });
 
   // Grade should belong to a school
@@ -224,7 +219,6 @@ export async function up(knex: Knex) {
       .notNullable();
   });
 
-  // TODO: Rethink this table and later add objection model and seeds for it
   await knex.schema.createTable('subject_grade', (table: TableBuilder) => {
     table
       .increments()
@@ -241,6 +235,23 @@ export async function up(knex: Knex) {
       .onDelete('CASCADE')
       .notNullable();
   });
+
+  await knex.schema.createTable('teacher_assessment', (table) => {
+    table
+      .increments()
+      .unsigned()
+      .primary();
+    table
+      .integer('teacher_id')
+      .references('teacher.id')
+      .onDelete('CASCADE')
+      .notNullable();
+    table
+      .integer('assessment_id')
+      .references('assessment.id')
+      .onDelete('CASCADE')
+      .notNullable();
+  });
 }
 
 const tables = [
@@ -251,11 +262,13 @@ const tables = [
   'assessment',
   'assessment_chapter',
   'student_subject',
+  'student_result',
+  'subject_teacher',
   'school',
   'school_teacher',
   'subject_assessment',
-  'student_results',
-  'subject_teacher',
+  'teacher_assessment',
+  'student_result',
   'grade',
   'school_grade',
   'subject_grade',

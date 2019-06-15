@@ -1,28 +1,40 @@
 import {BaseModel} from './base';
-//import {Subject} from './subject';
-import {Chapter} from './chapter';
-//import { Teacher } from './teacher';
+import {Subject} from './subject';
+import {Teacher} from './teacher';
 
 export class Assessment extends BaseModel {
   public totalMarks!: number;
   public kind!: string;
   public startDate!: Date;
   public endDate?: Date;
-  public subjectId!: number;
-  public id!: number;
+  public subjects!: Subject[];
+  public teachers!: Teacher[];
+  public readonly id!: number;
 
   public static get relationMappings() {
     return {
-      chapter: {
+      subjects: {
         relation: BaseModel.ManyToManyRelation,
-        modelClass: Chapter,
+        modelClass: Subject,
         join: {
           from: 'assessment.id',
           through: {
-            from: 'assessmentChapter.assessmentId',
-            to: 'assessmentChapter.chapterId',
+            from: 'subjectAssessment.assessmentId',
+            to: 'subjectAssessment.subjectId',
           },
-          to: 'chapter.id',
+          to: 'subject.id',
+        },
+      },
+      teachers: {
+        relation: BaseModel.ManyToManyRelation,
+        modelClass: Teacher,
+        join: {
+          from: 'assessment.id',
+          through: {
+            from: 'teacherAssessment.assessmentId',
+            to: 'teacherAssessment.teacherId',
+          },
+          to: 'teacher.id',
         },
       },
     };

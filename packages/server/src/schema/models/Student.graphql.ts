@@ -3,11 +3,13 @@ import {GraphQLDate} from 'graphql-iso-date';
 import {newJoinMonsterGraphQLObjectType} from '../../utils/joinMonster-graphql14.fix';
 //import {Subject} from './Subject.graphql';
 import {Assessment} from './assessment.graphql';
+import {StudentResult} from './student-results.graphql';
 
 export const Student = newJoinMonsterGraphQLObjectType({
   name: 'Student',
   sqlTable: 'student',
   uniqueKey: 'id_number',
+  // @ts-ignore
   fields: () => ({
     firstName: {
       type: GraphQLNonNull(GraphQLString),
@@ -45,16 +47,19 @@ export const Student = newJoinMonsterGraphQLObjectType({
       type: GraphQLNonNull(GraphQLDate),
       sqlColumn: 'enrolment_date',
     },
+    results: {
+      type: new GraphQLList(StudentResult),
+      sqlJoin: (studentTable) => `(${studentTable}.id = results.student_id)`,
+    },
     assessments: {
       type: GraphQLNonNull(new GraphQLList(Assessment)),
       junction: {
-        sqlTable: 'student_assessment_chapter',
-
+        sqlTable: 'student_result',
         sqlJoins: [
           (studentTable, junctionTable) =>
             `${studentTable}.id = ${junctionTable}.student_id`,
-          (junctionTable, assessmentTable) =>
-            `${junctionTable}.assessment_id = ${assessmentTable}.id`,
+          (junctionTable, assessmentChapterTable) =>
+            `${junctionTable}.assessment_chapter_id = ${assessmentChapterTable}.id`,
         ],
       },
     },

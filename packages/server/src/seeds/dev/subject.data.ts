@@ -1,4 +1,4 @@
-export const subjects = [
+export default [
   {
     name: 'Physical Sciences',
     totalMarks: 70,

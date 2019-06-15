@@ -1,5 +1,6 @@
-import {GraphQLNonNull, GraphQLString} from 'graphql';
+import {GraphQLNonNull, GraphQLString, GraphQLInt} from 'graphql';
 import {newJoinMonsterGraphQLObjectType} from '../../utils/joinMonster-graphql14.fix';
+import {Assessment} from './assessment.graphql';
 
 // TODO: Add description and commitment
 export const Chapter = newJoinMonsterGraphQLObjectType({
@@ -15,14 +16,21 @@ export const Chapter = newJoinMonsterGraphQLObjectType({
       type: GraphQLNonNull(GraphQLString),
       sqlColumn: 'description',
     },
-    contribution: {
-      type: GraphQLNonNull(GraphQLString),
-      sqlColumn: 'contribution',
+    maxPoints: {
+      type: GraphQLInt,
+      sqlColumn: 'max_score',
     },
-    // totalMarks: {
-    //   type: GraphQLNonNull(new GraphQLList(StudentAssessmentChapterMark)),
-    //   sqlJoin: (chapterTable, studentAssessmentChapterTable) =>
-    //   `${chapterTable}.id = ${studentAssessmentChapterTable}.chapter_id`
-    // }
+    assessment: {
+      type: Assessment,
+      junction: {
+        sqlTable: 'assessment_chapter',
+        sqlJoins: [
+          (chapterTable, junctionTable) =>
+            `${chapterTable}.id = ${junctionTable}.chapter_id`,
+          (junctionTable, assessmentTable) =>
+            `${junctionTable}.assessment_id = ${assessmentTable}.id`,
+        ],
+      },
+    },
   }),
 });
