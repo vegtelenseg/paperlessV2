@@ -252,6 +252,36 @@ export async function up(knex: Knex) {
       .onDelete('CASCADE')
       .notNullable();
   });
+
+  await knex.schema.createTable('teacher_grade', (table) => {
+    table
+      .increments()
+      .unsigned()
+      .primary();
+    table
+      .integer('teacher_id')
+      .references('teacher.id')
+      .onDelete('CASCADE');
+    table
+      .integer('grade_id')
+      .references('grade.id')
+      .onDelete('CASCADE');
+  });
+
+  await knex.schema.createTable('student_grade', (table) => {
+    table
+      .increments()
+      .unsigned()
+      .primary();
+    table
+      .integer('student_id')
+      .references('student.id')
+      .onDelete('CASCADE');
+    table
+      .integer('grade_id')
+      .references('grade.id')
+      .onDelete('CASCADE');
+  });
 }
 
 const tables = [

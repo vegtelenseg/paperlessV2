@@ -101,20 +101,6 @@ export async function seed(knex: Knex) {
     }
   });
 
-  await knex('grade').then(async () => {
-    const subjects = await Subject.query(knex).context({context});
-    for (let i = 0; i < grades.length; i++) {
-      await Grade.query(knex)
-        .context({context})
-        // @ts-ignore
-        .insertGraph({
-          name: grades[i],
-          subjects: subjects.map((subject) => ({
-            '#dbRef': subject.id,
-          })),
-        });
-    }
-  });
 
   await knex('school').then(async () => {
     const grades = await Grade.query(knex).context({context});
@@ -167,7 +153,6 @@ export async function seed(knex: Knex) {
         })),
       });
   }
-  const teacherList = await Teacher.query(knex).context({context});
 
   for (let i = 0; i < 4; i++) {
     const gender = genders[Math.round(Math.random())];
@@ -196,7 +181,29 @@ export async function seed(knex: Knex) {
         })),
       });
   }
+  const studentList = await Student.query(knex).context({context});
+  const teacherList = await Teacher.query(knex).context({context});
 
+  await knex('grade').then(async () => {
+    const subjects = await Subject.query(knex).context({context});
+    for (let i = 0; i < grades.length; i++) {
+      await Grade.query(knex)
+        .context({context})
+        // @ts-ignore
+        .insertGraph({
+          name: grades[i],
+          subjects: subjects.map((subject) => ({
+            '#dbRef': subject.id,
+          })),
+          students: studentList.map((student) => ({
+            '#dbRef': student.id,
+          })),
+          teachers: teacherList.map((teacher) => ({
+            '#dbRef': teacher.id,
+          })),
+        });
+    }
+  });
   for (let i = 0; i < subjects[0].chapters.length; i++) {
     const at = i % mockAssessments.length;
     await Assessment.query(knex)
@@ -224,8 +231,6 @@ export async function seed(knex: Knex) {
   }
 
   const assessmentList = await Assessment.query(knex).context({context});
-  console.log('LENGTH 1: ', assessmentList.length);
-  console.log('LENGTH 2: ', subjects[0].chapters.length);
   for (let i = 0; i < assessmentList.length; i++) {
     for (let j = 0; j < subjects[j].chapters.length; j++) {
       await Chapter.query(knex)
@@ -234,12 +239,11 @@ export async function seed(knex: Knex) {
           name: subjects[i].chapters[j].name,
           // @ts-ignore
           assessments: [{'#dbRef': assessmentList[i].id}],
-          maxScore: parseInt(Math.floor(Math.random() * 10).toString()),
+          maxScore: Math.floor(Math.random() * 10),
         });
     }
   }
 
-  const studentList = await Student.query(knex).context({context});
   const assessmendChaptersList = await AssessmentChapter.query(knex).context({
     context,
   });

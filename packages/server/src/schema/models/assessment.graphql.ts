@@ -1,5 +1,5 @@
 import {newJoinMonsterGraphQLObjectType} from '../../utils/joinMonster-graphql14.fix';
-import {GraphQLNonNull, GraphQLInt, GraphQLString} from 'graphql';
+import {GraphQLInt, GraphQLString} from 'graphql';
 import {GraphQLDate} from 'graphql-iso-date';
 
 export const Assessment = newJoinMonsterGraphQLObjectType({
@@ -8,15 +8,15 @@ export const Assessment = newJoinMonsterGraphQLObjectType({
   uniqueKey: 'id',
   fields: () => ({
     totalMarks: {
-      type: GraphQLNonNull(GraphQLInt),
+      type: GraphQLInt,
       sqlColumn: 'total_marks',
     },
     kind: {
-      type: GraphQLNonNull(GraphQLString),
+      type: GraphQLString,
       sqlColumn: 'kind',
     },
     startDate: {
-      type: GraphQLNonNull(GraphQLDate),
+      type: GraphQLDate,
       sqlColumn: 'start_date',
     },
     endDate: {

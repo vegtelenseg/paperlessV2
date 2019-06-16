@@ -2,7 +2,6 @@ import {GraphQLNonNull, GraphQLString, GraphQLInt} from 'graphql';
 import {newJoinMonsterGraphQLObjectType} from '../../utils/joinMonster-graphql14.fix';
 import {Assessment} from './assessment.graphql';
 
-// TODO: Add description and commitment
 export const Chapter = newJoinMonsterGraphQLObjectType({
   name: 'Chapter',
   sqlTable: 'chapter',
@@ -13,17 +12,46 @@ export const Chapter = newJoinMonsterGraphQLObjectType({
       sqlColumn: 'name',
     },
     description: {
-      type: GraphQLNonNull(GraphQLString),
+      type: GraphQLString,
       sqlColumn: 'description',
     },
-    maxPoints: {
+    maxScore: {
       type: GraphQLInt,
       sqlColumn: 'max_score',
+    },
+    kind: {
+      type: GraphQLString,
+      description: `The type of assessment (e.g. 'Class Test', 'Project', 'Assignment', and etc.`,
+      sqlExpr: (chapterTable) => `(select kind from assessment
+        left join assessment_chapter on
+        assessment_chapter.assessment_id = assessment.id
+        where assessment_chapter.chapter_id = ${chapterTable}.id
+       )`,
+      // junction: {
+      //   sqlTable: 'assessment_chapter',
+      //   sqlJoins: [
+      //     (chapterTable, junctionTable) =>
+      //       `${chapterTable}.id = ${junctionTable}.chapter_id`,
+      //     (junctionTable, assessmentTable) =>
+      //       `${junctionTable}.assessment_id = ${assessmentTable}.id`,
+      //   ],
+      // },
+    },
+    id: {
+      type: GraphQLInt,
+      description: `The type of assessment (e.g. 'Class Test', 'Project', 'Assignment', and etc.`,
+      sqlExpr: (chapterTable) => `(select assessment.id from assessment
+        left join assessment_chapter on
+        assessment_chapter.assessment_id = assessment.id
+        where assessment_chapter.chapter_id = ${chapterTable}.id
+       )`,
     },
     assessment: {
       type: Assessment,
       junction: {
         sqlTable: 'assessment_chapter',
+        where: (chapterTable) =>
+          `(assessment_chapter.chapter_id = ${chapterTable}.id)`,
         sqlJoins: [
           (chapterTable, junctionTable) =>
             `${chapterTable}.id = ${junctionTable}.chapter_id`,
