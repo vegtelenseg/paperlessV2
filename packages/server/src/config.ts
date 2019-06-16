@@ -43,7 +43,7 @@ const config = convict({
       doc: 'Enable Knex Debug',
       format: Boolean,
       env: 'KNEX_DEBUG',
-      default: false,
+      default: true,
     },
   },
   jaeger: {

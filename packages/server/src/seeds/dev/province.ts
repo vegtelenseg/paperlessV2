@@ -13,7 +13,7 @@ export const createProvince = async (
 ): Promise<Province> => {
   return await Province.query(trx)
     .context(context)
-    .upsertGraphAndFetch({
+    .insertGraph({
       name,
     });
 };

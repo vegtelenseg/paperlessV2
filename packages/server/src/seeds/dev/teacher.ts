@@ -27,7 +27,7 @@ export const createTeacher = async (
 ): Promise<Teacher> => {
   return Teacher.query(trx)
     .context(context)
-    .upsertGraphAndFetch({
+    .insertGraph({
       firstName,
       lastName,
       birthDate,

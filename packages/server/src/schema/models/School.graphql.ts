@@ -3,7 +3,8 @@ import {GraphQLNonNull, GraphQLString, GraphQLInt, GraphQLList} from 'graphql';
 //@ts-ignore
 import {GraphQLDate} from 'graphql-iso-date';
 import {newJoinMonsterGraphQLObjectType} from '../../utils/joinMonster-graphql14.fix';
-import {Teacher} from './Teacher.graphql';
+//import {Teacher} from './Teacher.graphql';
+import {Grade} from './grade.graphql';
 
 export const School = newJoinMonsterGraphQLObjectType({
   name: 'School',
@@ -22,17 +23,29 @@ export const School = newJoinMonsterGraphQLObjectType({
       type: GraphQLNonNull(GraphQLString),
       sqlColumn: 'registered_date',
     },
-    teachers: {
-      type: new GraphQLList(Teacher),
+    grades: {
+      type: GraphQLNonNull(new GraphQLList(Grade)),
       junction: {
-        sqlTable: 'school_teacher',
+        sqlTable: 'school_grade',
         sqlJoins: [
           (schoolTable, junctionTable) =>
             `${schoolTable}.id = ${junctionTable}.school_id`,
-          (junctionTable, teacher) =>
-            `${junctionTable}.teacher_id_number = ${teacher}.id_number`,
+          (junctionTable, gradeTable) =>
+            `${junctionTable}.grade_id = ${gradeTable}.id`,
         ],
       },
     },
+    // teachers: {
+    //   type: new GraphQLList(Teacher),
+    //   junction: {
+    //     sqlTable: 'school_teacher',
+    //     sqlJoins: [
+    //       (schoolTable, junctionTable) =>
+    //         `${schoolTable}.id = ${junctionTable}.school_id`,
+    //       (junctionTable, teacher) =>
+    //         `${junctionTable}.teacher_id_number = ${teacher}.id_number`,
+    //     ],
+    //   },
+    // },
   }),
 });

@@ -9,23 +9,20 @@ export const createAssessment = async (
     kind,
     totalMarks,
     startDate,
-    subjectId,
     endDate,
   }: {
     kind: string;
     totalMarks: number;
     startDate: Date;
-    subjectId: number;
     endDate?: Date;
   }
 ): Promise<Assessment> => {
   return await Assessment.query(trx)
     .context(context)
-    .upsertGraphAndFetch({
+    .insertGraph({
       kind,
       totalMarks,
       startDate,
-      subjectId,
       endDate,
     });
 };

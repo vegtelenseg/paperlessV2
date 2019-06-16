@@ -13,7 +13,7 @@ export const createGrade = async (
 ): Promise<Grade> => {
   return await Grade.query(trx)
     .context(context)
-    .upsertGraphAndFetch({
+    .insertGraph({
       name,
     });
 };

@@ -4,26 +4,35 @@ import randomDate from 'random-date-generator';
 //@ts-ignore
 import Fakerator from 'fakerator';
 
-import {Teacher, Student, Subject, School, Grade} from '../models';
+// import {
+//   Teacher,
+//   Subject,
+// } from '../models';
 import tracer from '../tracer';
-import {subjects} from './dev/subject.data';
+import subjects from './dev/subject.data';
 import {generateIdNumber} from '../utils/id-generator';
-//import {mockAssessments} from './dev/assessment.data';
-import {
-  createStudent,
-  createTeacher,
-  createSubject,
-  createChapter,
-  //  createAssessment,
-  createSchool,
-  createSubjectTeacher,
-  createStudentSubject,
-  createSchoolTeacher,
-  createSchoolGrade,
-  createGrade,
-} from './dev';
+import // createStudent,
+// createTeacher,
+// createSubject,
+// createChapter,
+//createSchool,
+// createGrade,
+//  createAssessment,
+'./dev';
 import {createProvince} from './dev/province';
-import {Province} from '../models/province';
+import {mockAssessments} from './dev/assessment.data';
+import {
+  Subject,
+  Student,
+  Province,
+  Teacher,
+  Assessment,
+  Grade,
+  School,
+  Chapter,
+} from '../models';
+import {StudentResult} from '../models/student-result';
+import {AssessmentChapter} from '../models/assessment-chapter';
 
 const createSeedContext = async () => {
   return {span: tracer.startSpan('seed')};
@@ -54,7 +63,6 @@ export async function seed(knex: Knex) {
     'subject',
     'chapter',
     'assessment',
-    'student_assessment_chapter',
     'student_subject',
     'school',
     'school_teacher',
@@ -69,108 +77,6 @@ export async function seed(knex: Knex) {
     await knex(tables[i]).del();
   }
 
-  for (let i = 0; i < 30; i++) {
-    const gender = genders[Math.round(Math.random())];
-    const ibirthDate = randomDate.getRandomDateInRange(iStartDate, iEndDate);
-    await createTeacher(context, knex, {
-      idNumber: generateIdNumber(ibirthDate),
-      firstName:
-        gender === 'F'
-          ? fakerator.names.firstNameF()
-          : fakerator.names.firstNameM(),
-      lastName:
-        gender === 'F'
-          ? fakerator.names.lastNameF()
-          : fakerator.names.lastNameM(),
-      title: gender === 'F' ? 'Mrs' : 'Mr',
-      birthDate: ibirthDate,
-      gender: genders[Math.round(Math.random())],
-      contactPhone: fakerator.phone.number(),
-    });
-  }
-
-  for (let i = 0; i < 100; i++) {
-    const gender = genders[Math.round(Math.random())];
-    const sBirthDate = randomDate.getRandomDateInRange(sStartDate, sEndDate);
-    await createStudent(context, knex, {
-      idNumber: generateIdNumber(sBirthDate),
-      firstName:
-        gender === 'F'
-          ? fakerator.names.firstNameF()
-          : fakerator.names.firstNameM(),
-      lastName:
-        gender === 'F'
-          ? fakerator.names.lastNameF()
-          : fakerator.names.lastNameM(),
-      birthDate: sBirthDate,
-      gender: gender,
-      contactPhone: fakerator.phone.number(),
-      contactMobile: fakerator.phone.number(),
-      contactMail: fakerator.internet.email(),
-    });
-  }
-
-  for (let i = 0; i < subjects.length; i++) {
-    await createSubject(context, knex, {
-      name: subjects[i].name,
-    });
-  }
-
-  const subjectList = await Subject.query(knex); // Be careful, this is used in many places.
-  const teachers = await Teacher.query(); // This is also being used on the school teacher table
-  for (let i = 0; i < teachers.length; i++) {
-    const subjectId = (i + 1) % 7;
-    const teacher = teachers[i];
-    const subject = subjectList.find((subject) =>
-      subjectId === 0 ? subject.id === 7 : subject.id === subjectId
-    );
-
-    if (subject && teacher) {
-      await createSubjectTeacher(context, knex, {
-        teacherIdNumber: teacher.idNumber,
-        subjectId: subject.id,
-      });
-    }
-  }
-
-  for (let i = 0; i < subjects.length; i++) {
-    for (let j = 0; j < subjects[i].chapters.length; j++) {
-      await createChapter(context, knex, {
-        name: subjects[i].chapters[j].name,
-      });
-    }
-  }
-
-  // for (let i = 0; i < subjects[0].chapters.length; i++) {
-  //   for (let j = 0; j < subjects[0].chapters.length; j++) {
-  //     const at = i % mockAssessments.length;
-  //     await createAssessment(context, knex, {
-  //       ...mockAssessments[i % mockAssessments.length],
-  //       startDate: randomDate.getRandomDateInRange(
-  //         mockAssessments[at].startDate,
-  //         new Date(2019, 3, 31)
-  //       ),
-  //       subjectId: subjec
-  //       endDate: mockAssessments[at].endDate
-  //         ? randomDate.getRandomDateInRange(
-  //             mockAssessments[at].endDate,
-  //             new Date(2019, 4, 31)
-  //           )
-  //         : undefined,
-  //     });
-  //   }
-  // }
-
-  //const assessments = await Assessment.query(knex);
-
-  const studentList = await Student.query(knex).context(context);
-  for (let i = 0; i < studentList.length * 4; i++) {
-    await createStudentSubject(context, knex, {
-      studentId: studentList[i % studentList.length].id,
-      subjectId: subjectList[i % subjectList.length].id,
-    });
-  }
-
   const provinces = [
     'Eastern Cape',
     'Free State',
@@ -178,55 +84,178 @@ export async function seed(knex: Knex) {
     'KwaZulu-Natal',
     'Limpopo',
     'Mpumalanga',
-    'Northern Cape',
-    'North West',
-    'Western Cape',
   ];
   for (let i = 0; i < provinces.length; i++) {
-    createProvince(context, knex, {
+    await createProvince(context, knex, {
       name: provinces[i],
     });
   }
 
-  const provinceList = await Province.query(knex).context(context);
-  for (let i = 0; i < provinces.length; i++) {
-    for (let j = 0; j < schools.length; j++) {
-      await createSchool(context, knex, {
-        name: schools[j],
-        registeredDate: randomDate.getRandomDateInRange(
-          registeredDate.start,
-          registeredDate.end
+  await knex('subject').then(async () => {
+    for (let i = 0; i < subjects.length; i++) {
+      await Subject.query(knex)
+        .context({context})
+        .insertGraph({
+          name: subjects[i].name,
+        });
+    }
+  });
+
+
+  await knex('school').then(async () => {
+    const grades = await Grade.query(knex).context({context});
+    const provinces = await Province.query(knex).context({context});
+    for (let i = 0; i < schools.length; i++) {
+      for (let j = 0; j < grades.length; j++) {
+        await School.query(knex)
+          .context({context})
+          // @ts-ignore
+          .insertGraph({
+            name: schools[j % schools.length],
+            registeredDate: randomDate.getRandomDateInRange(
+              registeredDate.start,
+              registeredDate.end
+            ),
+            grades: grades.map((grade) => ({'#dbRef': grade.id})),
+            provinceId: provinces[i % provinces.length].id,
+            active: false,
+          });
+      }
+    }
+  });
+  const subjectList = await Subject.query(knex).context({context});
+  for (let i = 0; i < 4; i++) {
+    const gender = genders[Math.round(Math.random())];
+    const ibirthDate = randomDate.getRandomDateInRange(iStartDate, iEndDate);
+    const schools = await School.query(knex).context({context});
+    await Teacher.query(knex)
+      .context({context})
+      // @ts-ignore
+      .insertGraph({
+        idNumber: generateIdNumber(ibirthDate),
+        firstName:
+          gender === 'F'
+            ? fakerator.names.firstNameF()
+            : fakerator.names.firstNameM(),
+        lastName:
+          gender === 'F'
+            ? fakerator.names.lastNameF()
+            : fakerator.names.lastNameM(),
+        title: gender === 'F' ? 'Mrs' : 'Mr',
+        birthDate: ibirthDate,
+        gender: genders[Math.round(Math.random())],
+        contactPhone: fakerator.phone.number(),
+        schools: schools.map((school) => ({
+          '#dbRef': school.id,
+        })),
+        subjects: subjectList.map((subject) => ({
+          '#dbRef': subject.id,
+        })),
+      });
+  }
+
+  for (let i = 0; i < 4; i++) {
+    const gender = genders[Math.round(Math.random())];
+    const sBirthDate = randomDate.getRandomDateInRange(sStartDate, sEndDate);
+    const subjects = await Subject.query(knex).context({context});
+    await Student.query(knex)
+      .context({context})
+      // @ts-ignore
+      .insertGraph({
+        idNumber: generateIdNumber(sBirthDate),
+        firstName:
+          gender === 'F'
+            ? fakerator.names.firstNameF()
+            : fakerator.names.firstNameM(),
+        lastName:
+          gender === 'F'
+            ? fakerator.names.lastNameF()
+            : fakerator.names.lastNameM(),
+        birthDate: sBirthDate,
+        gender: gender,
+        contactPhone: fakerator.phone.number(),
+        contactMobile: fakerator.phone.number(),
+        contactMail: fakerator.internet.email(),
+        subjects: subjects.map((subject) => ({
+          '#dbRef': subject.id,
+        })),
+      });
+  }
+  const studentList = await Student.query(knex).context({context});
+  const teacherList = await Teacher.query(knex).context({context});
+
+  await knex('grade').then(async () => {
+    const subjects = await Subject.query(knex).context({context});
+    for (let i = 0; i < grades.length; i++) {
+      await Grade.query(knex)
+        .context({context})
+        // @ts-ignore
+        .insertGraph({
+          name: grades[i],
+          subjects: subjects.map((subject) => ({
+            '#dbRef': subject.id,
+          })),
+          students: studentList.map((student) => ({
+            '#dbRef': student.id,
+          })),
+          teachers: teacherList.map((teacher) => ({
+            '#dbRef': teacher.id,
+          })),
+        });
+    }
+  });
+  for (let i = 0; i < subjects[0].chapters.length; i++) {
+    const at = i % mockAssessments.length;
+    await Assessment.query(knex)
+      .context({context})
+      // @ts-ignore
+      .insertGraph({
+        ...mockAssessments[i % mockAssessments.length],
+        startDate: randomDate.getRandomDateInRange(
+          mockAssessments[at].startDate,
+          new Date(2019, 3, 31)
         ),
-        provinceId: provinceList[j % provinceList.length].id,
-        active: false,
+        endDate: mockAssessments[at].endDate
+          ? randomDate.getRandomDateInRange(
+              mockAssessments[at].endDate,
+              new Date(2019, 4, 31)
+            )
+          : undefined,
+        subjects: subjectList.map((subject) => ({
+          '#dbRef': subject.id,
+        })),
+        teachers: teacherList.map((teacher) => ({
+          '#dbRef': teacher.id,
+        })),
       });
+  }
+
+  const assessmentList = await Assessment.query(knex).context({context});
+  for (let i = 0; i < assessmentList.length; i++) {
+    for (let j = 0; j < subjects[j].chapters.length; j++) {
+      await Chapter.query(knex)
+        .context({context})
+        .insertGraph({
+          name: subjects[i].chapters[j].name,
+          // @ts-ignore
+          assessments: [{'#dbRef': assessmentList[i].id}],
+          maxScore: Math.floor(Math.random() * 10),
+        });
     }
   }
 
-  const schoolList = await School.query(knex).context(context);
-  for (let i = 0; i < schoolList.length * 4; i++) {
-    for (let j = 0; j < teachers.length; j++) {
-      await createSchoolTeacher(context, knex, {
-        teacherIdNumber: teachers[j % teachers.length].idNumber,
-        schoolId: schoolList[i % schoolList.length].id,
-        active: false,
-      });
-    }
-  }
-
-  for (let i = 0; i < grades.length; i++) {
-    await createGrade(context, knex, {
-      name: grades[i],
-    });
-  }
-
-  const gradeList = await Grade.query(knex).context(context);
-  for (let i = 0; i < schoolList.length; i++) {
-    for (let j = 0; j < grades.length; j++) {
-      await createSchoolGrade(context, knex, {
-        gradeId: gradeList[j % gradeList.length].id,
-        schoolId: schoolList[i % schoolList.length].id,
-      });
+  const assessmendChaptersList = await AssessmentChapter.query(knex).context({
+    context,
+  });
+  for (let i = 0; i < studentList.length; i++) {
+    for (let j = 0; j < assessmendChaptersList.length; j++) {
+      await StudentResult.query(knex)
+        .context({context})
+        .insertGraph({
+          studentId: studentList[i].id,
+          assessmentChapterId: assessmendChaptersList[j].id,
+          score: Math.floor(Math.random() * 10),
+        });
     }
   }
 }

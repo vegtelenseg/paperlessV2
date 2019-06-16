@@ -13,7 +13,7 @@ export const createChapter = async (
 ): Promise<Chapter> => {
   return await Chapter.query(trx)
     .context(context)
-    .upsertGraphAndFetch({
+    .insertGraph({
       name,
     });
 };
