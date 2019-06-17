@@ -1,12 +1,14 @@
 import Person from './person';
 import {Subject} from './subject';
 import {School} from './school';
+import {Grade} from './grade';
 
 export class Teacher extends Person {
   public idNumber!: string;
   public subjectId!: number;
   public schools!: School[];
   public subjects!: Subject[];
+  public grades!: Grade[];
   public readonly id!: number;
 
   static get tableName() {
@@ -49,6 +51,18 @@ export class Teacher extends Person {
             to: 'subjectTeacher.subjectId',
           },
           to: 'subject.id',
+        },
+      },
+      grades: {
+        relation: Person.ManyToManyRelation,
+        modelClass: Grade,
+        join: {
+          from: 'teacher.id',
+          through: {
+            from: 'teacherGrade.teacherId',
+            to: 'teacherGrade.gradeId',
+          },
+          to: 'grade.id',
         },
       },
     };

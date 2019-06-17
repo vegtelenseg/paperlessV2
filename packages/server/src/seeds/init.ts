@@ -1,19 +1,11 @@
-import Knex from 'knex';
 //@ts-ignore
 import randomDate from 'random-date-generator';
 //@ts-ignore
 import Fakerator from 'fakerator';
+import Knex from 'knex';
 import tracer from '../tracer';
-import subjects from './dev/subject.data';
+
 import {generateIdNumber} from '../utils/id-generator';
-import // createStudent,
-// createTeacher,
-// createSubject,
-// createChapter,
-//createSchool,
-// createGrade,
-//  createAssessment,
-'./dev';
 import {mockAssessments} from './dev/assessment.data';
 import {
   Subject,
@@ -27,7 +19,7 @@ import {
 } from '../models';
 import {StudentResult} from '../models/student-result';
 import {AssessmentChapter} from '../models/assessment-chapter';
-import { provinces, tables, grades, schools } from './dev/';
+import {provinces, tables, grades, schools, subjects} from './dev/';
 
 const createSeedContext = async () => {
   return {span: tracer.startSpan('seed')};
@@ -46,18 +38,17 @@ export async function seed(knex: Knex) {
     end: new Date(2019, 1, 1),
   };
 
-
-
   // We need to do this otherwise the db gets dirty
   for (let i = 0; i < tables.length; i++) {
     await knex(tables[i]).del();
   }
 
-
   for (let i = 0; i < provinces.length; i++) {
-    await Province.query(knex).context({context}).insertGraph({
-      name: provinces[i],
-    });
+    await Province.query(knex)
+      .context({context})
+      .insertGraph({
+        name: provinces[i],
+      });
   }
 
   await knex('subject').then(async () => {
@@ -66,6 +57,21 @@ export async function seed(knex: Knex) {
         .context({context})
         .insertGraph({
           name: subjects[i].name,
+        });
+    }
+  });
+
+  await knex('grade').then(async () => {
+    const subjects = await Subject.query(knex).context({context});
+    for (let i = 0; i < grades.length; i++) {
+      await Grade.query(knex)
+        .context({context})
+        // @ts-ignore
+        .insertGraph({
+          name: grades[i],
+          subjects: subjects.map((subject) => ({
+            '#dbRef': subject.id,
+          })),
         });
     }
   });
@@ -92,6 +98,7 @@ export async function seed(knex: Knex) {
     }
   });
   const subjectList = await Subject.query(knex).context({context});
+  const gradeList = await Grade.query(knex).context({context});
   for (let i = 0; i < 4; i++) {
     const gender = genders[Math.round(Math.random())];
     const ibirthDate = randomDate.getRandomDateInRange(iStartDate, iEndDate);
@@ -118,6 +125,9 @@ export async function seed(knex: Knex) {
         })),
         subjects: subjectList.map((subject) => ({
           '#dbRef': subject.id,
+        })),
+        grades: gradeList.map((grade) => ({
+          '#dbRef': grade.id,
         })),
       });
   }
@@ -147,31 +157,14 @@ export async function seed(knex: Knex) {
         subjects: subjects.map((subject) => ({
           '#dbRef': subject.id,
         })),
+        grades: gradeList.map((grade) => ({
+          '#dbRef': grade.id,
+        })),
       });
   }
   const studentList = await Student.query(knex).context({context});
   const teacherList = await Teacher.query(knex).context({context});
 
-  await knex('grade').then(async () => {
-    const subjects = await Subject.query(knex).context({context});
-    for (let i = 0; i < grades.length; i++) {
-      await Grade.query(knex)
-        .context({context})
-        // @ts-ignore
-        .insertGraph({
-          name: grades[i],
-          subjects: subjects.map((subject) => ({
-            '#dbRef': subject.id,
-          })),
-          students: studentList.map((student) => ({
-            '#dbRef': student.id,
-          })),
-          teachers: teacherList.map((teacher) => ({
-            '#dbRef': teacher.id,
-          })),
-        });
-    }
-  });
   for (let i = 0; i < subjects[0].chapters.length; i++) {
     const at = i % mockAssessments.length;
     await Assessment.query(knex)
