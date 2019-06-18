@@ -13,7 +13,12 @@ export const Assessment = newJoinMonsterGraphQLObjectType({
     },
     kind: {
       type: GraphQLString,
-      sqlColumn: 'kind',
+      description: `The type of assessment (e.g. 'Class Test', 'Project', 'Assignment', and etc.`,
+      sqlExpr: (assessmentTable) => `(select kind from assessment
+        left join assessment_chapter on
+        assessment_chapter.assessment_id = ${assessmentTable}.id
+        where assessment_chapter.chapter_id = chapter.id
+       )`,
     },
     startDate: {
       type: GraphQLDate,

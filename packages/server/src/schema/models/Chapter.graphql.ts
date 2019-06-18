@@ -19,39 +19,12 @@ export const Chapter = newJoinMonsterGraphQLObjectType({
       type: GraphQLInt,
       sqlColumn: 'max_score',
     },
-    kind: {
-      type: GraphQLString,
-      description: `The type of assessment (e.g. 'Class Test', 'Project', 'Assignment', and etc.`,
-      sqlExpr: (chapterTable) => `(select kind from assessment
-        left join assessment_chapter on
-        assessment_chapter.assessment_id = assessment.id
-        where assessment_chapter.chapter_id = ${chapterTable}.id
-       )`,
-      // junction: {
-      //   sqlTable: 'assessment_chapter',
-      //   sqlJoins: [
-      //     (chapterTable, junctionTable) =>
-      //       `${chapterTable}.id = ${junctionTable}.chapter_id`,
-      //     (junctionTable, assessmentTable) =>
-      //       `${junctionTable}.assessment_id = ${assessmentTable}.id`,
-      //   ],
-      // },
-    },
-    id: {
-      type: GraphQLInt,
-      description: `The type of assessment (e.g. 'Class Test', 'Project', 'Assignment', and etc.`,
-      sqlExpr: (chapterTable) => `(select assessment.id from assessment
-        left join assessment_chapter on
-        assessment_chapter.assessment_id = assessment.id
-        where assessment_chapter.chapter_id = ${chapterTable}.id
-       )`,
-    },
     assessment: {
       type: Assessment,
       junction: {
         sqlTable: 'assessment_chapter',
-        where: (chapterTable) =>
-          `(assessment_chapter.chapter_id = ${chapterTable}.id)`,
+        // where: () =>
+        //   `(assessment_chapter.chapter_id = chapter.id)`,
         sqlJoins: [
           (chapterTable, junctionTable) =>
             `${chapterTable}.id = ${junctionTable}.chapter_id`,
@@ -60,5 +33,28 @@ export const Chapter = newJoinMonsterGraphQLObjectType({
         ],
       },
     },
+    id: {
+      type: GraphQLInt,
+      description: `The type of assessment (e.g. 'Class Test', 'Project', 'Assignment', and etc.`,
+      sqlExpr: (chapterTable) => `(select assessment.id from assessment
+        left join assessment_chapter on
+        assessment_chapter.assessment_id = assessment.id
+        where assessment.chapter_id = ${chapterTable}.id
+       )`,
+    },
+    // assessment: {
+    //   type: Assessment,
+    //   junction: {
+    //     sqlTable: 'assessment_chapter',
+    //     where: (chapterTable) =>
+    //       `(assessment_chapter.chapter_id = ${chapterTable}.id)`,
+    //     sqlJoins: [
+    //       (chapterTable, junctionTable) =>
+    //         `${chapterTable}.id = ${junctionTable}.chapter_id`,
+    //       (junctionTable, assessmentTable) =>
+    //         `${junctionTable}.assessment_id = ${assessmentTable}.id`,
+    //     ],
+    //   },
+    // },
   }),
 });

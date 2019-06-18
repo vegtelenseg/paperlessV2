@@ -15,7 +15,7 @@ export const School = newJoinMonsterGraphQLObjectType({
       type: GraphQLNonNull(GraphQLString),
       sqlColumn: 'name',
     },
-    isActive: {
+    active: {
       type: GraphQLNonNull(GraphQLString),
       sqlColumn: 'active',
     },
