@@ -20,13 +20,20 @@
     "@types/node": "^12.0.2",
     "@types/react": "^16.8.17",
     "@types/react-dom": "^16.8.4",
+    "apollo-boost": "^0.4.3",
+    "apollo-cache-inmemory": "^1.6.2",
+    "apollo-client": "^2.6.3",
+    "apollo-link-http": "^1.5.15",
     "bootstrap": "^4.3.1",
     "chart.js": "^2.8.0",
     "classnames": "^2.2.6",
     "core-js": "^2.6.5",
     "font-awesome": "^4.7.0",
+    "graphql": "^14.3.1",
+    "graphql-tag": "^2.10.1",
     "node-sass": "^4.12.0",
     "react": "^16.8.6",
+    "react-apollo": "^2.5.8",
     "react-app-polyfill": "^1.0.1",
     "react-chartjs-2": "^2.7.6",
     "react-dom": "^16.8.6",
@@ -37,11 +44,14 @@
     "typescript": "^3.4.5"
   },
   "devDependencies": {
+    "@types/graphql": "^14.2.1",
+    "prettier": "^1.18.2",
     "react-scripts": "^3.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "prettier": "prettier --write \"./src/**/*.{tsx,ts,js}\"",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

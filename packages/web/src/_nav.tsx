@@ -1,13 +1,13 @@
 export default {
   items: [
     {
-      name: 'Dashboard',
-      url: '/dashboard',
-      icon: 'icon-speedometer',
+      name: "Dashboard",
+      url: "/dashboard",
+      icon: "icon-speedometer",
       badge: {
-        variant: 'info',
-        text: 'NEW',
-      },
+        variant: "info",
+        text: "NEW"
+      }
     },
     // {
     //   title: true,
@@ -222,39 +222,39 @@ export default {
     //   },
     // },
     {
-      divider: true,
+      divider: true
     },
     {
       title: true,
-      name: 'Extras',
+      name: "Extras"
     },
     {
-      name: 'Pages',
-      url: '/pages',
-      icon: 'icon-star',
+      name: "Pages",
+      url: "/pages",
+      icon: "icon-star",
       children: [
         {
-          name: 'Login',
-          url: '/login',
-          icon: 'icon-star',
+          name: "Login",
+          url: "/login",
+          icon: "icon-star"
         },
         {
-          name: 'Register',
-          url: '/register',
-          icon: 'icon-star',
+          name: "Register",
+          url: "/register",
+          icon: "icon-star"
         },
         {
-          name: 'Error 404',
-          url: '/404',
-          icon: 'icon-star',
+          name: "Error 404",
+          url: "/404",
+          icon: "icon-star"
         },
         {
-          name: 'Error 500',
-          url: '/500',
-          icon: 'icon-star',
-        },
-      ],
-    },
+          name: "Error 500",
+          url: "/500",
+          icon: "icon-star"
+        }
+      ]
+    }
     // {
     //   name: 'Disabled',
     //   url: '/dashboard',
@@ -276,5 +276,5 @@ export default {
     //   variant: 'danger',
     //   attributes: { target: '_blank', rel: "noopener" },
     // },
-  ],
+  ]
 };
