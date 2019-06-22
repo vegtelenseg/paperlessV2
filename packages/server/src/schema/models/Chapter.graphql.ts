@@ -1,37 +1,27 @@
 import {GraphQLNonNull, GraphQLString, GraphQLInt} from 'graphql';
 import {newJoinMonsterGraphQLObjectType} from '../../utils/joinMonster-graphql14.fix';
-import {Assessment} from './assessment.graphql';
 
 export const Chapter = newJoinMonsterGraphQLObjectType({
   name: 'Chapter',
   sqlTable: 'chapter',
   uniqueKey: 'id',
+  description: "Keeps information about a subject's chapter",
   fields: () => ({
     name: {
+      description: 'The name of the Chapter',
       type: GraphQLNonNull(GraphQLString),
       sqlColumn: 'name',
     },
     description: {
+      description: 'A summary about the chapter',
       type: GraphQLString,
       sqlColumn: 'description',
     },
     maxScore: {
+      description:
+        'The total amount of marks that the chapter contributes to the overall 100% of the subject',
       type: GraphQLInt,
       sqlColumn: 'max_score',
-    },
-    assessment: {
-      type: Assessment,
-      junction: {
-        sqlTable: 'assessment_chapter',
-        // where: () =>
-        //   `(assessment_chapter.chapter_id = chapter.id)`,
-        sqlJoins: [
-          (chapterTable, junctionTable) =>
-            `${chapterTable}.id = ${junctionTable}.chapter_id`,
-          (junctionTable, assessmentTable) =>
-            `${junctionTable}.assessment_id = ${assessmentTable}.id`,
-        ],
-      },
     },
     id: {
       type: GraphQLInt,
@@ -42,19 +32,5 @@ export const Chapter = newJoinMonsterGraphQLObjectType({
         where assessment.chapter_id = ${chapterTable}.id
        )`,
     },
-    // assessment: {
-    //   type: Assessment,
-    //   junction: {
-    //     sqlTable: 'assessment_chapter',
-    //     where: (chapterTable) =>
-    //       `(assessment_chapter.chapter_id = ${chapterTable}.id)`,
-    //     sqlJoins: [
-    //       (chapterTable, junctionTable) =>
-    //         `${chapterTable}.id = ${junctionTable}.chapter_id`,
-    //       (junctionTable, assessmentTable) =>
-    //         `${junctionTable}.assessment_id = ${assessmentTable}.id`,
-    //     ],
-    //   },
-    // },
   }),
 });

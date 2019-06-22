@@ -5,26 +5,27 @@ import {GraphQLDate} from 'graphql-iso-date';
 export const Assessment = newJoinMonsterGraphQLObjectType({
   name: 'Assessment',
   sqlTable: 'assessment',
+  description: 'Keeps information about an assessment',
   uniqueKey: 'id',
   fields: () => ({
     totalMarks: {
+      description: 'The score allocated to the entire assessment',
       type: GraphQLInt,
       sqlColumn: 'total_marks',
     },
     kind: {
       type: GraphQLString,
       description: `The type of assessment (e.g. 'Class Test', 'Project', 'Assignment', and etc.`,
-      sqlExpr: (assessmentTable) => `(select kind from assessment
-        left join assessment_chapter on
-        assessment_chapter.assessment_id = ${assessmentTable}.id
-        where assessment_chapter.chapter_id = chapter.id
-       )`,
+      sqlColumn: 'kind',
     },
     startDate: {
+      description: 'The day the assessment will be taken',
       type: GraphQLDate,
       sqlColumn: 'start_date',
     },
     endDate: {
+      description:
+        'The day the assessment will be submitted to the teacher. Null for one day-long assessments',
       type: GraphQLDate,
       sqlColumn: 'end_date',
     },
