@@ -1,6 +1,7 @@
 import {newJoinMonsterGraphQLObjectType} from '../../utils/joinMonster-graphql14.fix';
 import {GraphQLInt, GraphQLNonNull} from 'graphql';
 import {Chapter} from './Chapter.graphql';
+import {Assessment} from './assessment.graphql';
 
 export const StudentResult = newJoinMonsterGraphQLObjectType({
   name: 'StudentResult',
@@ -21,6 +22,18 @@ export const StudentResult = newJoinMonsterGraphQLObjectType({
             `${studentResultTable}.assessment_chapter_id = ${junctionTable}.id`,
           (junctionTable, chapterTable) =>
             `${junctionTable}.chapter_id = ${chapterTable}.id`,
+        ],
+      },
+    },
+    assessment: {
+      type: Assessment,
+      junction: {
+        sqlTable: 'assessment_chapter',
+        sqlJoins: [
+          (studentResult, junctionTable) =>
+            `${studentResult}.assessment_chapter_id = ${junctionTable}.id`,
+          (junctionTable, assessmentTable) =>
+            `${junctionTable}.assessment_id = ${assessmentTable}.id`,
         ],
       },
     },
