@@ -1,7 +1,7 @@
 import React from "react";
 import { Card, CardBody, CardHeader, Col, Row, Table } from "reactstrap";
 
-import usersData from "./UsersData";
+// import usersData from "./UsersData";
 
 interface Props {
   match: {
@@ -13,20 +13,20 @@ interface Props {
 
 class User extends React.Component<Props> {
   render() {
-    const user = usersData.find(
-      user => user.id.toString() === this.props.match.params.id
-    );
+    // const user = usersData.find(
+    //   user => user.id.toString() === this.props.match.params.id
+    // );
 
-    const userDetails = user
-      ? Object.entries(user)
-      : [
-          [
-            "id",
-            <span>
-              <i className="text-muted icon-ban"></i> Not found
-            </span>
-          ]
-        ];
+    // const userDetails = user
+    //   ? Object.entries(user)
+    //   : [
+    //       [
+    //         "id",
+    //         <span>
+    //           <i className="text-muted icon-ban"></i> Not found
+    //         </span>
+    //       ]
+    //     ];
 
     return (
       <div className="animated fadeIn">
@@ -42,7 +42,8 @@ class User extends React.Component<Props> {
               <CardBody>
                 <Table responsive striped hover>
                   <tbody>
-                    {// @ts-ignore
+                    {/* {
+                      // @ts-ignore
                     userDetails.map(([key, value]) => {
                       return (
                         <tr key={key}>
@@ -52,7 +53,7 @@ class User extends React.Component<Props> {
                           </td>
                         </tr>
                       );
-                    })}
+                    })} */}
                   </tbody>
                 </Table>
               </CardBody>

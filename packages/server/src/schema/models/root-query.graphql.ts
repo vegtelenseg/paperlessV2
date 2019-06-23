@@ -3,6 +3,7 @@ import Context from '../../context';
 import dbCall from '../dbCall';
 import {Province} from './province.graphql';
 import {Assessment} from './assessment.graphql';
+import { School } from './school.graphql';
 
 export default new GraphQLObjectType({
   name: 'RootQuery',
@@ -18,6 +19,15 @@ export default new GraphQLObjectType({
     },
     assessments: {
       type: new GraphQLList(Assessment),
+      resolve: (
+        parent: any,
+        args: {[key: string]: any},
+        context: Context,
+        resolveInfo: GraphQLResolveInfo
+      ) => dbCall(parent, args, context, resolveInfo),
+    },
+    schools: {
+      type: new GraphQLList(School),
       resolve: (
         parent: any,
         args: {[key: string]: any},

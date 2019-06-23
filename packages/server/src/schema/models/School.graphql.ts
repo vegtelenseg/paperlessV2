@@ -20,7 +20,7 @@ export const School = newJoinMonsterGraphQLObjectType({
       sqlColumn: 'active',
     },
     registeredDate: {
-      type: GraphQLNonNull(GraphQLString),
+      type: GraphQLNonNull(GraphQLDate),
       sqlColumn: 'registered_date',
     },
     grades: {
