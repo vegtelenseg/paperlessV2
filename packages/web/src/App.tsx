@@ -1,61 +1,23 @@
 import React from "react";
-import { HashRouter, Route, Switch } from "react-router-dom";
+import { createBrowserHistory as createHistory } from "history";
+import { Router } from "react-router-dom";
 // import { renderRoutes } from 'react-router-config';
 import "./App.scss";
+import { DefaultLayout } from "./containers";
 
 const loading = () => (
   <div className="animated fadeIn pt-3 text-center">Loading...</div>
 );
 
-// Containers
-const DefaultLayout = React.lazy(() =>
-  import("./containers/DefaultLayout/DefaultLayout")
-);
-
-// Pages
-const Login = React.lazy(() => import("./views/Pages/Login/Login"));
-const Register = React.lazy(() => import("./views/Pages/Register/Register"));
-const Page404 = React.lazy(() => import("./views/Pages/Page404/Page404"));
-const Page500 = React.lazy(() => import("./views/Pages/Page500/Page500"));
-
 class App extends React.Component {
+  private history = createHistory();
   render() {
     return (
-      <HashRouter>
+      <Router history={this.history}>
         <React.Suspense fallback={loading()}>
-          <Switch>
-            <Route
-              exact
-              path="/login"
-              name="Login Page"
-              render={props => <Login {...props} />}
-            />
-            <Route
-              exact
-              path="/register"
-              name="Register Page"
-              render={props => <Register {...props} />}
-            />
-            <Route
-              exact
-              path="/404"
-              name="Page 404"
-              render={props => <Page404 {...props} />}
-            />
-            <Route
-              exact
-              path="/500"
-              name="Page 500"
-              render={props => <Page500 {...props} />}
-            />
-            <Route
-              path="/"
-              name="Home"
-              render={props => <DefaultLayout {...props} />}
-            />
-          </Switch>
+          <DefaultLayout />
         </React.Suspense>
-      </HashRouter>
+      </Router>
     );
   }
 }

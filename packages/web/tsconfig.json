@@ -3,6 +3,9 @@
     "target": "es5",
     "module": "esnext",
     "lib": ["es6", "dom"],
+            "typeRoots": [
+            "node_modules/@types"
+        ],
     "allowJs": false,
     "jsx": "preserve",
     "importHelpers": true,

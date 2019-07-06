@@ -1,5 +1,4 @@
 import React, { Suspense } from "react";
-import { Redirect, Route, Switch } from "react-router-dom";
 import { Container } from "reactstrap";
 
 import {
@@ -11,33 +10,28 @@ import {
   AppSidebarFooter,
   AppSidebarForm,
   AppSidebarHeader,
-  AppSidebarMinimizer,
-  AppSidebarNav
+  AppSidebarMinimizer
 } from "@coreui/react";
+import { routes } from "../../Routes";
+import { RouteComponentProps, withRouter } from "react-router";
 // sidebar nav config
-import navigation from "../../_nav";
 // routes config
-import routes from "../../routes";
-
-interface Props {
-  history;
-}
-
 const DefaultAside = React.lazy(() => import("./DefaultAside"));
 const DefaultFooter = React.lazy(() => import("./DefaultFooter"));
 const DefaultHeader = React.lazy(() => import("./DefaultHeader"));
+const Routes = React.lazy(() => import("../../Routes"));
 
-class DefaultLayout extends React.Component<Props> {
+class DefaultLayout extends React.Component<RouteComponentProps> {
   loading = () => (
     <div className="animated fadeIn pt-1 text-center">Loading...</div>
   );
 
   signOut(e) {
     e.preventDefault();
-    this.props.history.push("/login");
   }
 
   render() {
+    console.log("Default Layout props: ", this.props);
     return (
       <div className="app">
         <AppHeader fixed>
@@ -49,12 +43,7 @@ class DefaultLayout extends React.Component<Props> {
           <AppSidebar fixed display="lg">
             <AppSidebarHeader />
             <AppSidebarForm />
-            {
-              // @ts-ignore
-              <Suspense>
-                <AppSidebarNav navConfig={navigation} {...this.props} />
-              </Suspense>
-            }
+
             <AppSidebarFooter />
             <AppSidebarMinimizer />
           </AppSidebar>
@@ -62,20 +51,7 @@ class DefaultLayout extends React.Component<Props> {
             <AppBreadcrumb appRoutes={routes} />
             <Container fluid>
               <Suspense fallback={this.loading()}>
-                <Switch>
-                  {routes.map((route, idx) => {
-                    return route.component ? (
-                      <Route
-                        key={idx}
-                        path={route.path}
-                        exact={route.exact}
-                        name={route.name}
-                        render={props => <route.component {...props} />}
-                      />
-                    ) : null;
-                  })}
-                  <Redirect from="/" to="/dashboard" />
-                </Switch>
+                <Routes />
               </Suspense>
             </Container>
           </main>
@@ -95,4 +71,4 @@ class DefaultLayout extends React.Component<Props> {
   }
 }
 
-export default DefaultLayout;
+export default withRouter(DefaultLayout);

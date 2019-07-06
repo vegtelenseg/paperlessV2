@@ -18,6 +18,5 @@ export default (
       const result = await SqlService.raw(context, sql);
       return result.rows;
     },
-    // @ts-ignore
     options
   );

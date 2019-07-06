@@ -1,9 +1,10 @@
 import React from "react";
-import { Row } from "reactstrap";
+import { Row, Col } from "reactstrap";
 import gql from "graphql-tag";
 
 import School from "../../components/school/school";
-import ApolloQuery from '../ApolloQuery';
+import ApolloQuery from "../ApolloQuery";
+import { RouteComponentProps } from "react-router";
 
 interface State {
   dropdownOpen: boolean;
@@ -14,18 +15,18 @@ interface State {
   card4: boolean;
 }
 
-interface Props {
-  data: any;
+interface Props extends RouteComponentProps {
+  data?: any;
 }
 
 const DashboardQuery = gql`
-    {
-      viewer {
+  {
+    viewer {
       schools {
-        ...school
-        }
+        ...schools
       }
-    },
+    }
+  }
   ${School.fragments.schools}
 `;
 
@@ -39,13 +40,22 @@ class Dashboard extends React.Component<Props, State> {
           } else if (error) {
             return <div>Error: {error.message}</div>;
           }
+          console.log("Data: ", data);
           return (
             <div className="animated fadeIn">
-                <Row>
-              {data.viewer.schools.map((school, idx) => (
-                  <School key={`${school} ${idx}`} school={school} />
-              ))}
-                </Row>
+              <Row>
+                {data.viewer.schools.map((school, idx) => (
+                  <Col
+                    xs="12"
+                    sm="6"
+                    lg="3"
+                    onClick={() => this.props.history.push("/students")}
+                    key={`${school} ${idx}`}
+                  >
+                    <School school={school} />
+                  </Col>
+                ))}
+              </Row>
             </div>
           );
         }}

@@ -1,9 +1,14 @@
-import {GraphQLObjectType, GraphQLResolveInfo, GraphQLList} from 'graphql';
+import {
+  GraphQLObjectType,
+  GraphQLResolveInfo,
+  GraphQLList,
+  GraphQLInt,
+} from 'graphql';
 import Context from '../../context';
 import dbCall from '../dbCall';
 import {Province} from './province.graphql';
 import {Assessment} from './assessment.graphql';
-import { School } from './school.graphql';
+import {School} from './school.graphql';
 
 export default new GraphQLObjectType({
   name: 'RootQuery',
@@ -28,6 +33,18 @@ export default new GraphQLObjectType({
     },
     schools: {
       type: new GraphQLList(School),
+      args: {
+        id: {
+          type: GraphQLInt,
+        },
+      },
+      where: (schoolTable, {id}) => {
+        if (id) {
+          return `${schoolTable}.id = ${id}`;
+        } else {
+          return `${schoolTable}.id = ${schoolTable}.id`;
+        }
+      },
       resolve: (
         parent: any,
         args: {[key: string]: any},

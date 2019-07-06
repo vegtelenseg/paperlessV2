@@ -11,6 +11,9 @@ export const School = newJoinMonsterGraphQLObjectType({
   sqlTable: 'school',
   uniqueKey: 'id',
   fields: () => ({
+    id: {
+      type: GraphQLInt,
+    },
     name: {
       type: GraphQLNonNull(GraphQLString),
       sqlColumn: 'name',
