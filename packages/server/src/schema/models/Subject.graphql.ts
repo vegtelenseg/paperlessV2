@@ -3,12 +3,14 @@ import {newJoinMonsterGraphQLObjectType} from '../../utils/joinMonster-graphql14
 import {GraphQLObjectType} from 'graphql/type/definition';
 import {Teacher} from './teacher.graphql';
 import {Student} from './student.graphql';
+import { globalIdField } from 'graphql-relay';
 
 export const Subject: GraphQLObjectType = newJoinMonsterGraphQLObjectType({
   name: 'Subject',
   sqlTable: 'subject',
   uniqueKey: 'id',
   fields: () => ({
+    id: globalIdField('Subject'),
     name: {
       type: GraphQLNonNull(GraphQLString),
       sqlColumn: 'name',

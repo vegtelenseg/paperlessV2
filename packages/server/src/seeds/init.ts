@@ -136,6 +136,9 @@ export async function seed(knex: Knex) {
     const gender = genders[Math.round(Math.random())];
     const sBirthDate = randomDate.getRandomDateInRange(sStartDate, sEndDate);
     const subjects = await Subject.query(knex).context({context});
+    const school = await School.query(knex)
+      .context(context)
+      .findById(Math.floor(Math.random() * 4));
     await Student.query(knex)
       .context({context})
       // @ts-ignore
@@ -154,6 +157,9 @@ export async function seed(knex: Knex) {
         contactPhone: fakerator.phone.number(),
         contactMobile: fakerator.phone.number(),
         contactMail: fakerator.internet.email(),
+        school: {
+          '#dbRef': school ? school.id : 1,
+        },
         subjects: subjects.map((subject) => ({
           '#dbRef': subject.id,
         })),
@@ -193,13 +199,14 @@ export async function seed(knex: Knex) {
 
   const assessmentList = await Assessment.query(knex).context({context});
   for (let i = 0; i < assessmentList.length; i++) {
-    for (let j = 0; j < subjects[j].chapters.length; j++) {
+    for (let j = 0; j < subjects[j % 2].chapters.length; j++) {
       await Chapter.query(knex)
         .context({context})
         .insertGraph({
-          name: subjects[i].chapters[j].name,
+          name: subjects[j % 2].chapters[j].name,
           // @ts-ignore
           assessments: [{'#dbRef': assessmentList[i].id}],
+          subjectId: subjectList[j % 2].id,
           maxScore: Math.floor(Math.random() * 10),
         });
     }

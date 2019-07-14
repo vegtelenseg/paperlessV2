@@ -1,96 +1,49 @@
 export const subjects = [
   {
-    name: 'Physical Sciences',
-    totalMarks: 70,
-    commitment: '12 months',
-    chapters: [
-      {
-        name: 'Skills for Science',
-      },
-      {
-        name: 'Momentum and Impulse',
-      },
-      {
-        name: 'Vertical Projectile Motion in One Dimension',
-      },
-      {
-        name: 'Organic molecules',
-      },
-    ],
-  },
-  {
-    name: 'Geography',
-    totalMarks: 70,
-    commitment: '12 months',
-    chapters: [
-      {
-        name: 'Skills for Science',
-      },
-      {
-        name: 'Momentum and Impulse',
-      },
-      {
-        name: 'Vertical Projectile Motion in One Dimension',
-      },
-      {
-        name: 'Organic molecules',
-      },
-    ],
-  },
-  {
     name: 'Mathematics',
-    totalMarks: 70,
     commitment: '12 months',
     chapters: [
       {
-        name: 'Skills for Science',
+        name: 'Ratios, Rates and Percentages',
       },
       {
-        name: 'Momentum and Impulse',
+        name: 'Arithmetic operations',
       },
       {
-        name: 'Vertical Projectile Motion in One Dimension',
+        name: 'Negative numbers',
       },
       {
-        name: 'Organic molecules',
+        name: 'Properties of Numbers',
+      },
+      {
+        name: 'Variables and Expressions',
+      },
+      {
+        name: 'Equations & Inequalities',
+      },
+      {
+        name: 'Geometry',
+      },
+      {
+        name: 'Data and Statistics',
       },
     ],
   },
   {
-    name: 'Accounting',
-    totalMarks: 70,
+    name: 'English',
     commitment: '12 months',
     chapters: [
       {
-        name: 'Skills for Science',
+        name: 'Communication',
       },
       {
-        name: 'Momentum and Impulse',
+        name: 'Reading',
       },
       {
-        name: 'Vertical Projectile Motion in One Dimension',
+        name: 'Writing',
       },
       {
-        name: 'Organic molecules',
-      },
-    ],
-  },
-  {
-    name: 'Economics',
-    totalMarks: 70,
-    commitment: '12 months',
-    chapters: [
-      {
-        name: 'Skills for Science',
-      },
-      {
-        name: 'Momentum and Impulse',
-      },
-      {
-        name: 'Vertical Projectile Motion in One Dimension',
-      },
-      {
-        name: 'Organic molecules',
+        name: 'Research',
       },
     ],
   },

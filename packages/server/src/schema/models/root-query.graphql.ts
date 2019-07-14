@@ -11,7 +11,7 @@ import {Assessment} from './assessment.graphql';
 import {School} from './school.graphql';
 
 export default new GraphQLObjectType({
-  name: 'RootQuery',
+  name: 'Viewer',
   fields: () => ({
     provinces: {
       type: new GraphQLList(Province),

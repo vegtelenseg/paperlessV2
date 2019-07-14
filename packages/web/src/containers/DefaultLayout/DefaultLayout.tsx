@@ -31,7 +31,6 @@ class DefaultLayout extends React.Component<RouteComponentProps> {
   }
 
   render() {
-    console.log("Default Layout props: ", this.props);
     return (
       <div className="app">
         <AppHeader fixed>

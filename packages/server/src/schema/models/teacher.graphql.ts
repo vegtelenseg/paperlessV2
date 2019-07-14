@@ -1,16 +1,17 @@
 import {GraphQLNonNull, GraphQLString, GraphQLInt} from 'graphql';
 import {GraphQLDate} from 'graphql-iso-date';
-//import {Subject} from './subject.graphql';
 import {newJoinMonsterGraphQLObjectType} from '../../utils/joinMonster-graphql14.fix';
 import {School} from './school.graphql';
 import {GraphQLObjectType, GraphQLList} from 'graphql/type/definition';
 import {Subject} from './subject.graphql';
+import { globalIdField } from 'graphql-relay';
 
 export const Teacher: GraphQLObjectType = newJoinMonsterGraphQLObjectType({
   name: 'Teacher',
   sqlTable: 'teacher',
   uniqueKey: 'id_number',
   fields: () => ({
+    id: globalIdField('Teacher'),
     firstName: {
       type: GraphQLNonNull(GraphQLString),
       sqlColumn: 'first_name',

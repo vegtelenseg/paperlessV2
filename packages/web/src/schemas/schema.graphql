@@ -1,0 +1,130 @@
+# source: http://localhost:5000/graphql
+# timestamp: Sun Jul 14 2019 09:39:48 GMT+0200 (South Africa Standard Time)
+
+"""Keeps information about an assessment"""
+type Assessment {
+  """The ID of an object"""
+  id: ID!
+
+  """The score allocated to the entire assessment"""
+  totalMarks: Int
+
+  """
+  The type of assessment (e.g. 'Class Test', 'Project', 'Assignment', and etc.
+  """
+  kind: String
+
+  """The day the assessment will be taken"""
+  startDate: Date
+
+  """
+  The day the assessment will be submitted to the teacher. Null for one day-long assessments
+  """
+  endDate: Date
+}
+
+"""Keeps information about a subject's chapter"""
+type Chapter {
+  """The ID of an object"""
+  id: ID!
+
+  """The name of the Chapter"""
+  name: String!
+
+  """A summary about the chapter"""
+  description: String
+
+  """
+  The total amount of marks that the chapter contributes to the overall 100% of the subject
+  """
+  maxScore: Int
+}
+
+"""
+A date string, such as 2007-12-03, compliant with the `full-date` format
+outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for
+representation of dates and times using the Gregorian calendar.
+"""
+scalar Date
+
+type Grade {
+  """The ID of an object"""
+  id: ID!
+  name: String!
+  subjects: [Subject]!
+}
+
+type Province {
+  """The ID of an object"""
+  id: ID!
+  name: String!
+  schools: [School]!
+}
+
+type Query {
+  viewer: Viewer!
+}
+
+type School {
+  """The ID of an object"""
+  id: ID!
+  name: String!
+  active: String!
+  registeredDate: Date!
+  grades: [Grade]!
+  students: [Student]
+}
+
+type Student {
+  """The ID of an object"""
+  id: ID!
+  firstName: String!
+  lastName: String!
+  birthDate: Date!
+  gender: String!
+  contactPhone: String
+  contactMobile: String
+  contactMail: String
+  grade: Int!
+  enrolmentDate: Date!
+  results: [StudentResult]
+  assessments: [Assessment]!
+}
+
+type StudentResult {
+  """The ID of an object"""
+  id: ID!
+  score: Int
+  chapter: Chapter!
+  assessment: Assessment
+}
+
+type Subject {
+  """The ID of an object"""
+  id: ID!
+  name: String!
+  students: [Student]
+  teacher: Teacher
+}
+
+type Teacher {
+  """The ID of an object"""
+  id: ID!
+  firstName: String!
+  lastName: String!
+  birthDate: Date!
+  gender: String!
+  contactPhone: String
+  contactMobile: String
+  contactMail: String
+  grade: Int!
+  employmentDate: Date!
+  subjects: [Subject]
+  school: School
+}
+
+type Viewer {
+  provinces: [Province]
+  assessments: [Assessment]
+  schools(id: Int): [School]
+}
