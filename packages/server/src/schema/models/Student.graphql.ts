@@ -4,7 +4,8 @@ import {newJoinMonsterGraphQLObjectType} from '../../utils/joinMonster-graphql14
 //import {Subject} from './Subject.graphql';
 import {Assessment} from './assessment.graphql';
 import {StudentResult} from './student-results.graphql';
-import { globalIdField } from 'graphql-relay';
+import {globalIdField} from 'graphql-relay';
+import {nodeInterface} from '../Relay';
 
 export const Student = newJoinMonsterGraphQLObjectType({
   name: 'Student',
@@ -66,4 +67,5 @@ export const Student = newJoinMonsterGraphQLObjectType({
       },
     },
   }),
+  interfaces: [nodeInterface],
 });

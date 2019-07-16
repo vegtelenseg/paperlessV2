@@ -81,7 +81,11 @@ const query = graphql`
   query RoutesQuery {
     viewer {
       schools {
-        ...school_viewer
+        edges {
+          node {
+            ...school_viewer
+          }
+        }
       }
     }
   }

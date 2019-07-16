@@ -1,8 +1,8 @@
 # source: http://localhost:5000/graphql
-# timestamp: Sun Jul 14 2019 09:39:48 GMT+0200 (South Africa Standard Time)
+# timestamp: Tue Jul 16 2019 10:28:28 GMT+0200 (South Africa Standard Time)
 
 """Keeps information about an assessment"""
-type Assessment {
+type Assessment implements Node {
   """The ID of an object"""
   id: ID!
 
@@ -24,7 +24,7 @@ type Assessment {
 }
 
 """Keeps information about a subject's chapter"""
-type Chapter {
+type Chapter implements Node {
   """The ID of an object"""
   id: ID!
 
@@ -47,14 +47,35 @@ representation of dates and times using the Gregorian calendar.
 """
 scalar Date
 
-type Grade {
+type Grade implements Node {
   """The ID of an object"""
   id: ID!
   name: String!
   subjects: [Subject]!
 }
 
-type Province {
+"""An object with an ID"""
+interface Node {
+  """The id of the object."""
+  id: ID!
+}
+
+"""Information about pagination in a connection."""
+type PageInfo {
+  """When paginating forwards, are there more items?"""
+  hasNextPage: Boolean!
+
+  """When paginating backwards, are there more items?"""
+  hasPreviousPage: Boolean!
+
+  """When paginating backwards, the cursor to continue."""
+  startCursor: String
+
+  """When paginating forwards, the cursor to continue."""
+  endCursor: String
+}
+
+type Province implements Node {
   """The ID of an object"""
   id: ID!
   name: String!
@@ -62,10 +83,15 @@ type Province {
 }
 
 type Query {
+  """Fetches an object given its ID"""
+  node(
+    """The ID of an object"""
+    id: ID!
+  ): Node
   viewer: Viewer!
 }
 
-type School {
+type School implements Node {
   """The ID of an object"""
   id: ID!
   name: String!
@@ -75,7 +101,7 @@ type School {
   students: [Student]
 }
 
-type Student {
+type Student implements Node {
   """The ID of an object"""
   id: ID!
   firstName: String!
@@ -91,7 +117,7 @@ type Student {
   assessments: [Assessment]!
 }
 
-type StudentResult {
+type StudentResult implements Node {
   """The ID of an object"""
   id: ID!
   score: Int
@@ -99,7 +125,7 @@ type StudentResult {
   assessment: Assessment
 }
 
-type Subject {
+type Subject implements Node {
   """The ID of an object"""
   id: ID!
   name: String!
@@ -107,7 +133,7 @@ type Subject {
   teacher: Teacher
 }
 
-type Teacher {
+type Teacher implements Node {
   """The ID of an object"""
   id: ID!
   firstName: String!
@@ -126,5 +152,24 @@ type Teacher {
 type Viewer {
   provinces: [Province]
   assessments: [Assessment]
-  schools(id: Int): [School]
+  schools(after: String, first: Int): ViewerSchoolConnectionConnection
+}
+
+"""A connection to a list of items."""
+type ViewerSchoolConnectionConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [ViewerSchoolConnectionEdge]
+  total: Int
+}
+
+"""An edge in a connection."""
+type ViewerSchoolConnectionEdge {
+  """The item at the end of the edge"""
+  node: School
+
+  """A cursor for use in pagination"""
+  cursor: String!
 }

@@ -12,14 +12,15 @@ import {
 import graphql from "babel-plugin-relay/macro";
 import { RouteComponentProps } from "react-router";
 import { createFragmentContainer } from "react-relay";
+import { school_viewer } from "./__generated__/school_viewer.graphql";
 
 interface Props extends Partial<RouteComponentProps> {
-  viewer: any;
+  viewer: school_viewer;
 }
 
 class School extends React.Component<Props> {
   public render() {
-    console.log("School:Props: ", this.props.viewer.schools);
+    console.log("School:Props: ", this.props.viewer.name);
     const { viewer } = this.props;
 
     return (
@@ -46,7 +47,7 @@ class School extends React.Component<Props> {
               </ButtonDropdown>
             </ButtonGroup>
             <div className="text-value">{viewer.name}</div>
-            <div>{viewer.registeredDate}</div>
+            <div>{viewer.name}</div>
           </CardBody>
           <div className="chart-wrapper mx-3" style={{ height: "70px" }}></div>
         </Card>

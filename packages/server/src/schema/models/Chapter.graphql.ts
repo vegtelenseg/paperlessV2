@@ -1,6 +1,7 @@
 import {GraphQLNonNull, GraphQLString, GraphQLInt} from 'graphql';
 import {newJoinMonsterGraphQLObjectType} from '../../utils/joinMonster-graphql14.fix';
-import { globalIdField } from 'graphql-relay';
+import {globalIdField} from 'graphql-relay';
+import {nodeInterface} from '../Relay';
 
 export const Chapter = newJoinMonsterGraphQLObjectType({
   name: 'Chapter',
@@ -24,6 +25,7 @@ export const Chapter = newJoinMonsterGraphQLObjectType({
         'The total amount of marks that the chapter contributes to the overall 100% of the subject',
       type: GraphQLInt,
       sqlColumn: 'max_score',
-    }
+    },
   }),
+  interfaces: [nodeInterface],
 });

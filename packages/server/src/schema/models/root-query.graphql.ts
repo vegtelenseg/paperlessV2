@@ -9,6 +9,15 @@ import dbCall from '../dbCall';
 import {Province} from './province.graphql';
 import {Assessment} from './assessment.graphql';
 import {School} from './school.graphql';
+import {connectionDefinitions, forwardConnectionArgs} from 'graphql-relay';
+
+const {connectionType: ViewerSchoolConnection} = connectionDefinitions({
+  name: 'ViewerSchoolConnection',
+  nodeType: School,
+  connectionFields: {
+    total: {type: GraphQLInt},
+  },
+});
 
 export default new GraphQLObjectType({
   name: 'Viewer',
@@ -32,11 +41,13 @@ export default new GraphQLObjectType({
       ) => dbCall(parent, args, context, resolveInfo),
     },
     schools: {
-      type: new GraphQLList(School),
+      type: ViewerSchoolConnection,
       args: {
-        id: {
-          type: GraphQLInt,
-        },
+        ...forwardConnectionArgs,
+      },
+      sqlPaginate: true,
+      orderBy: {
+        name: 'desc',
       },
       where: (schoolTable, {id}) => {
         if (id) {
