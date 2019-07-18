@@ -2,6 +2,9 @@ import React from "react";
 import { Table } from "reactstrap";
 
 import { RouteComponentProps } from "react-router";
+import { createFragmentContainer } from "react-relay";
+import { graphql } from "babel-plugin-relay/macro";
+import { Students_viewer } from "./__generated__/Students_viewer.graphql";
 
 const tableHeadings = [
   "First Name",
@@ -11,13 +14,12 @@ const tableHeadings = [
   "Mathematics"
 ];
 interface Props extends Partial<RouteComponentProps> {
-  id: string;
-  name: string;
-  registeredDate: string;
+  viewer: Students_viewer;
 }
 
-class School extends React.Component<Props> {
+class Students extends React.Component<Props> {
   public render() {
+    console.log(this.props.viewer);
     return (
       <>
         <h2>{""}</h2>
@@ -52,4 +54,11 @@ class School extends React.Component<Props> {
   }
 }
 
-export default School;
+const StudentFragmentContainer = createFragmentContainer(Students, {
+  viewer: graphql`
+    fragment Students_viewer on Student {
+      firstName
+    }
+  `
+});
+export default StudentFragmentContainer;

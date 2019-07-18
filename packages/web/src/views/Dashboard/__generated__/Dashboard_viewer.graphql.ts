@@ -1,16 +1,10 @@
 /* tslint:disable */
 
 import { ReaderFragment } from "relay-runtime";
-type school_viewer$ref = any;
+type Schools_viewer$ref = any;
 export type Dashboard_viewer$ref = any;
 export type Dashboard_viewer = {
-    readonly schools: {
-        readonly edges: ReadonlyArray<{
-            readonly node: {
-                readonly " $fragmentRefs": school_viewer$ref;
-            } | null;
-        } | null> | null;
-    } | null;
+    readonly " $fragmentRefs": Schools_viewer$ref;
     readonly " $refType": Dashboard_viewer$ref;
 };
 
@@ -24,44 +18,11 @@ const node: ReaderFragment = {
   "argumentDefinitions": [],
   "selections": [
     {
-      "kind": "LinkedField",
-      "alias": null,
-      "name": "schools",
-      "storageKey": null,
-      "args": null,
-      "concreteType": "ViewerSchoolConnectionConnection",
-      "plural": false,
-      "selections": [
-        {
-          "kind": "LinkedField",
-          "alias": null,
-          "name": "edges",
-          "storageKey": null,
-          "args": null,
-          "concreteType": "ViewerSchoolConnectionEdge",
-          "plural": true,
-          "selections": [
-            {
-              "kind": "LinkedField",
-              "alias": null,
-              "name": "node",
-              "storageKey": null,
-              "args": null,
-              "concreteType": "School",
-              "plural": false,
-              "selections": [
-                {
-                  "kind": "FragmentSpread",
-                  "name": "school_viewer",
-                  "args": null
-                }
-              ]
-            }
-          ]
-        }
-      ]
+      "kind": "FragmentSpread",
+      "name": "Schools_viewer",
+      "args": null
     }
   ]
 };
-(node as any).hash = 'da21a51a27e6d5f9e981de0f20624d7e';
+(node as any).hash = '1d25e9d4e4599de30b1596842a9859da';
 export default node;

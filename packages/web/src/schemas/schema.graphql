@@ -1,5 +1,5 @@
 # source: http://localhost:5000/graphql
-# timestamp: Tue Jul 16 2019 10:28:28 GMT+0200 (South Africa Standard Time)
+# timestamp: Wed Jul 17 2019 09:19:51 GMT+0200 (South Africa Standard Time)
 
 """Keeps information about an assessment"""
 type Assessment implements Node {

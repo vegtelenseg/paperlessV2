@@ -1,16 +1,12 @@
 import React from "react";
 import { Switch, Route } from "react-router-dom";
-import { RelayContext } from "./contexts/Relay";
-import { QueryRenderer } from "react-relay";
-import Error from "./components/error/Error";
-import graphql from "babel-plugin-relay/macro";
 
 const Register = React.lazy(() => import("./views/Pages/Register/Register"));
 const Page404 = React.lazy(() => import("./views/Pages/Page404/Page404"));
 const Page500 = React.lazy(() => import("./views/Pages/Page500/Page500"));
 const Dashboard = React.lazy(() => import("./views/Dashboard/Dashboard"));
 const Login = React.lazy(() => import("./views/Pages/Login/Login"));
-const School = React.lazy(() => import("./views/Pages/School/School"));
+const Students = React.lazy(() => import("./views/Pages/Students/Students"));
 
 export const routes = [
   {
@@ -47,7 +43,7 @@ export const routes = [
     path: "/school/:id",
     exact: true,
     name: "School",
-    Component: School
+    Component: Students
   }
 ];
 class Routes extends React.Component {
@@ -77,40 +73,4 @@ class Routes extends React.Component {
   }
 }
 
-const query = graphql`
-  query RoutesQuery {
-    viewer {
-      schools {
-        edges {
-          node {
-            ...school_viewer
-          }
-        }
-      }
-    }
-  }
-`;
-export default moduleProps => {
-  return (
-    <RelayContext.Consumer>
-      {environment => (
-        <QueryRenderer
-          environment={environment}
-          query={query}
-          variables={{}}
-          render={({ error, props, retry }) => {
-            if (error) {
-              return <Error error={error} retry={retry} />;
-            } else if (props) {
-              return (
-                <Routes environment={environment} {...moduleProps} {...props} />
-              );
-            }
-
-            return <div>Loading...</div>;
-          }}
-        />
-      )}
-    </RelayContext.Consumer>
-  );
-};
+export default Routes;

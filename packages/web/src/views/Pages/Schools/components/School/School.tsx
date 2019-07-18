@@ -9,22 +9,30 @@ import {
   DropdownItem,
   Col
 } from "reactstrap";
-import graphql from "babel-plugin-relay/macro";
-import { RouteComponentProps } from "react-router";
-import { createFragmentContainer } from "react-relay";
-import { school_viewer } from "./__generated__/school_viewer.graphql";
+import { RouteComponentProps, withRouter } from "react-router";
 
-interface Props extends Partial<RouteComponentProps> {
-  viewer: school_viewer;
+interface School {
+  id: string;
+  name: string;
+  registeredDate: Date;
+}
+interface Props extends RouteComponentProps {
+  school: School;
 }
 
 class School extends React.Component<Props> {
   public render() {
-    console.log("School:Props: ", this.props.viewer.name);
-    const { viewer } = this.props;
-
+    const {
+      // @ts-ignore
+      school: { node }
+    } = this.props;
     return (
-      <Col xs="12" sm="6" lg="3">
+      <Col
+        xs="12"
+        sm="6"
+        lg="3"
+        onClick={() => this.props.history.push(`/school/${node.id}`)}
+      >
         <Card className="text-white bg-info">
           <CardBody className="pb-0">
             <ButtonGroup className="float-right">
@@ -46,8 +54,8 @@ class School extends React.Component<Props> {
                 </DropdownMenu>
               </ButtonDropdown>
             </ButtonGroup>
-            <div className="text-value">{viewer.name}</div>
-            <div>{viewer.name}</div>
+            <div className="text-value">{node.name}</div>
+            <div>{node.registeredDate}</div>
           </CardBody>
           <div className="chart-wrapper mx-3" style={{ height: "70px" }}></div>
         </Card>
@@ -56,12 +64,4 @@ class School extends React.Component<Props> {
   }
 }
 
-const SchoolFragmentContainer = createFragmentContainer(School, {
-  viewer: graphql`
-    fragment school_viewer on School {
-      name
-      registeredDate
-    }
-  `
-});
-export { SchoolFragmentContainer };
+export default withRouter(School);
