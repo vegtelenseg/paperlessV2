@@ -72,6 +72,10 @@ export async function up(knex: Knex) {
       .increments()
       .primary()
       .unsigned();
+    table
+      .integer('subject_id')
+      .references('subject.id')
+      .onDelete('CASCADE');
     table.string('name', 128).notNullable();
     table.string('description');
     table.integer('max_score');
@@ -282,6 +286,22 @@ export async function up(knex: Knex) {
       .references('grade.id')
       .onDelete('CASCADE');
   });
+
+  await knex.schema.createTable('school_student', (table) => {
+    table
+      .increments()
+      .unsigned()
+      .primary();
+    table
+      .integer('student_id')
+      .references('student.id')
+      .onDelete('CASCADE');
+    table
+      .integer('school_id')
+      .references('school.id')
+      .onDelete('CASCADE');
+    table.boolean('is_active').defaultTo(false);
+  });
 }
 
 const tables = [
@@ -305,6 +325,7 @@ const tables = [
   'province',
   'teacher_grade',
   'student_grade',
+  'school_student',
 ];
 
 export async function down(knex: Knex) {

@@ -3,6 +3,9 @@
     "target": "es5",
     "module": "esnext",
     "lib": ["es6", "dom"],
+            "typeRoots": [
+            "node_modules/@types"
+        ],
     "allowJs": false,
     "jsx": "preserve",
     "importHelpers": true,
@@ -12,7 +15,7 @@
     "esModuleInterop": true,
     "skipLibCheck": false,
     "allowSyntheticDefaultImports": true,
-    "forceConsistentCasingInFileNames": true,
+    "forceConsistentCasingInFileNames": false,
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,

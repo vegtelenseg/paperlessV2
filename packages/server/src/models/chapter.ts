@@ -8,6 +8,7 @@ export class Chapter extends BaseModel {
   public contribution?: number;
   public maxScore!: number;
   public assessments!: Assessment[];
+  public subjectId!: number;
 
   public static get relationMappings() {
     return {

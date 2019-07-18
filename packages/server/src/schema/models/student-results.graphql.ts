@@ -2,6 +2,8 @@ import {newJoinMonsterGraphQLObjectType} from '../../utils/joinMonster-graphql14
 import {GraphQLInt, GraphQLNonNull} from 'graphql';
 import {Chapter} from './Chapter.graphql';
 import {Assessment} from './assessment.graphql';
+import {globalIdField} from 'graphql-relay';
+import {nodeInterface} from '../Relay';
 
 export const StudentResult = newJoinMonsterGraphQLObjectType({
   name: 'StudentResult',
@@ -9,6 +11,7 @@ export const StudentResult = newJoinMonsterGraphQLObjectType({
   uniqueKey: 'id',
   // @ts-ignore
   fields: () => ({
+    id: globalIdField('StudentResult'),
     score: {
       type: GraphQLInt,
       sqlColumn: 'score',
@@ -38,4 +41,5 @@ export const StudentResult = newJoinMonsterGraphQLObjectType({
       },
     },
   }),
+  interfaces: [nodeInterface],
 });

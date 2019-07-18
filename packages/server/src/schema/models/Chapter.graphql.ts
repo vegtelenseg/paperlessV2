@@ -1,5 +1,7 @@
 import {GraphQLNonNull, GraphQLString, GraphQLInt} from 'graphql';
 import {newJoinMonsterGraphQLObjectType} from '../../utils/joinMonster-graphql14.fix';
+import {globalIdField} from 'graphql-relay';
+import {nodeInterface} from '../Relay';
 
 export const Chapter = newJoinMonsterGraphQLObjectType({
   name: 'Chapter',
@@ -7,6 +9,7 @@ export const Chapter = newJoinMonsterGraphQLObjectType({
   uniqueKey: 'id',
   description: "Keeps information about a subject's chapter",
   fields: () => ({
+    id: globalIdField('Chapter'),
     name: {
       description: 'The name of the Chapter',
       type: GraphQLNonNull(GraphQLString),
@@ -23,14 +26,6 @@ export const Chapter = newJoinMonsterGraphQLObjectType({
       type: GraphQLInt,
       sqlColumn: 'max_score',
     },
-    id: {
-      type: GraphQLInt,
-      description: `The type of assessment (e.g. 'Class Test', 'Project', 'Assignment', and etc.`,
-      sqlExpr: (chapterTable) => `(select assessment.id from assessment
-        left join assessment_chapter on
-        assessment_chapter.assessment_id = assessment.id
-        where assessment.chapter_id = ${chapterTable}.id
-       )`,
-    },
   }),
+  interfaces: [nodeInterface],
 });

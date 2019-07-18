@@ -31,7 +31,7 @@ class Page500 extends React.Component {
                   </InputGroupText>
                 </InputGroupAddon>
                 <Input
-                  size="16"
+                  size={16}
                   type="text"
                   placeholder="What are you looking for?"
                 />

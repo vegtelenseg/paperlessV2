@@ -1,6 +1,8 @@
 import {newJoinMonsterGraphQLObjectType} from '../../utils/joinMonster-graphql14.fix';
 import {GraphQLInt, GraphQLString} from 'graphql';
 import {GraphQLDate} from 'graphql-iso-date';
+import {globalIdField} from 'graphql-relay';
+import {nodeInterface} from '../Relay';
 
 export const Assessment = newJoinMonsterGraphQLObjectType({
   name: 'Assessment',
@@ -8,6 +10,7 @@ export const Assessment = newJoinMonsterGraphQLObjectType({
   description: 'Keeps information about an assessment',
   uniqueKey: 'id',
   fields: () => ({
+    id: globalIdField('Assessment'),
     totalMarks: {
       description: 'The score allocated to the entire assessment',
       type: GraphQLInt,
@@ -30,4 +33,5 @@ export const Assessment = newJoinMonsterGraphQLObjectType({
       sqlColumn: 'end_date',
     },
   }),
+  interfaces: [nodeInterface],
 });

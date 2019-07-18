@@ -33,7 +33,6 @@ export default class LoginService {
   public login(username: string, password: string) {
     const headers = new Headers();
     const credentials = btoa(`${username}:${password}`);
-    console.log({ credentials });
     const json = {
       username,
       password,

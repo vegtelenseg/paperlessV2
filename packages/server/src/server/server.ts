@@ -1,6 +1,9 @@
 const express = require('express');
 import {Request} from 'express';
 import {ApolloServer} from 'apollo-server-express';
+import OpentracingExtension from 'apollo-opentracing';
+import cors from 'cors';
+import helmet from 'helmet';
 // import passport from 'passport';
 // import GoogleStrategy from 'passport-google-oauth20';
 
@@ -9,11 +12,13 @@ import {ApolloServer} from 'apollo-server-express';
 // const {api: apiUrl} = config.get('url');
 //import graphqlHTTP from 'express-graphql';
 import schema from '../schema';
+import tracer from '../tracer';
 
 //const autoRegister = true;
 
 const app = express();
-
+app.use(cors());
+app.use(helmet());
 // class CustomGoogleStrategy extends GoogleStrategy {
 //   // eslint-disable-next-line
 //   public authorizationParams(options: any) {
@@ -87,17 +92,16 @@ const apolloServer = new ApolloServer({
   // replaces a lot of the useful error logic apollo-server already does
   // formatError,
   // @ts-ignore
-  // extensions: [
-  //   () =>
-  //     new OpentracingExtension({
-  //       server: tracer,
-  //       local: tracer,
-  //       shouldTraceRequest: (_info: any) => {
-  //         return true;
-  //       },
-  //     }),
-  //   () => new LoggingGraphQLExtension(),
-  // ],
+  extensions: [
+    () =>
+      new OpentracingExtension({
+        server: tracer,
+        local: tracer,
+        shouldTraceRequest: (_info: any) => {
+          return true;
+        },
+      }),
+  ],
 });
 apolloServer.applyMiddleware({app, path: '/graphql'});
 const port = 5000;

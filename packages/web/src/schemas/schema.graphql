@@ -1,0 +1,175 @@
+# source: http://localhost:5000/graphql
+# timestamp: Wed Jul 17 2019 09:19:51 GMT+0200 (South Africa Standard Time)
+
+"""Keeps information about an assessment"""
+type Assessment implements Node {
+  """The ID of an object"""
+  id: ID!
+
+  """The score allocated to the entire assessment"""
+  totalMarks: Int
+
+  """
+  The type of assessment (e.g. 'Class Test', 'Project', 'Assignment', and etc.
+  """
+  kind: String
+
+  """The day the assessment will be taken"""
+  startDate: Date
+
+  """
+  The day the assessment will be submitted to the teacher. Null for one day-long assessments
+  """
+  endDate: Date
+}
+
+"""Keeps information about a subject's chapter"""
+type Chapter implements Node {
+  """The ID of an object"""
+  id: ID!
+
+  """The name of the Chapter"""
+  name: String!
+
+  """A summary about the chapter"""
+  description: String
+
+  """
+  The total amount of marks that the chapter contributes to the overall 100% of the subject
+  """
+  maxScore: Int
+}
+
+"""
+A date string, such as 2007-12-03, compliant with the `full-date` format
+outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for
+representation of dates and times using the Gregorian calendar.
+"""
+scalar Date
+
+type Grade implements Node {
+  """The ID of an object"""
+  id: ID!
+  name: String!
+  subjects: [Subject]!
+}
+
+"""An object with an ID"""
+interface Node {
+  """The id of the object."""
+  id: ID!
+}
+
+"""Information about pagination in a connection."""
+type PageInfo {
+  """When paginating forwards, are there more items?"""
+  hasNextPage: Boolean!
+
+  """When paginating backwards, are there more items?"""
+  hasPreviousPage: Boolean!
+
+  """When paginating backwards, the cursor to continue."""
+  startCursor: String
+
+  """When paginating forwards, the cursor to continue."""
+  endCursor: String
+}
+
+type Province implements Node {
+  """The ID of an object"""
+  id: ID!
+  name: String!
+  schools: [School]!
+}
+
+type Query {
+  """Fetches an object given its ID"""
+  node(
+    """The ID of an object"""
+    id: ID!
+  ): Node
+  viewer: Viewer!
+}
+
+type School implements Node {
+  """The ID of an object"""
+  id: ID!
+  name: String!
+  active: String!
+  registeredDate: Date!
+  grades: [Grade]!
+  students: [Student]
+}
+
+type Student implements Node {
+  """The ID of an object"""
+  id: ID!
+  firstName: String!
+  lastName: String!
+  birthDate: Date!
+  gender: String!
+  contactPhone: String
+  contactMobile: String
+  contactMail: String
+  grade: Int!
+  enrolmentDate: Date!
+  results: [StudentResult]
+  assessments: [Assessment]!
+}
+
+type StudentResult implements Node {
+  """The ID of an object"""
+  id: ID!
+  score: Int
+  chapter: Chapter!
+  assessment: Assessment
+}
+
+type Subject implements Node {
+  """The ID of an object"""
+  id: ID!
+  name: String!
+  students: [Student]
+  teacher: Teacher
+}
+
+type Teacher implements Node {
+  """The ID of an object"""
+  id: ID!
+  firstName: String!
+  lastName: String!
+  birthDate: Date!
+  gender: String!
+  contactPhone: String
+  contactMobile: String
+  contactMail: String
+  grade: Int!
+  employmentDate: Date!
+  subjects: [Subject]
+  school: School
+}
+
+type Viewer {
+  provinces: [Province]
+  assessments: [Assessment]
+  schools(after: String, first: Int): ViewerSchoolConnectionConnection
+}
+
+"""A connection to a list of items."""
+type ViewerSchoolConnectionConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [ViewerSchoolConnectionEdge]
+  total: Int
+}
+
+"""An edge in a connection."""
+type ViewerSchoolConnectionEdge {
+  """The item at the end of the edge"""
+  node: School
+
+  """A cursor for use in pagination"""
+  cursor: String!
+}

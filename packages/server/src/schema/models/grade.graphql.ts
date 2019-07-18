@@ -1,6 +1,8 @@
 import {GraphQLNonNull, GraphQLString, GraphQLList} from 'graphql';
 import {newJoinMonsterGraphQLObjectType} from '../../utils/joinMonster-graphql14.fix';
 import {Subject} from './subject.graphql';
+import {globalIdField} from 'graphql-relay';
+import {nodeInterface} from '../Relay';
 
 // TODO: Add description and commitment
 export const Grade = newJoinMonsterGraphQLObjectType({
@@ -8,6 +10,7 @@ export const Grade = newJoinMonsterGraphQLObjectType({
   sqlTable: 'grade',
   uniqueKey: 'id',
   fields: () => ({
+    id: globalIdField('Grade'),
     name: {
       type: GraphQLNonNull(GraphQLString),
       sqlColumn: 'name',
@@ -25,4 +28,5 @@ export const Grade = newJoinMonsterGraphQLObjectType({
       },
     },
   }),
+  interfaces: [nodeInterface],
 });
