@@ -22,6 +22,12 @@ export const routes = [
     Component: Register
   },
   {
+    path: "/",
+    exact: true,
+    name: "Dashboard",
+    Component: Dashboard
+  },
+  {
     path: "/dashboard",
     exact: true,
     name: "Dashboard",
