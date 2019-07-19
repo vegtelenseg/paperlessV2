@@ -10,10 +10,12 @@ import {
   AppSidebarFooter,
   AppSidebarForm,
   AppSidebarHeader,
-  AppSidebarMinimizer
+  AppSidebarMinimizer,
+  AppSidebarNav
 } from "@coreui/react";
 import { routes } from "../../Routes";
 import { RouteComponentProps, withRouter } from "react-router";
+import navigation from '../../_nav';
 // sidebar nav config
 // routes config
 const DefaultAside = React.lazy(() => import("./DefaultAside"));
@@ -42,7 +44,9 @@ class DefaultLayout extends React.Component<RouteComponentProps> {
           <AppSidebar fixed display="lg">
             <AppSidebarHeader />
             <AppSidebarForm />
-
+              <Suspense fallback={this.loading()}>
+                <AppSidebarNav navConfig={navigation} {...this.props} />
+              </Suspense>
             <AppSidebarFooter />
             <AppSidebarMinimizer />
           </AppSidebar>
