@@ -1,14 +1,28 @@
 //@ts-ignore
-import {GraphQLNonNull, GraphQLString, GraphQLInt, GraphQLList} from 'graphql';
+import {
+  GraphQLNonNull,
+  GraphQLString,
+  GraphQLInt,
+  GraphQLList,
+  GraphQLID,
+} from 'graphql';
 //@ts-ignore
 import {GraphQLDate} from 'graphql-iso-date';
 import {newJoinMonsterGraphQLObjectType} from '../../utils/joinMonster-graphql14.fix';
 //import {Teacher} from './Teacher.graphql';
 import {Grade} from './grade.graphql';
 import {Student} from './student.graphql';
-import {globalIdField} from 'graphql-relay';
+import {globalIdField, connectionDefinitions} from 'graphql-relay';
 import {nodeInterface} from '../Relay';
+import {forwardConnectionArgs} from 'graphql-relay';
 
+const {connectionType: ViewerStudentConnection} = connectionDefinitions({
+  name: 'ViewerStudentConnection',
+  nodeType: Student,
+  connectionFields: {
+    total: {type: GraphQLInt},
+  },
+});
 export const School = newJoinMonsterGraphQLObjectType({
   name: 'School',
   sqlTable: 'school',
@@ -16,7 +30,7 @@ export const School = newJoinMonsterGraphQLObjectType({
   fields: () => ({
     id: globalIdField('School'),
     name: {
-      type: GraphQLNonNull(GraphQLString),
+      type: GraphQLString,
       sqlColumn: 'name',
     },
     active: {
@@ -24,7 +38,7 @@ export const School = newJoinMonsterGraphQLObjectType({
       sqlColumn: 'active',
     },
     registeredDate: {
-      type: GraphQLNonNull(GraphQLDate),
+      type: GraphQLDate,
       sqlColumn: 'registered_date',
     },
     grades: {
@@ -40,7 +54,17 @@ export const School = newJoinMonsterGraphQLObjectType({
       },
     },
     students: {
-      type: new GraphQLList(Student),
+      type: ViewerStudentConnection,
+      args: {
+        id: {
+          type: GraphQLID,
+        },
+        ...forwardConnectionArgs,
+      },
+      sqlPaginate: true,
+      orderBy: {
+        first_name: 'desc',
+      },
       junction: {
         sqlTable: 'school_student',
         sqlJoins: [

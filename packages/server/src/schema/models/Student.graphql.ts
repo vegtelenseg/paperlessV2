@@ -10,7 +10,7 @@ import {nodeInterface} from '../Relay';
 export const Student = newJoinMonsterGraphQLObjectType({
   name: 'Student',
   sqlTable: 'student',
-  uniqueKey: 'id_number',
+  uniqueKey: 'id',
   // @ts-ignore
   fields: () => ({
     id: globalIdField('Student'),

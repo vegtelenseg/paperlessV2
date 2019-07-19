@@ -19,6 +19,7 @@ export type DashboardQuery = {
 query DashboardQuery {
   viewer {
     ...Dashboard_viewer
+    id
   }
 }
 
@@ -39,7 +40,15 @@ fragment Schools_viewer on Viewer {
 }
 */
 
-const node: ConcreteRequest = {
+const node: ConcreteRequest = (function(){
+var v0 = {
+  "kind": "ScalarField",
+  "alias": null,
+  "name": "id",
+  "args": null,
+  "storageKey": null
+};
+return {
   "kind": "Request",
   "fragment": {
     "kind": "Fragment",
@@ -107,13 +116,7 @@ const node: ConcreteRequest = {
                     "concreteType": "School",
                     "plural": false,
                     "selections": [
-                      {
-                        "kind": "ScalarField",
-                        "alias": null,
-                        "name": "id",
-                        "args": null,
-                        "storageKey": null
-                      },
+                      (v0/*: any*/),
                       {
                         "kind": "ScalarField",
                         "alias": null,
@@ -133,7 +136,8 @@ const node: ConcreteRequest = {
                 ]
               }
             ]
-          }
+          },
+          (v0/*: any*/)
         ]
       }
     ]
@@ -142,9 +146,10 @@ const node: ConcreteRequest = {
     "operationKind": "query",
     "name": "DashboardQuery",
     "id": null,
-    "text": "query DashboardQuery {\n  viewer {\n    ...Dashboard_viewer\n  }\n}\n\nfragment Dashboard_viewer on Viewer {\n  ...Schools_viewer\n}\n\nfragment Schools_viewer on Viewer {\n  schools {\n    edges {\n      node {\n        id\n        name\n        registeredDate\n      }\n    }\n  }\n}\n",
+    "text": "query DashboardQuery {\n  viewer {\n    ...Dashboard_viewer\n    id\n  }\n}\n\nfragment Dashboard_viewer on Viewer {\n  ...Schools_viewer\n}\n\nfragment Schools_viewer on Viewer {\n  schools {\n    edges {\n      node {\n        id\n        name\n        registeredDate\n      }\n    }\n  }\n}\n",
     "metadata": {}
   }
 };
+})();
 (node as any).hash = '326ba50c880279cb96cacf3c3dfd565b';
 export default node;

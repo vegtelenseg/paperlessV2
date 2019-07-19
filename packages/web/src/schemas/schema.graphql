@@ -1,5 +1,5 @@
 # source: http://localhost:5000/graphql
-# timestamp: Wed Jul 17 2019 09:19:51 GMT+0200 (South Africa Standard Time)
+# timestamp: Fri Jul 19 2019 14:06:37 GMT+0200 (South Africa Standard Time)
 
 """Keeps information about an assessment"""
 type Assessment implements Node {
@@ -94,11 +94,11 @@ type Query {
 type School implements Node {
   """The ID of an object"""
   id: ID!
-  name: String!
+  name: String
   active: String!
-  registeredDate: Date!
+  registeredDate: Date
   grades: [Grade]!
-  students: [Student]
+  students(id: ID, after: String, first: Int): ViewerStudentConnectionConnection
 }
 
 type Student implements Node {
@@ -149,7 +149,9 @@ type Teacher implements Node {
   school: School
 }
 
-type Viewer {
+type Viewer implements Node {
+  """The ID of an object"""
+  id: ID!
   provinces: [Province]
   assessments: [Assessment]
   schools(after: String, first: Int): ViewerSchoolConnectionConnection
@@ -169,6 +171,25 @@ type ViewerSchoolConnectionConnection {
 type ViewerSchoolConnectionEdge {
   """The item at the end of the edge"""
   node: School
+
+  """A cursor for use in pagination"""
+  cursor: String!
+}
+
+"""A connection to a list of items."""
+type ViewerStudentConnectionConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [ViewerStudentConnectionEdge]
+  total: Int
+}
+
+"""An edge in a connection."""
+type ViewerStudentConnectionEdge {
+  """The item at the end of the edge"""
+  node: Student
 
   """A cursor for use in pagination"""
   cursor: String!

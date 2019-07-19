@@ -19,23 +19,36 @@ export type RoutesQuery = {
 query RoutesQuery {
   viewer {
     ...Dashboard_viewer
+    id
   }
 }
 
 fragment Dashboard_viewer on Viewer {
+  ...Schools_viewer
+}
+
+fragment Schools_viewer on Viewer {
   schools {
-    total
     edges {
       node {
-        name
         id
+        name
+        registeredDate
       }
     }
   }
 }
 */
 
-const node: ConcreteRequest = {
+const node: ConcreteRequest = (function(){
+var v0 = {
+  "kind": "ScalarField",
+  "alias": null,
+  "name": "id",
+  "args": null,
+  "storageKey": null
+};
+return {
   "kind": "Request",
   "fragment": {
     "kind": "Fragment",
@@ -86,13 +99,6 @@ const node: ConcreteRequest = {
             "plural": false,
             "selections": [
               {
-                "kind": "ScalarField",
-                "alias": null,
-                "name": "total",
-                "args": null,
-                "storageKey": null
-              },
-              {
                 "kind": "LinkedField",
                 "alias": null,
                 "name": "edges",
@@ -110,6 +116,7 @@ const node: ConcreteRequest = {
                     "concreteType": "School",
                     "plural": false,
                     "selections": [
+                      (v0/*: any*/),
                       {
                         "kind": "ScalarField",
                         "alias": null,
@@ -120,7 +127,7 @@ const node: ConcreteRequest = {
                       {
                         "kind": "ScalarField",
                         "alias": null,
-                        "name": "id",
+                        "name": "registeredDate",
                         "args": null,
                         "storageKey": null
                       }
@@ -129,7 +136,8 @@ const node: ConcreteRequest = {
                 ]
               }
             ]
-          }
+          },
+          (v0/*: any*/)
         ]
       }
     ]
@@ -138,9 +146,10 @@ const node: ConcreteRequest = {
     "operationKind": "query",
     "name": "RoutesQuery",
     "id": null,
-    "text": "query RoutesQuery {\n  viewer {\n    ...Dashboard_viewer\n  }\n}\n\nfragment Dashboard_viewer on Viewer {\n  schools {\n    total\n    edges {\n      node {\n        name\n        id\n      }\n    }\n  }\n}\n",
+    "text": "query RoutesQuery {\n  viewer {\n    ...Dashboard_viewer\n    id\n  }\n}\n\nfragment Dashboard_viewer on Viewer {\n  ...Schools_viewer\n}\n\nfragment Schools_viewer on Viewer {\n  schools {\n    edges {\n      node {\n        id\n        name\n        registeredDate\n      }\n    }\n  }\n}\n",
     "metadata": {}
   }
 };
+})();
 (node as any).hash = 'd97d7830db900b6be35e36e72eaa55f6';
 export default node;

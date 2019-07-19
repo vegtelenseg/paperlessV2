@@ -7,8 +7,8 @@ export type Schools_viewer = {
         readonly edges: ReadonlyArray<{
             readonly node: {
                 readonly id: string;
-                readonly name: string;
-                readonly registeredDate: any;
+                readonly name: string | null;
+                readonly registeredDate: any | null;
             } | null;
         } | null> | null;
     } | null;

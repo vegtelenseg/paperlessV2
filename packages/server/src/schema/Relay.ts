@@ -4,18 +4,29 @@ import joinMonster from 'join-monster';
 import {knex} from '../db';
 import options from './dbOptions';
 
+const whereClause = (type: string, id: number) => {
+  switch (type) {
+    case 'School':
+      return (table: string) => `${table}.id = ${id}`;
+    case 'Student':
+      return (table: string) => `${table}.id = ${id}`;
+    default:
+      return (table: string) => `${table}.id = ${id}`;
+  }
+};
+
 const {nodeField, nodeInterface} = nodeDefinitions<Context>(
   // resolve the ID to an object
   (globalId, context, resolveInfo) => {
     // parse the globalID
-    const {type} = fromGlobalId(globalId);
+    const {type, id} = fromGlobalId(globalId);
     // pass the type name and other info. `joinMonster` will find the type from the name and write the SQL
     // @ts-ignore
     return joinMonster.getNode(
       type,
       resolveInfo,
       context,
-      null,
+      whereClause(type, parseInt(id, 10)),
       async (sql: string) => {
         const data = await knex.raw(sql);
         return data;

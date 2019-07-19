@@ -52,12 +52,9 @@ export default function RelayRenderer<T extends EnvironmentProp>({
                   />
                 );
               }
-
               if (renderLoading) {
                 return renderLoading();
               }
-
-              return <div>Loading...</div>;
             }}
           />
         )
