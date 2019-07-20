@@ -40,7 +40,7 @@ class DefaultLayout extends React.Component<RouteComponentProps> {
             <DefaultHeader onLogout={e => this.signOut(e)} />
           </Suspense>
         </AppHeader>
-        <div className="app-body">
+        <div className="app-body" style={{ backgroundColor: "#fff" }}>
           <AppSidebar fixed display="lg">
             <AppSidebarHeader />
             <AppSidebarForm />

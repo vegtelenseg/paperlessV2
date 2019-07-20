@@ -7,7 +7,7 @@ const Page500 = React.lazy(() => import("./views/Pages/Page500/Page500"));
 const Dashboard = React.lazy(() => import("./views/Dashboard/Dashboard"));
 const Login = React.lazy(() => import("./views/Pages/Login/Login"));
 const Students = React.lazy(() => import("./views/Pages/Students/Students"));
-
+const Drilldown = React.lazy(() => import("./views/Pages/Drilldown/Drilldown"));
 export const routes = [
   {
     path: "/login",
@@ -50,6 +50,12 @@ export const routes = [
     exact: true,
     name: "School",
     Component: Students
+  },
+  {
+    path: "/school/:id/:studentId",
+    exact: true,
+    name: "School",
+    Component: Drilldown
   }
 ];
 class Routes extends React.Component {

@@ -6,6 +6,7 @@ import {Assessment} from './assessment.graphql';
 import {StudentResult} from './student-results.graphql';
 import {globalIdField} from 'graphql-relay';
 import {nodeInterface} from '../Relay';
+import { Results } from './results.graphql';
 
 export const Student = newJoinMonsterGraphQLObjectType({
   name: 'Student',
@@ -66,6 +67,14 @@ export const Student = newJoinMonsterGraphQLObjectType({
         ],
       },
     },
+    dateEnrolled: {
+      type: GraphQLDate,
+      sqlColumn: 'enrolment_date'
+    },
+    studentResults: {
+      type: new GraphQLList(Results),
+      sqlJoin: (studentTable, resultsTable) => `${studentTable}.id = ${resultsTable}.student_id`
+    }
   }),
   interfaces: [nodeInterface],
 });
