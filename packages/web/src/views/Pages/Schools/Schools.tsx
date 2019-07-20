@@ -40,4 +40,4 @@ const SchoolFragmentContainer = createFragmentContainer(Schools, {
   `
 });
 
-export default  SchoolFragmentContainer;
+export default SchoolFragmentContainer;

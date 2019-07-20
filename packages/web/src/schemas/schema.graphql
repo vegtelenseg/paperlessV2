@@ -1,5 +1,5 @@
 # source: http://localhost:5000/graphql
-# timestamp: Wed Jul 17 2019 09:19:51 GMT+0200 (South Africa Standard Time)
+# timestamp: Sat Jul 20 2019 05:58:30 GMT+0200 (South Africa Standard Time)
 
 """Keeps information about an assessment"""
 type Assessment implements Node {
@@ -21,13 +21,11 @@ type Assessment implements Node {
   The day the assessment will be submitted to the teacher. Null for one day-long assessments
   """
   endDate: Date
+  chapters: [Chapter!]
 }
 
 """Keeps information about a subject's chapter"""
-type Chapter implements Node {
-  """The ID of an object"""
-  id: ID!
-
+type Chapter {
   """The name of the Chapter"""
   name: String!
 
@@ -91,14 +89,21 @@ type Query {
   viewer: Viewer!
 }
 
+type Results implements Node {
+  """The ID of an object"""
+  id: ID!
+  score: Int
+  subject: String
+}
+
 type School implements Node {
   """The ID of an object"""
   id: ID!
-  name: String!
+  name: String
   active: String!
-  registeredDate: Date!
+  registeredDate: Date
   grades: [Grade]!
-  students: [Student]
+  students(id: ID, after: String, first: Int): ViewerStudentConnectionConnection
 }
 
 type Student implements Node {
@@ -115,13 +120,14 @@ type Student implements Node {
   enrolmentDate: Date!
   results: [StudentResult]
   assessments: [Assessment]!
+  dateEnrolled: Date
+  studentResults: [Results]
 }
 
 type StudentResult implements Node {
   """The ID of an object"""
   id: ID!
   score: Int
-  chapter: Chapter!
   assessment: Assessment
 }
 
@@ -149,7 +155,9 @@ type Teacher implements Node {
   school: School
 }
 
-type Viewer {
+type Viewer implements Node {
+  """The ID of an object"""
+  id: ID!
   provinces: [Province]
   assessments: [Assessment]
   schools(after: String, first: Int): ViewerSchoolConnectionConnection
@@ -169,6 +177,25 @@ type ViewerSchoolConnectionConnection {
 type ViewerSchoolConnectionEdge {
   """The item at the end of the edge"""
   node: School
+
+  """A cursor for use in pagination"""
+  cursor: String!
+}
+
+"""A connection to a list of items."""
+type ViewerStudentConnectionConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [ViewerStudentConnectionEdge]
+  total: Int
+}
+
+"""An edge in a connection."""
+type ViewerStudentConnectionEdge {
+  """The item at the end of the edge"""
+  node: Student
 
   """A cursor for use in pagination"""
   cursor: String!

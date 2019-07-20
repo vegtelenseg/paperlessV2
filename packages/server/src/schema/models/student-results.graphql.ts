@@ -1,6 +1,5 @@
 import {newJoinMonsterGraphQLObjectType} from '../../utils/joinMonster-graphql14.fix';
-import {GraphQLInt, GraphQLNonNull} from 'graphql';
-import {Chapter} from './Chapter.graphql';
+import {GraphQLInt} from 'graphql';
 import {Assessment} from './assessment.graphql';
 import {globalIdField} from 'graphql-relay';
 import {nodeInterface} from '../Relay';
@@ -16,18 +15,7 @@ export const StudentResult = newJoinMonsterGraphQLObjectType({
       type: GraphQLInt,
       sqlColumn: 'score',
     },
-    chapter: {
-      type: GraphQLNonNull(Chapter),
-      junction: {
-        sqlTable: 'assessment_chapter',
-        sqlJoins: [
-          (studentResultTable, junctionTable) =>
-            `${studentResultTable}.assessment_chapter_id = ${junctionTable}.id`,
-          (junctionTable, chapterTable) =>
-            `${junctionTable}.chapter_id = ${chapterTable}.id`,
-        ],
-      },
-    },
+
     assessment: {
       type: Assessment,
       junction: {

@@ -9,7 +9,12 @@ import dbCall from '../dbCall';
 import {Province} from './province.graphql';
 import {Assessment} from './assessment.graphql';
 import {School} from './school.graphql';
-import {connectionDefinitions, forwardConnectionArgs} from 'graphql-relay';
+import {
+  connectionDefinitions,
+  forwardConnectionArgs,
+  globalIdField,
+} from 'graphql-relay';
+import {nodeInterface} from '../Relay';
 
 const {connectionType: ViewerSchoolConnection} = connectionDefinitions({
   name: 'ViewerSchoolConnection',
@@ -22,6 +27,7 @@ const {connectionType: ViewerSchoolConnection} = connectionDefinitions({
 export default new GraphQLObjectType({
   name: 'Viewer',
   fields: () => ({
+    id: globalIdField('Viewer'),
     provinces: {
       type: new GraphQLList(Province),
       resolve: (
@@ -64,4 +70,5 @@ export default new GraphQLObjectType({
       ) => dbCall(parent, args, context, resolveInfo),
     },
   }),
+  interfaces: [nodeInterface],
 });

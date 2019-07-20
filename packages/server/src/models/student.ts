@@ -6,6 +6,7 @@ import {School} from './school';
 export class Student extends Person {
   public readonly id!: number;
   public subjects!: Subject[];
+  public enrolmentDate!: Date;
   public school!: School;
   public grades!: Grade[];
 

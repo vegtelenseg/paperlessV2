@@ -15,18 +15,6 @@ export const subjects = [
       {
         name: 'Properties of Numbers',
       },
-      {
-        name: 'Variables and Expressions',
-      },
-      {
-        name: 'Equations & Inequalities',
-      },
-      {
-        name: 'Geometry',
-      },
-      {
-        name: 'Data and Statistics',
-      },
     ],
   },
   {

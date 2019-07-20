@@ -1,8 +1,9 @@
 import {newJoinMonsterGraphQLObjectType} from '../../utils/joinMonster-graphql14.fix';
-import {GraphQLInt, GraphQLString} from 'graphql';
+import { GraphQLInt, GraphQLString, GraphQLList, GraphQLNonNull } from 'graphql';
 import {GraphQLDate} from 'graphql-iso-date';
 import {globalIdField} from 'graphql-relay';
 import {nodeInterface} from '../Relay';
+import { Chapter } from './Chapter.graphql';
 
 export const Assessment = newJoinMonsterGraphQLObjectType({
   name: 'Assessment',
@@ -31,6 +32,19 @@ export const Assessment = newJoinMonsterGraphQLObjectType({
         'The day the assessment will be submitted to the teacher. Null for one day-long assessments',
       type: GraphQLDate,
       sqlColumn: 'end_date',
+    },
+    chapters: {
+      type: new GraphQLList(GraphQLNonNull(Chapter)),
+      where: (assessmentTable) => `(${assessmentTable}.id = 1)`,
+      junction: {
+        sqlTable: 'assessment_chapter',
+        sqlJoins: [
+          (chapterTable, junctionTable) =>
+            `${chapterTable}.id = ${junctionTable}.chapter_id`,
+          (junctionTable, assessmentTable) =>
+            `${junctionTable}.assessment_id = ${assessmentTable}.id`,
+        ],
+      },
     },
   }),
   interfaces: [nodeInterface],
