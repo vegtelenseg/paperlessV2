@@ -233,7 +233,7 @@ export async function seed(knex: Knex) {
           score:
             score > assessmentList[j % assessmentList.length].totalMarks
               ? assessmentList[j % assessmentList.length].totalMarks
-              : score,
+              : score + 1,
         });
     }
   }

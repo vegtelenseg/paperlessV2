@@ -36,7 +36,7 @@ export const Results = newJoinMonsterGraphQLObjectType({
         ${drilldownTable}."studentid" = student."id"
         and ${drilldownTable}."subject_name" =  "studentRes"."subject_name"`,
       sqlJoin: (resultsTable, drilldownTable) =>
-        `${resultsTable}."sid" = ${drilldownTable}."studentid"`
+        `${resultsTable}."sid" = ${drilldownTable}."studentid"`,
     },
- }),
+  }),
 });

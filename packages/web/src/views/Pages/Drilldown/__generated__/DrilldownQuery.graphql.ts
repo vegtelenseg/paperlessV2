@@ -61,7 +61,6 @@ query DrilldownQuery(
           name
           subjectName
           sum
-          id
         }
       }
     }
@@ -87,67 +86,88 @@ v1 = [
   }
 ],
 v2 = {
-  "kind": "ScalarField",
-  "alias": null,
-  "name": "firstName",
-  "args": null,
-  "storageKey": null
-},
-v3 = {
-  "kind": "ScalarField",
-  "alias": null,
-  "name": "lastName",
-  "args": null,
-  "storageKey": null
-},
-v4 = {
-  "kind": "ScalarField",
-  "alias": null,
-  "name": "grade",
-  "args": null,
-  "storageKey": null
-},
-v5 = {
-  "kind": "ScalarField",
-  "alias": null,
-  "name": "score",
-  "args": null,
-  "storageKey": null
-},
-v6 = {
-  "kind": "ScalarField",
-  "alias": null,
-  "name": "subject",
-  "args": null,
-  "storageKey": null
-},
-v7 = {
-  "kind": "ScalarField",
-  "alias": null,
-  "name": "name",
-  "args": null,
-  "storageKey": null
-},
-v8 = {
-  "kind": "ScalarField",
-  "alias": null,
-  "name": "subjectName",
-  "args": null,
-  "storageKey": null
-},
-v9 = {
-  "kind": "ScalarField",
-  "alias": null,
-  "name": "sum",
-  "args": null,
-  "storageKey": null
-},
-v10 = {
-  "kind": "ScalarField",
-  "alias": null,
-  "name": "id",
-  "args": null,
-  "storageKey": null
+  "kind": "InlineFragment",
+  "type": "Student",
+  "selections": [
+    {
+      "kind": "ScalarField",
+      "alias": null,
+      "name": "firstName",
+      "args": null,
+      "storageKey": null
+    },
+    {
+      "kind": "ScalarField",
+      "alias": null,
+      "name": "lastName",
+      "args": null,
+      "storageKey": null
+    },
+    {
+      "kind": "ScalarField",
+      "alias": null,
+      "name": "grade",
+      "args": null,
+      "storageKey": null
+    },
+    {
+      "kind": "LinkedField",
+      "alias": null,
+      "name": "studentResults",
+      "storageKey": null,
+      "args": null,
+      "concreteType": "Results",
+      "plural": true,
+      "selections": [
+        {
+          "kind": "ScalarField",
+          "alias": null,
+          "name": "score",
+          "args": null,
+          "storageKey": null
+        },
+        {
+          "kind": "ScalarField",
+          "alias": null,
+          "name": "subject",
+          "args": null,
+          "storageKey": null
+        },
+        {
+          "kind": "LinkedField",
+          "alias": null,
+          "name": "drilldown",
+          "storageKey": null,
+          "args": null,
+          "concreteType": "Drilldown",
+          "plural": true,
+          "selections": [
+            {
+              "kind": "ScalarField",
+              "alias": null,
+              "name": "name",
+              "args": null,
+              "storageKey": null
+            },
+            {
+              "kind": "ScalarField",
+              "alias": null,
+              "name": "subjectName",
+              "args": null,
+              "storageKey": null
+            },
+            {
+              "kind": "ScalarField",
+              "alias": null,
+              "name": "sum",
+              "args": null,
+              "storageKey": null
+            }
+          ]
+        }
+      ]
+    }
+  ]
 };
 return {
   "kind": "Request",
@@ -167,42 +187,7 @@ return {
         "concreteType": null,
         "plural": false,
         "selections": [
-          {
-            "kind": "InlineFragment",
-            "type": "Student",
-            "selections": [
-              (v2/*: any*/),
-              (v3/*: any*/),
-              (v4/*: any*/),
-              {
-                "kind": "LinkedField",
-                "alias": null,
-                "name": "studentResults",
-                "storageKey": null,
-                "args": null,
-                "concreteType": "Results",
-                "plural": true,
-                "selections": [
-                  (v5/*: any*/),
-                  (v6/*: any*/),
-                  {
-                    "kind": "LinkedField",
-                    "alias": null,
-                    "name": "drilldown",
-                    "storageKey": null,
-                    "args": null,
-                    "concreteType": "Drilldown",
-                    "plural": true,
-                    "selections": [
-                      (v7/*: any*/),
-                      (v8/*: any*/),
-                      (v9/*: any*/)
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
+          (v2/*: any*/)
         ]
       }
     ]
@@ -228,44 +213,14 @@ return {
             "args": null,
             "storageKey": null
           },
-          (v10/*: any*/),
           {
-            "kind": "InlineFragment",
-            "type": "Student",
-            "selections": [
-              (v2/*: any*/),
-              (v3/*: any*/),
-              (v4/*: any*/),
-              {
-                "kind": "LinkedField",
-                "alias": null,
-                "name": "studentResults",
-                "storageKey": null,
-                "args": null,
-                "concreteType": "Results",
-                "plural": true,
-                "selections": [
-                  (v5/*: any*/),
-                  (v6/*: any*/),
-                  {
-                    "kind": "LinkedField",
-                    "alias": null,
-                    "name": "drilldown",
-                    "storageKey": null,
-                    "args": null,
-                    "concreteType": "Drilldown",
-                    "plural": true,
-                    "selections": [
-                      (v7/*: any*/),
-                      (v8/*: any*/),
-                      (v9/*: any*/),
-                      (v10/*: any*/)
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
+            "kind": "ScalarField",
+            "alias": null,
+            "name": "id",
+            "args": null,
+            "storageKey": null
+          },
+          (v2/*: any*/)
         ]
       }
     ]
@@ -274,7 +229,7 @@ return {
     "operationKind": "query",
     "name": "DrilldownQuery",
     "id": null,
-    "text": "query DrilldownQuery(\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ... on Student {\n      firstName\n      lastName\n      grade\n      studentResults {\n        score\n        subject\n        drilldown {\n          name\n          subjectName\n          sum\n          id\n        }\n      }\n    }\n    id\n  }\n}\n",
+    "text": "query DrilldownQuery(\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ... on Student {\n      firstName\n      lastName\n      grade\n      studentResults {\n        score\n        subject\n        drilldown {\n          name\n          subjectName\n          sum\n        }\n      }\n    }\n    id\n  }\n}\n",
     "metadata": {}
   }
 };
