@@ -1,36 +1,42 @@
-import { GraphQLInt, GraphQLString } from 'graphql';
+import {GraphQLInt, GraphQLString, GraphQLList} from 'graphql';
 import {newJoinMonsterGraphQLObjectType} from '../../utils/joinMonster-graphql14.fix';
-import {globalIdField} from 'graphql-relay';
-import { nodeInterface } from '../Relay';
+import {Drilldown} from './drilldown.graphql';
 
 // TODO: Add description and commitment
 export const Results = newJoinMonsterGraphQLObjectType({
   name: 'Results',
   sqlTable: `(
-    select sum(score) as score, first_name, subject.name as subject_name, student.id, student_result.student_id from student_result
-    inner join student
-    on student.id = student_result.student_id
-    inner join assessment_chapter
-    on assessment_chapter_id = assessment_chapter.id
-    inner join chapter
-    on chapter.id = assessment_chapter.chapter_id
-    inner join subject
-    on subject.id = chapter.subject_id
-    where student.id = student_result.student_id and chapter.subject_id = subject.id
-    group by subject.name, first_name, student.id, subject_name, student_result.student_id
-    order by subject.name, first_name, student.id, subject_name, student_result.student_id
+    SELECT sum(score) as score, first_name, subject.name as subject_name,
+      student.id as sid, student_result.student_id
+    FROM student_result
+    JOIN student
+    ON student.id = student_result.student_id
+    JOIN assessment_chapter
+    ON assessment_chapter_id = assessment_chapter.id
+    JOIN chapter
+    ON chapter.id = assessment_chapter.chapter_id
+    JOIN subject
+    ON subject.id = chapter.subject_id
+    GROUP BY subject.name, first_name, sid, subject_name, student_result.student_id
+    ORDER BY subject.name, first_name, sid, subject_name, student_result.student_id
   )`,
-  uniqueKey: 'id',
+  uniqueKey: ['sid', 'subject_name'],
   fields: () => ({
-    id: globalIdField('Results'),
     score: {
       type: GraphQLInt,
       sqlColumn: 'score',
     },
     subject: {
       type: GraphQLString,
-      sqlColumn: 'subject_name'
-    }
+      sqlColumn: 'subject_name',
+    },
+    drilldown: {
+      type: new GraphQLList(Drilldown),
+      where: (drilldownTable) => `
+        ${drilldownTable}."studentid" = student."id"
+        and ${drilldownTable}."subject_name" =  "studentRes"."subject_name"`,
+      sqlJoin: (resultsTable, drilldownTable) =>
+        `${resultsTable}."sid" = ${drilldownTable}."studentid"`,
+    },
   }),
-  interfaces: [nodeInterface],
 });

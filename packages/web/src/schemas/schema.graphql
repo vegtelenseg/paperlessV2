@@ -1,5 +1,5 @@
 # source: http://localhost:5000/graphql
-# timestamp: Sat Jul 20 2019 05:58:30 GMT+0200 (South Africa Standard Time)
+# timestamp: Sun Jul 21 2019 12:01:49 GMT+0200 (South Africa Standard Time)
 
 """Keeps information about an assessment"""
 type Assessment implements Node {
@@ -45,6 +45,13 @@ representation of dates and times using the Gregorian calendar.
 """
 scalar Date
 
+type Drilldown {
+  name: String!
+  sum: Int!
+  subjectName: String!
+  studentId: Int
+}
+
 type Grade implements Node {
   """The ID of an object"""
   id: ID!
@@ -89,11 +96,10 @@ type Query {
   viewer: Viewer!
 }
 
-type Results implements Node {
-  """The ID of an object"""
-  id: ID!
+type Results {
   score: Int
   subject: String
+  drilldown: [Drilldown]
 }
 
 type School implements Node {

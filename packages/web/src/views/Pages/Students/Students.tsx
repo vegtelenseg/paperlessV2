@@ -18,7 +18,6 @@ interface Props extends RouteComponentProps {
 
 class Students extends React.Component<Props> {
   public render() {
-    console.log("Students:Props: ", this.props);
     const {
       node: { students }
     } = this.props;
@@ -37,7 +36,7 @@ class Students extends React.Component<Props> {
                 {tableHeadings.map(tableHeading => {
                   if (tableHeading === "avatar") {
                     return (
-                      <th className="text-center">
+                      <th className="text-center" key={tableHeading}>
                         <i className="icon-people"></i>
                       </th>
                     );
@@ -48,13 +47,7 @@ class Students extends React.Component<Props> {
             </thead>
             <tbody>
               {students.edges.map((student, idx) => {
-                const score = student.node.studentResults[0].score;
-                const status =
-                  score <= 36
-                    ? "bg-danger"
-                    : score > 33 && score <= 59
-                    ? "bg-warning"
-                    : "bg-success";
+                const results = student.node.studentResults;
                 return (
                   <tr
                     key={`${student.node.firstName}${idx}`}
@@ -63,18 +56,18 @@ class Students extends React.Component<Props> {
                         `${this.props.location.pathname}/${student.node.id}`
                       )
                     }
+                    className="card-header-action"
                   >
                     <>
                       <td className="text-center">
                         <div className="avatar">
                           <img
-                            className="img-avatar"
+                            className="img-avatar sm"
                             // There is only 8 sample avatars
                             src={`https://coreui.io/demo/img/avatars/${(idx %
                               8) +
                               1}.jpg`}
                           />
-                          <span className={`avatar-status ${status}`} />
                         </div>
                       </td>
                       <td>
@@ -91,31 +84,42 @@ class Students extends React.Component<Props> {
                           {student.node.grade}
                         </div>
                       </td>
-                      <td>
-                        <div className="clearfix">
-                          <div className="float-left">
-                            <strong>{score + "%"}</strong>
-                          </div>
-                          {/* <div className="float-right">
+                      {results.map((result: any, idx) => {
+                        const { score } = result;
+                        const status =
+                          score <= 36
+                            ? "bg-danger"
+                            : score > 33 && score <= 59
+                            ? "bg-warning"
+                            : "bg-success";
+
+                        return (
+                          <td key={`${result}-${idx}`}>
+                            <div className="clearfix">
+                              <div className="float-left">
+                                <strong>{score + "%"}</strong>
+                              </div>
+                              {/* <div className="float-right">
                           <small className="text-muted">
                             Jun 11, 2015 - Jul 10, 2015
                           </small>
                         </div> */}
-                        </div>
-                        <div className="progress progress-xs">
-                          <div
-                            className={`progress-bar ${status}`}
-                            role="progressbar"
-                            style={{
-                              width: score + "%"
-                            }}
-                            aria-valuenow={score}
-                            aria-valuemin={0}
-                            aria-valuemax={100}
-                          ></div>
-                        </div>
-                      </td>
-                      <td>{student.node.grade}</td>
+                            </div>
+                            <div className="progress progress-xs">
+                              <div
+                                className={`progress-bar ${status}`}
+                                role="progressbar"
+                                style={{
+                                  width: score + "%"
+                                }}
+                                aria-valuenow={score}
+                                aria-valuemin={0}
+                                aria-valuemax={100}
+                              ></div>
+                            </div>
+                          </td>
+                        );
+                      })}
                     </>
                   </tr>
                 );

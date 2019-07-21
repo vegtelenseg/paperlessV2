@@ -74,7 +74,6 @@ query StudentsQuery(
             studentResults {
               score
               subject
-              id
             }
           }
         }
@@ -104,65 +103,116 @@ v1 = [
 v2 = {
   "kind": "ScalarField",
   "alias": null,
-  "name": "name",
-  "args": null,
-  "storageKey": null
-},
-v3 = {
-  "kind": "ScalarField",
-  "alias": null,
-  "name": "registeredDate",
-  "args": null,
-  "storageKey": null
-},
-v4 = {
-  "kind": "ScalarField",
-  "alias": null,
   "name": "id",
   "args": null,
   "storageKey": null
 },
-v5 = {
-  "kind": "ScalarField",
-  "alias": null,
-  "name": "firstName",
-  "args": null,
-  "storageKey": null
-},
-v6 = {
-  "kind": "ScalarField",
-  "alias": null,
-  "name": "lastName",
-  "args": null,
-  "storageKey": null
-},
-v7 = {
-  "kind": "ScalarField",
-  "alias": null,
-  "name": "grade",
-  "args": null,
-  "storageKey": null
-},
-v8 = {
-  "kind": "ScalarField",
-  "alias": null,
-  "name": "dateEnrolled",
-  "args": null,
-  "storageKey": null
-},
-v9 = {
-  "kind": "ScalarField",
-  "alias": null,
-  "name": "score",
-  "args": null,
-  "storageKey": null
-},
-v10 = {
-  "kind": "ScalarField",
-  "alias": null,
-  "name": "subject",
-  "args": null,
-  "storageKey": null
+v3 = {
+  "kind": "InlineFragment",
+  "type": "School",
+  "selections": [
+    {
+      "kind": "ScalarField",
+      "alias": null,
+      "name": "name",
+      "args": null,
+      "storageKey": null
+    },
+    {
+      "kind": "ScalarField",
+      "alias": null,
+      "name": "registeredDate",
+      "args": null,
+      "storageKey": null
+    },
+    {
+      "kind": "LinkedField",
+      "alias": null,
+      "name": "students",
+      "storageKey": null,
+      "args": null,
+      "concreteType": "ViewerStudentConnectionConnection",
+      "plural": false,
+      "selections": [
+        {
+          "kind": "LinkedField",
+          "alias": null,
+          "name": "edges",
+          "storageKey": null,
+          "args": null,
+          "concreteType": "ViewerStudentConnectionEdge",
+          "plural": true,
+          "selections": [
+            {
+              "kind": "LinkedField",
+              "alias": null,
+              "name": "node",
+              "storageKey": null,
+              "args": null,
+              "concreteType": "Student",
+              "plural": false,
+              "selections": [
+                (v2/*: any*/),
+                {
+                  "kind": "ScalarField",
+                  "alias": null,
+                  "name": "firstName",
+                  "args": null,
+                  "storageKey": null
+                },
+                {
+                  "kind": "ScalarField",
+                  "alias": null,
+                  "name": "lastName",
+                  "args": null,
+                  "storageKey": null
+                },
+                {
+                  "kind": "ScalarField",
+                  "alias": null,
+                  "name": "grade",
+                  "args": null,
+                  "storageKey": null
+                },
+                {
+                  "kind": "ScalarField",
+                  "alias": null,
+                  "name": "dateEnrolled",
+                  "args": null,
+                  "storageKey": null
+                },
+                {
+                  "kind": "LinkedField",
+                  "alias": null,
+                  "name": "studentResults",
+                  "storageKey": null,
+                  "args": null,
+                  "concreteType": "Results",
+                  "plural": true,
+                  "selections": [
+                    {
+                      "kind": "ScalarField",
+                      "alias": null,
+                      "name": "score",
+                      "args": null,
+                      "storageKey": null
+                    },
+                    {
+                      "kind": "ScalarField",
+                      "alias": null,
+                      "name": "subject",
+                      "args": null,
+                      "storageKey": null
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
 };
 return {
   "kind": "Request",
@@ -182,65 +232,7 @@ return {
         "concreteType": null,
         "plural": false,
         "selections": [
-          {
-            "kind": "InlineFragment",
-            "type": "School",
-            "selections": [
-              (v2/*: any*/),
-              (v3/*: any*/),
-              {
-                "kind": "LinkedField",
-                "alias": null,
-                "name": "students",
-                "storageKey": null,
-                "args": null,
-                "concreteType": "ViewerStudentConnectionConnection",
-                "plural": false,
-                "selections": [
-                  {
-                    "kind": "LinkedField",
-                    "alias": null,
-                    "name": "edges",
-                    "storageKey": null,
-                    "args": null,
-                    "concreteType": "ViewerStudentConnectionEdge",
-                    "plural": true,
-                    "selections": [
-                      {
-                        "kind": "LinkedField",
-                        "alias": null,
-                        "name": "node",
-                        "storageKey": null,
-                        "args": null,
-                        "concreteType": "Student",
-                        "plural": false,
-                        "selections": [
-                          (v4/*: any*/),
-                          (v5/*: any*/),
-                          (v6/*: any*/),
-                          (v7/*: any*/),
-                          (v8/*: any*/),
-                          {
-                            "kind": "LinkedField",
-                            "alias": null,
-                            "name": "studentResults",
-                            "storageKey": null,
-                            "args": null,
-                            "concreteType": "Results",
-                            "plural": true,
-                            "selections": [
-                              (v9/*: any*/),
-                              (v10/*: any*/)
-                            ]
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
+          (v3/*: any*/)
         ]
       }
     ]
@@ -266,67 +258,8 @@ return {
             "args": null,
             "storageKey": null
           },
-          (v4/*: any*/),
-          {
-            "kind": "InlineFragment",
-            "type": "School",
-            "selections": [
-              (v2/*: any*/),
-              (v3/*: any*/),
-              {
-                "kind": "LinkedField",
-                "alias": null,
-                "name": "students",
-                "storageKey": null,
-                "args": null,
-                "concreteType": "ViewerStudentConnectionConnection",
-                "plural": false,
-                "selections": [
-                  {
-                    "kind": "LinkedField",
-                    "alias": null,
-                    "name": "edges",
-                    "storageKey": null,
-                    "args": null,
-                    "concreteType": "ViewerStudentConnectionEdge",
-                    "plural": true,
-                    "selections": [
-                      {
-                        "kind": "LinkedField",
-                        "alias": null,
-                        "name": "node",
-                        "storageKey": null,
-                        "args": null,
-                        "concreteType": "Student",
-                        "plural": false,
-                        "selections": [
-                          (v4/*: any*/),
-                          (v5/*: any*/),
-                          (v6/*: any*/),
-                          (v7/*: any*/),
-                          (v8/*: any*/),
-                          {
-                            "kind": "LinkedField",
-                            "alias": null,
-                            "name": "studentResults",
-                            "storageKey": null,
-                            "args": null,
-                            "concreteType": "Results",
-                            "plural": true,
-                            "selections": [
-                              (v9/*: any*/),
-                              (v10/*: any*/),
-                              (v4/*: any*/)
-                            ]
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
+          (v2/*: any*/),
+          (v3/*: any*/)
         ]
       }
     ]
@@ -335,7 +268,7 @@ return {
     "operationKind": "query",
     "name": "StudentsQuery",
     "id": null,
-    "text": "query StudentsQuery(\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ... on School {\n      name\n      registeredDate\n      students {\n        edges {\n          node {\n            id\n            firstName\n            lastName\n            grade\n            dateEnrolled\n            studentResults {\n              score\n              subject\n              id\n            }\n          }\n        }\n      }\n    }\n    id\n  }\n}\n",
+    "text": "query StudentsQuery(\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ... on School {\n      name\n      registeredDate\n      students {\n        edges {\n          node {\n            id\n            firstName\n            lastName\n            grade\n            dateEnrolled\n            studentResults {\n              score\n              subject\n            }\n          }\n        }\n      }\n    }\n    id\n  }\n}\n",
     "metadata": {}
   }
 };

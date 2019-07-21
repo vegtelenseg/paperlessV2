@@ -4,49 +4,60 @@ import { graphql } from "babel-plugin-relay/macro";
 import RelayRenderer from "../../../RelayRenderer";
 import { withRouter, RouteComponentProps } from "react-router";
 import { Card, CardHeader, CardBody } from "reactstrap";
-import Radar from "react-chartjs-2";
+import { Radar } from "./components/Radar";
 
 interface Props extends RouteComponentProps {
   node: any;
 }
 
+// interface Dataset {
+//   backgroundColor: Color,
+//   borderColor: Color,
+//   pointBackgroundColor: Color,
+//   pointBorderColor: Color,
+//   pointHoverBackgroundColor: Color,
+//   pointHoverBorderColor: Color,
+//   data: number[]
+// }
+
+// interface RadarDataset {
+//   label: string;
+//   datasets: Dataset[];
+// }
+// interface StudentResults {
+//   labels: string[];
+//   databases: RadarDataset[]
+// }
+
 class Drilldown extends React.Component<Props> {
-  public render() {
-    const radar = {
-      labels: [
-        "Eating",
-        "Drinking",
-        "Sleeping",
-        "Designing",
-        "Coding",
-        "Cycling",
-        "Running"
-      ],
+  public renderRadarData(drilldown: any, subjectName: string) {
+    console.log("Student Result: ", subjectName);
+    return {
+      labels: drilldown.map(drilldown => drilldown.name),
       datasets: [
         {
-          label: "My First dataset",
-          backgroundColor: "rgba(179,181,198,0.2)",
-          borderColor: "rgba(179,181,198,1)",
-          pointBackgroundColor: "rgba(179,181,198,1)",
-          pointBorderColor: "#fff",
-          pointHoverBackgroundColor: "#fff",
-          pointHoverBorderColor: "rgba(179,181,198,1)",
-          data: [65, 59, 90, 81, 56, 55, 40]
-        },
-        {
-          label: "My Second dataset",
+          label: subjectName,
           backgroundColor: "rgba(255,99,132,0.2)",
           borderColor: "rgba(255,99,132,1)",
           pointBackgroundColor: "rgba(255,99,132,1)",
           pointBorderColor: "#fff",
           pointHoverBackgroundColor: "#fff",
           pointHoverBorderColor: "rgba(255,99,132,1)",
-          data: [28, 48, 40, 19, 96, 27, 100]
+          data: drilldown.map(drilldown => drilldown.sum)
         }
       ]
     };
-    console.log("Drilldown:Props: ", this.props);
-    const { firstName, lastName, grade } = this.props.node;
+  }
+  public render() {
+    const { firstName, lastName, grade, studentResults } = this.props.node;
+    const mathData = this.renderRadarData(
+      studentResults[0].drilldown,
+      studentResults[0].subject
+    );
+    const englishData = this.renderRadarData(
+      studentResults[1].drilldown,
+      studentResults[1].subject
+    );
     return (
       <div className="animated fadeIn">
         <div className="">
@@ -58,36 +69,21 @@ class Drilldown extends React.Component<Props> {
         <div className="card-columns cols-2">
           <Card>
             <CardHeader className="card-header">
-              Mathematics
-              <div className="card-header-actions">
-                <a href="http://www.chartjs.org" className="card-header-action">
-                  <small className="text-muted">docs</small>
-                </a>
-              </div>
+              English
             </CardHeader>
             <CardBody className="card-body">
               <div className="chart-wrapper">
-                <Radar data={radar} />
+                <Radar type="radar" data={englishData} />
               </div>
             </CardBody>
           </Card>
           <Card>
             <CardHeader>
-              English
-              <div className="card-header-actions">
-                <a href="http://www.chartjs.org" className="card-header-action">
-                  <small className="text-muted">docs</small>
-                </a>
-              </div>
+              Mathematics
             </CardHeader>
             <CardBody className="card-body">
               <div className="chart-wrapper">
-                <Radar
-                  options={{
-                    responsive: false
-                  }}
-                  data={radar}
-                />
+                <Radar type="radar" data={mathData} />
               </div>
             </CardBody>
           </Card>
@@ -115,14 +111,13 @@ const query = graphql`
         firstName
         lastName
         grade
-        results {
+        studentResults {
           score
-          assessment {
-            kind
-            chapters {
-              name
-              maxScore
-            }
+          subject
+          drilldown {
+            name
+            subjectName
+            sum
           }
         }
       }
