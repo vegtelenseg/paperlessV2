@@ -4,15 +4,14 @@ import { graphql } from "babel-plugin-relay/macro";
 import RelayRenderer from "../../../RelayRenderer";
 import { withRouter, RouteComponentProps } from "react-router";
 import { Card, CardHeader, CardBody } from "reactstrap";
-import Radar from "react-chartjs-2";
-
+import { Radar } from "./components/Radar";
 interface Props extends RouteComponentProps {
   node: any;
 }
 
 class Drilldown extends React.Component<Props> {
   public render() {
-    const radar = {
+    const mathematicsData = {
       labels: [
         "Eating",
         "Drinking",
@@ -24,7 +23,7 @@ class Drilldown extends React.Component<Props> {
       ],
       datasets: [
         {
-          label: "My First dataset",
+          label: "Mathematics",
           backgroundColor: "rgba(179,181,198,0.2)",
           borderColor: "rgba(179,181,198,1)",
           pointBackgroundColor: "rgba(179,181,198,1)",
@@ -32,21 +31,35 @@ class Drilldown extends React.Component<Props> {
           pointHoverBackgroundColor: "#fff",
           pointHoverBorderColor: "rgba(179,181,198,1)",
           data: [65, 59, 90, 81, 56, 55, 40]
-        },
+        }
+      ]
+    };
+    const englishData = {
+      labels: [
+        "Eating",
+        "Drinking",
+        "Sleeping",
+        "Designing",
+        "Coding",
+        "Cycling",
+        "Running"
+      ],
+      datasets: [
         {
-          label: "My Second dataset",
+          label: "English",
           backgroundColor: "rgba(255,99,132,0.2)",
           borderColor: "rgba(255,99,132,1)",
           pointBackgroundColor: "rgba(255,99,132,1)",
           pointBorderColor: "#fff",
           pointHoverBackgroundColor: "#fff",
           pointHoverBorderColor: "rgba(255,99,132,1)",
-          data: [28, 48, 40, 19, 96, 27, 100]
+          data: [48, 48, 40, 19, 96, 27, 100]
         }
       ]
     };
-    console.log("Drilldown:Props: ", this.props);
+
     const { firstName, lastName, grade } = this.props.node;
+    console.log("Drilldown:Props: ", this.props);
     return (
       <div className="animated fadeIn">
         <div className="">
@@ -58,21 +71,6 @@ class Drilldown extends React.Component<Props> {
         <div className="card-columns cols-2">
           <Card>
             <CardHeader className="card-header">
-              Mathematics
-              <div className="card-header-actions">
-                <a href="http://www.chartjs.org" className="card-header-action">
-                  <small className="text-muted">docs</small>
-                </a>
-              </div>
-            </CardHeader>
-            <CardBody className="card-body">
-              <div className="chart-wrapper">
-                <Radar data={radar} />
-              </div>
-            </CardBody>
-          </Card>
-          <Card>
-            <CardHeader>
               English
               <div className="card-header-actions">
                 <a href="http://www.chartjs.org" className="card-header-action">
@@ -82,12 +80,22 @@ class Drilldown extends React.Component<Props> {
             </CardHeader>
             <CardBody className="card-body">
               <div className="chart-wrapper">
-                <Radar
-                  options={{
-                    responsive: false
-                  }}
-                  data={radar}
-                />
+                <Radar type="radar" data={englishData} />
+              </div>
+            </CardBody>
+          </Card>
+          <Card>
+            <CardHeader>
+              Mathematics
+              <div className="card-header-actions">
+                <a href="http://www.chartjs.org" className="card-header-action">
+                  <small className="text-muted">docs</small>
+                </a>
+              </div>
+            </CardHeader>
+            <CardBody className="card-body">
+              <div className="chart-wrapper">
+                <Radar type="radar" data={mathematicsData} />
               </div>
             </CardBody>
           </Card>
@@ -115,14 +123,13 @@ const query = graphql`
         firstName
         lastName
         grade
-        results {
+        studentResults {
           score
-          assessment {
-            kind
-            chapters {
-              name
-              maxScore
-            }
+          subject
+          drilldown {
+            name
+            subjectName
+            sum
           }
         }
       }

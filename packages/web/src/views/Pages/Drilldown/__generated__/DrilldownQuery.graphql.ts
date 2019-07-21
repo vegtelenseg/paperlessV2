@@ -9,29 +9,27 @@ export type DrilldownQueryResponse = {
         readonly firstName?: string;
         readonly lastName?: string;
         readonly grade?: number;
-        readonly results?: ReadonlyArray<{
+        readonly studentResults?: ReadonlyArray<{
             readonly score: number | null;
-            readonly assessment: {
-                readonly kind: string | null;
-                readonly chapters: ReadonlyArray<{
-                    readonly name: string;
-                    readonly maxScore: number | null;
-                }> | null;
-            } | null;
+            readonly subject: string | null;
+            readonly drilldown: ReadonlyArray<{
+                readonly name: string;
+                readonly subjectName: string;
+                readonly sum: number;
+            } | null> | null;
         } | null> | null;
     } & ({
         readonly firstName: string;
         readonly lastName: string;
         readonly grade: number;
-        readonly results: ReadonlyArray<{
+        readonly studentResults: ReadonlyArray<{
             readonly score: number | null;
-            readonly assessment: {
-                readonly kind: string | null;
-                readonly chapters: ReadonlyArray<{
-                    readonly name: string;
-                    readonly maxScore: number | null;
-                }> | null;
-            } | null;
+            readonly subject: string | null;
+            readonly drilldown: ReadonlyArray<{
+                readonly name: string;
+                readonly subjectName: string;
+                readonly sum: number;
+            } | null> | null;
         } | null> | null;
     } | {
         /*This will never be '% other', but we need some
@@ -56,17 +54,15 @@ query DrilldownQuery(
       firstName
       lastName
       grade
-      results {
+      studentResults {
         score
-        assessment {
-          kind
-          chapters {
-            name
-            maxScore
-          }
+        subject
+        drilldown {
+          name
+          subjectName
+          sum
           id
         }
-        id
       }
     }
     id
@@ -121,36 +117,32 @@ v5 = {
 v6 = {
   "kind": "ScalarField",
   "alias": null,
-  "name": "kind",
+  "name": "subject",
   "args": null,
   "storageKey": null
 },
 v7 = {
-  "kind": "LinkedField",
+  "kind": "ScalarField",
   "alias": null,
-  "name": "chapters",
-  "storageKey": null,
+  "name": "name",
   "args": null,
-  "concreteType": "Chapter",
-  "plural": true,
-  "selections": [
-    {
-      "kind": "ScalarField",
-      "alias": null,
-      "name": "name",
-      "args": null,
-      "storageKey": null
-    },
-    {
-      "kind": "ScalarField",
-      "alias": null,
-      "name": "maxScore",
-      "args": null,
-      "storageKey": null
-    }
-  ]
+  "storageKey": null
 },
 v8 = {
+  "kind": "ScalarField",
+  "alias": null,
+  "name": "subjectName",
+  "args": null,
+  "storageKey": null
+},
+v9 = {
+  "kind": "ScalarField",
+  "alias": null,
+  "name": "sum",
+  "args": null,
+  "storageKey": null
+},
+v10 = {
   "kind": "ScalarField",
   "alias": null,
   "name": "id",
@@ -185,24 +177,26 @@ return {
               {
                 "kind": "LinkedField",
                 "alias": null,
-                "name": "results",
+                "name": "studentResults",
                 "storageKey": null,
                 "args": null,
-                "concreteType": "StudentResult",
+                "concreteType": "Results",
                 "plural": true,
                 "selections": [
                   (v5/*: any*/),
+                  (v6/*: any*/),
                   {
                     "kind": "LinkedField",
                     "alias": null,
-                    "name": "assessment",
+                    "name": "drilldown",
                     "storageKey": null,
                     "args": null,
-                    "concreteType": "Assessment",
-                    "plural": false,
+                    "concreteType": "Drilldown",
+                    "plural": true,
                     "selections": [
-                      (v6/*: any*/),
-                      (v7/*: any*/)
+                      (v7/*: any*/),
+                      (v8/*: any*/),
+                      (v9/*: any*/)
                     ]
                   }
                 ]
@@ -234,7 +228,7 @@ return {
             "args": null,
             "storageKey": null
           },
-          (v8/*: any*/),
+          (v10/*: any*/),
           {
             "kind": "InlineFragment",
             "type": "Student",
@@ -245,28 +239,29 @@ return {
               {
                 "kind": "LinkedField",
                 "alias": null,
-                "name": "results",
+                "name": "studentResults",
                 "storageKey": null,
                 "args": null,
-                "concreteType": "StudentResult",
+                "concreteType": "Results",
                 "plural": true,
                 "selections": [
                   (v5/*: any*/),
+                  (v6/*: any*/),
                   {
                     "kind": "LinkedField",
                     "alias": null,
-                    "name": "assessment",
+                    "name": "drilldown",
                     "storageKey": null,
                     "args": null,
-                    "concreteType": "Assessment",
-                    "plural": false,
+                    "concreteType": "Drilldown",
+                    "plural": true,
                     "selections": [
-                      (v6/*: any*/),
                       (v7/*: any*/),
-                      (v8/*: any*/)
+                      (v8/*: any*/),
+                      (v9/*: any*/),
+                      (v10/*: any*/)
                     ]
-                  },
-                  (v8/*: any*/)
+                  }
                 ]
               }
             ]
@@ -279,10 +274,10 @@ return {
     "operationKind": "query",
     "name": "DrilldownQuery",
     "id": null,
-    "text": "query DrilldownQuery(\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ... on Student {\n      firstName\n      lastName\n      grade\n      results {\n        score\n        assessment {\n          kind\n          chapters {\n            name\n            maxScore\n          }\n          id\n        }\n        id\n      }\n    }\n    id\n  }\n}\n",
+    "text": "query DrilldownQuery(\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ... on Student {\n      firstName\n      lastName\n      grade\n      studentResults {\n        score\n        subject\n        drilldown {\n          name\n          subjectName\n          sum\n          id\n        }\n      }\n    }\n    id\n  }\n}\n",
     "metadata": {}
   }
 };
 })();
-(node as any).hash = '667f14d464401b7228bfc78e0d7b4ea7';
+(node as any).hash = '949095a1e120b753c72cbbf4ba551f26';
 export default node;

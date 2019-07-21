@@ -138,7 +138,10 @@ export async function seed(knex: Knex) {
       const gender = genders[Math.round(Math.random())];
       const sBirthDate = randomDate.getRandomDateInRange(sStartDate, sEndDate);
       const subjects = await Subject.query(knex).context({context});
-      const enrolmentDate = randomDate.getRandomDateInRange(new Date(2016, 1, 1), new Date(2019, 12, 12));
+      const enrolmentDate = randomDate.getRandomDateInRange(
+        new Date(2016, 1, 1),
+        new Date(2019, 12, 12)
+      );
       await Student.query(knex)
         .context({context})
         // @ts-ignore
@@ -200,15 +203,17 @@ export async function seed(knex: Knex) {
   }
 
   const assessmentList = await Assessment.query(knex).context({context});
-  for (let i = 0; i < assessmentList.length; i++) {
-    for (let j = 0; j < subjects[j % 2].chapters.length; j++) {
+  for (let i = 0; i < subjectList.length; i++) {
+    for (let j = 0; j < 4; j++) {
       await Chapter.query(knex)
         .context({context})
+        // @ts-ignore
         .insertGraph({
-          name: subjects[j % 2].chapters[j].name,
-          // @ts-ignore
-          assessments: [{'#dbRef': assessmentList[i].id}],
-          subjectId: subjectList[j % 2].id,
+          name: subjects[i].chapters[j].name,
+          assessments: assessmentList.map((assessment) => ({
+            '#dbRef': assessment.id,
+          })),
+          subjectId: subjectList[i].id,
           maxScore: Math.floor(Math.random() * 10),
         });
     }
@@ -225,7 +230,10 @@ export async function seed(knex: Knex) {
         .insertGraph({
           studentId: studentList[i].id,
           assessmentChapterId: assessmendChaptersList[j].id,
-          score: score > assessmentList[j % assessmentList.length].totalMarks ? assessmentList[j % assessmentList.length].totalMarks : score + 2,
+          score:
+            score > assessmentList[j % assessmentList.length].totalMarks
+              ? assessmentList[j % assessmentList.length].totalMarks
+              : score,
         });
     }
   }

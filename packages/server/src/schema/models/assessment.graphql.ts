@@ -1,9 +1,9 @@
 import {newJoinMonsterGraphQLObjectType} from '../../utils/joinMonster-graphql14.fix';
-import { GraphQLInt, GraphQLString, GraphQLList, GraphQLNonNull } from 'graphql';
+import {GraphQLInt, GraphQLString, GraphQLList, GraphQLNonNull} from 'graphql';
 import {GraphQLDate} from 'graphql-iso-date';
 import {globalIdField} from 'graphql-relay';
 import {nodeInterface} from '../Relay';
-import { Chapter } from './Chapter.graphql';
+import {Chapter} from './Chapter.graphql';
 
 export const Assessment = newJoinMonsterGraphQLObjectType({
   name: 'Assessment',
@@ -35,14 +35,13 @@ export const Assessment = newJoinMonsterGraphQLObjectType({
     },
     chapters: {
       type: new GraphQLList(GraphQLNonNull(Chapter)),
-      where: (assessmentTable) => `(${assessmentTable}.id = 1)`,
       junction: {
         sqlTable: 'assessment_chapter',
         sqlJoins: [
-          (chapterTable, junctionTable) =>
-            `${chapterTable}.id = ${junctionTable}.chapter_id`,
-          (junctionTable, assessmentTable) =>
-            `${junctionTable}.assessment_id = ${assessmentTable}.id`,
+          (assessmentTable, junctionTable) =>
+            `${assessmentTable}.id = ${junctionTable}.assessment_id`,
+          (junctionTable, chapterTable) =>
+            `${junctionTable}.assessment_id = ${chapterTable}.id`,
         ],
       },
     },
