@@ -10,14 +10,12 @@ import {
   Col
 } from "reactstrap";
 import { RouteComponentProps, withRouter } from "react-router";
+import { createFragmentContainer } from "react-relay";
+import { graphql } from "babel-plugin-relay/macro";
+import { School_viewer } from "./__generated__/School_viewer.graphql";
 
-interface School {
-  id: string;
-  name: string;
-  registeredDate: Date;
-}
 interface Props extends RouteComponentProps {
-  school: School;
+  school: School_viewer;
 }
 
 class School extends React.Component<Props> {
@@ -26,6 +24,7 @@ class School extends React.Component<Props> {
       // @ts-ignore
       school: { node }
     } = this.props;
+    console.log("School:props: ", this.props);
     return (
       <Col
         xs="12"
@@ -64,4 +63,13 @@ class School extends React.Component<Props> {
   }
 }
 
-export default withRouter(School);
+const SchoolFragmentContainer = createFragmentContainer(School, {
+  viewer: graphql`
+    fragment School_viewer on School {
+      id
+      name
+      registeredDate
+    }
+  `
+});
+export default withRouter(SchoolFragmentContainer);

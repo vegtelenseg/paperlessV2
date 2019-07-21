@@ -131,7 +131,7 @@ v3 = {
       "name": "students",
       "storageKey": null,
       "args": null,
-      "concreteType": "ViewerStudentConnectionConnection",
+      "concreteType": "ViewerStudentConnection",
       "plural": false,
       "selections": [
         {
@@ -140,7 +140,7 @@ v3 = {
           "name": "edges",
           "storageKey": null,
           "args": null,
-          "concreteType": "ViewerStudentConnectionEdge",
+          "concreteType": "ViewerStudentEdge",
           "plural": true,
           "selections": [
             {

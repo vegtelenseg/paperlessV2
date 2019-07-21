@@ -5,6 +5,7 @@ import RelayRenderer from "../../../RelayRenderer";
 import { withRouter, RouteComponentProps } from "react-router";
 import { Card, CardHeader, CardBody } from "reactstrap";
 import { Radar } from "./components/Radar";
+
 interface Props extends RouteComponentProps {
   node: any;
 }
@@ -66,9 +67,7 @@ class Drilldown extends React.Component<Props> {
         </div>
         <div className="card-columns cols-2">
           <Card>
-            <CardHeader className="card-header">
-              English
-            </CardHeader>
+            <CardHeader className="card-header">English</CardHeader>
             <CardBody className="card-body">
               <div className="chart-wrapper">
                 <Radar type="radar" data={englishData} />
@@ -76,9 +75,7 @@ class Drilldown extends React.Component<Props> {
             </CardBody>
           </Card>
           <Card>
-            <CardHeader>
-              Mathematics
-            </CardHeader>
+            <CardHeader>Mathematics</CardHeader>
             <CardBody className="card-body">
               <div className="chart-wrapper">
                 <Radar type="radar" data={mathData} />
