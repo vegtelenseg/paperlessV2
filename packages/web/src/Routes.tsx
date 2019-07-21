@@ -54,7 +54,7 @@ export const routes = [
   {
     path: "/school/:id/:studentId",
     exact: true,
-    name: "School",
+    name: "Marks Drilldown",
     Component: Drilldown
   }
 ];

@@ -31,7 +31,6 @@ interface Props extends RouteComponentProps {
 
 class Drilldown extends React.Component<Props> {
   public renderRadarData(drilldown: any, subjectName: string) {
-    console.log("Student Result: ", subjectName);
     return {
       labels: drilldown.map(drilldown => drilldown.name),
       datasets: [
@@ -60,7 +59,7 @@ class Drilldown extends React.Component<Props> {
     );
     return (
       <div className="animated fadeIn">
-        <div className="">
+        <div className="card" style={{border: 'none'}}>
           <h2>
             {firstName} {lastName}
           </h2>
