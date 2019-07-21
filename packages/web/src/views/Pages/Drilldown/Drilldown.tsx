@@ -5,7 +5,6 @@ import RelayRenderer from "../../../RelayRenderer";
 import { withRouter, RouteComponentProps } from "react-router";
 import { Card, CardHeader, CardBody } from "reactstrap";
 import { Radar } from "./components/Radar";
-
 interface Props extends RouteComponentProps {
   node: any;
 }
