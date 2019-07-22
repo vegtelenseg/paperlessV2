@@ -1,7 +1,6 @@
 import React from "react";
 
 import { RouteComponentProps, withRouter } from "react-router";
-import { createFragmentContainer } from "react-relay";
 import { graphql } from "babel-plugin-relay/macro";
 import RelayRenderer from "../../../RelayRenderer";
 
@@ -132,15 +131,6 @@ class Students extends React.Component<Props> {
   }
 }
 
-const StudentFragmentContainer = createFragmentContainer(withRouter(Students), {
-  viewer: graphql`
-    fragment Students_viewer on Student {
-      firstName
-      lastName
-    }
-  `
-});
-
 const query = graphql`
   query StudentsQuery($id: ID!) {
     node(id: $id) {
@@ -174,7 +164,7 @@ export default moduleProps => {
       variables={{
         id: moduleProps.id
       }}
-      container={StudentFragmentContainer}
+      container={withRouter(Students)}
       {...moduleProps}
     />
   );

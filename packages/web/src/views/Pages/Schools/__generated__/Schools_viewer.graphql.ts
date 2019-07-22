@@ -1,6 +1,7 @@
 /* tslint:disable */
 
 import { ReaderFragment } from "relay-runtime";
+type School_viewer$ref = any;
 export type Schools_viewer$ref = any;
 export type Schools_viewer = {
     readonly schools: {
@@ -9,6 +10,7 @@ export type Schools_viewer = {
                 readonly id: string;
                 readonly name: string | null;
                 readonly registeredDate: any | null;
+                readonly " $fragmentRefs": School_viewer$ref;
             } | null;
         } | null> | null;
     } | null;
@@ -71,6 +73,11 @@ const node: ReaderFragment = {
                   "name": "registeredDate",
                   "args": null,
                   "storageKey": null
+                },
+                {
+                  "kind": "FragmentSpread",
+                  "name": "School_viewer",
+                  "args": null
                 }
               ]
             }
@@ -80,5 +87,5 @@ const node: ReaderFragment = {
     }
   ]
 };
-(node as any).hash = 'e7799a86297f0714404166200884c80b';
+(node as any).hash = '26e496ae8ca9d3422331000d013b8f87';
 export default node;

@@ -17,7 +17,7 @@ import {nodeInterface} from '../Relay';
 import {forwardConnectionArgs} from 'graphql-relay';
 
 const {connectionType: ViewerStudentConnection} = connectionDefinitions({
-  name: 'ViewerStudentConnection',
+  name: 'ViewerStudent',
   nodeType: Student,
   connectionFields: {
     total: {type: GraphQLInt},

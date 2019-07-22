@@ -33,6 +33,7 @@ const SchoolFragmentContainer = createFragmentContainer(Schools, {
             id
             name
             registeredDate
+            ...School_viewer
           }
         }
       }

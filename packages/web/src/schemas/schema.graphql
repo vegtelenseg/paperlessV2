@@ -1,5 +1,5 @@
 # source: http://localhost:5000/graphql
-# timestamp: Sun Jul 21 2019 12:01:49 GMT+0200 (South Africa Standard Time)
+# timestamp: Mon Jul 22 2019 10:25:19 GMT+0200 (South Africa Standard Time)
 
 """Keeps information about an assessment"""
 type Assessment implements Node {
@@ -109,7 +109,7 @@ type School implements Node {
   active: String!
   registeredDate: Date
   grades: [Grade]!
-  students(id: ID, after: String, first: Int): ViewerStudentConnectionConnection
+  students(id: ID, after: String, first: Int): ViewerStudentConnection
 }
 
 type Student implements Node {
@@ -189,17 +189,17 @@ type ViewerSchoolConnectionEdge {
 }
 
 """A connection to a list of items."""
-type ViewerStudentConnectionConnection {
+type ViewerStudentConnection {
   """Information to aid in pagination."""
   pageInfo: PageInfo!
 
   """A list of edges."""
-  edges: [ViewerStudentConnectionEdge]
+  edges: [ViewerStudentEdge]
   total: Int
 }
 
 """An edge in a connection."""
-type ViewerStudentConnectionEdge {
+type ViewerStudentEdge {
   """The item at the end of the edge"""
   node: Student
 
