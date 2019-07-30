@@ -3,6 +3,8 @@ import React from "react";
 import { RouteComponentProps, withRouter } from "react-router";
 import { graphql } from "babel-plugin-relay/macro";
 import RelayRenderer from "../../../RelayRenderer";
+import Student from "./component/Student";
+import { createPaginationContainer, RelayPaginationProp } from "react-relay";
 
 const tableHeadings = [
   "avatar",
@@ -13,6 +15,7 @@ const tableHeadings = [
 ];
 interface Props extends RouteComponentProps {
   node: any;
+  relay: RelayPaginationProp;
 }
 
 class Students extends React.Component<Props> {
@@ -20,6 +23,7 @@ class Students extends React.Component<Props> {
     const {
       node: { students }
     } = this.props;
+    console.log("Students: ", this.props);
     return (
       <div className="card">
         <div className="card-body">
@@ -45,84 +49,7 @@ class Students extends React.Component<Props> {
               </tr>
             </thead>
             <tbody>
-              {students.edges.map((student, idx) => {
-                const results = student.node.studentResults;
-                return (
-                  <tr
-                    key={`${student.node.firstName}${idx}`}
-                    onClick={() =>
-                      this.props.history.push(
-                        `${this.props.location.pathname}/${student.node.id}`
-                      )
-                    }
-                    className="card-header-action"
-                  >
-                    <>
-                      <td className="text-center">
-                        <div className="avatar">
-                          <img
-                            className="img-avatar sm"
-                            // There is only 8 sample avatars
-                            src={`https://coreui.io/demo/img/avatars/${(idx %
-                              8) +
-                              1}.jpg`}
-                          />
-                        </div>
-                      </td>
-                      <td>
-                        <div>
-                          {student.node.firstName} {student.node.lastName}
-                        </div>
-                        <div className="small text-muted">
-                          <span>New</span> | Registered:
-                          {student.node.dateEnrolled}
-                        </div>
-                      </td>
-                      <td>
-                        <div className="medium text-muted">
-                          {student.node.grade}
-                        </div>
-                      </td>
-                      {results.map((result: any, idx) => {
-                        const { score } = result;
-                        const status =
-                          score <= 36
-                            ? "bg-danger"
-                            : score > 33 && score <= 59
-                            ? "bg-warning"
-                            : "bg-success";
-
-                        return (
-                          <td key={`${result}-${idx}`}>
-                            <div className="clearfix">
-                              <div className="float-left">
-                                <strong>{score + "%"}</strong>
-                              </div>
-                              {/* <div className="float-right">
-                          <small className="text-muted">
-                            Jun 11, 2015 - Jul 10, 2015
-                          </small>
-                        </div> */}
-                            </div>
-                            <div className="progress progress-xs">
-                              <div
-                                className={`progress-bar ${status}`}
-                                role="progressbar"
-                                style={{
-                                  width: score + "%"
-                                }}
-                                aria-valuenow={score}
-                                aria-valuemin={0}
-                                aria-valuemax={100}
-                              ></div>
-                            </div>
-                          </td>
-                        );
-                      })}
-                    </>
-                  </tr>
-                );
-              })}
+              <Student student={students as any} />;
             </tbody>
           </table>
         </div>
@@ -132,39 +59,60 @@ class Students extends React.Component<Props> {
 }
 
 const query = graphql`
-  query StudentsQuery($id: ID!) {
+  query StudentsQuery($id: ID!, $count: Int!, $cursor: String) {
     node(id: $id) {
       ... on School {
         name
         registeredDate
-        students {
-          edges {
-            node {
-              id
-              firstName
-              lastName
-              grade
-              dateEnrolled
-              studentResults {
-                score
-                subject
-              }
-            }
-          }
-        }
+        ...Students_students @arguments(count: $count, cursor: $cursor)
       }
     }
   }
 `;
 
+const StudentsPaginationContainer = createPaginationContainer(
+  withRouter(Students),
+  {
+    students: graphql`
+      fragment Students_students on School
+        @argumentDefinitions(
+          count: { type: "Int" }
+          cursor: { type: "String" }
+        ) {
+        id
+        name
+        registeredDate
+        students(first: $count, after: $cursor)
+          @connection(key: "Students_students") {
+          edges {
+            node {
+              ...Student_student
+            }
+          }
+        }
+      }
+    `
+  },
+  {
+    direction: "forward",
+    query,
+    getVariables(_props, { count, cursor }, _fragmentVariables) {
+      return {
+        count,
+        cursor
+      };
+    }
+  }
+);
 export default moduleProps => {
   return (
     <RelayRenderer
       query={query}
       variables={{
-        id: moduleProps.id
+        id: moduleProps.id,
+        count: 4
       }}
-      container={withRouter(Students)}
+      container={StudentsPaginationContainer}
       {...moduleProps}
     />
   );

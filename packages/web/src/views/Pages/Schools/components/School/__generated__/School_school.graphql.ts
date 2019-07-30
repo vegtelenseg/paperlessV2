@@ -1,19 +1,19 @@
 /* tslint:disable */
 
 import { ReaderFragment } from "relay-runtime";
-export type School_viewer$ref = any;
-export type School_viewer = {
+export type School_school$ref = any;
+export type School_school = {
     readonly id: string;
     readonly name: string | null;
     readonly registeredDate: any | null;
-    readonly " $refType": School_viewer$ref;
+    readonly " $refType": School_school$ref;
 };
 
 
 
 const node: ReaderFragment = {
   "kind": "Fragment",
-  "name": "School_viewer",
+  "name": "School_school",
   "type": "School",
   "metadata": null,
   "argumentDefinitions": [],
@@ -41,5 +41,5 @@ const node: ReaderFragment = {
     }
   ]
 };
-(node as any).hash = '4a45f55f562b182d4de7eb1701e12101';
+(node as any).hash = '1fc91646d5c9ce1a35ebaf36d18a8bef';
 export default node;

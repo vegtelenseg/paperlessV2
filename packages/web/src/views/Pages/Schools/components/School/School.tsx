@@ -12,10 +12,10 @@ import {
 import { RouteComponentProps, withRouter } from "react-router";
 import { createFragmentContainer } from "react-relay";
 import { graphql } from "babel-plugin-relay/macro";
-import { School_viewer } from "./__generated__/School_viewer.graphql";
+import { School_school } from "./__generated__/School_school.graphql";
 
 interface Props extends RouteComponentProps {
-  school: School_viewer;
+  school: School_school;
 }
 
 class School extends React.Component<Props> {
@@ -64,8 +64,8 @@ class School extends React.Component<Props> {
 }
 
 const SchoolFragmentContainer = createFragmentContainer(School, {
-  viewer: graphql`
-    fragment School_viewer on School {
+  school: graphql`
+    fragment School_school on School {
       id
       name
       registeredDate

@@ -34,13 +34,13 @@ fragment Schools_viewer on Viewer {
         id
         name
         registeredDate
-        ...School_viewer
+        ...School_school
       }
     }
   }
 }
 
-fragment School_viewer on School {
+fragment School_school on School {
   id
   name
   registeredDate
@@ -153,7 +153,7 @@ return {
     "operationKind": "query",
     "name": "DashboardQuery",
     "id": null,
-    "text": "query DashboardQuery {\n  viewer {\n    ...Dashboard_viewer\n    id\n  }\n}\n\nfragment Dashboard_viewer on Viewer {\n  ...Schools_viewer\n}\n\nfragment Schools_viewer on Viewer {\n  schools {\n    edges {\n      node {\n        id\n        name\n        registeredDate\n        ...School_viewer\n      }\n    }\n  }\n}\n\nfragment School_viewer on School {\n  id\n  name\n  registeredDate\n}\n",
+    "text": "query DashboardQuery {\n  viewer {\n    ...Dashboard_viewer\n    id\n  }\n}\n\nfragment Dashboard_viewer on Viewer {\n  ...Schools_viewer\n}\n\nfragment Schools_viewer on Viewer {\n  schools {\n    edges {\n      node {\n        id\n        name\n        registeredDate\n        ...School_school\n      }\n    }\n  }\n}\n\nfragment School_school on School {\n  id\n  name\n  registeredDate\n}\n",
     "metadata": {}
   }
 };

@@ -59,7 +59,7 @@ class Drilldown extends React.Component<Props> {
     );
     return (
       <div className="animated fadeIn">
-        <div className="card" style={{border: 'none'}}>
+        <div className="card" style={{ border: "none" }}>
           <h2>
             {firstName} {lastName}
           </h2>
