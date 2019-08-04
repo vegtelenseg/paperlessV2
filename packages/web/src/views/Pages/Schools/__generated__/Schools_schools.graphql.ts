@@ -2,8 +2,8 @@
 
 import { ReaderFragment } from "relay-runtime";
 type School_school$ref = any;
-export type Schools_viewer$ref = any;
-export type Schools_viewer = {
+export type Schools_schools$ref = any;
+export type Schools_schools = {
     readonly schools: {
         readonly edges: ReadonlyArray<{
             readonly node: {
@@ -14,22 +14,46 @@ export type Schools_viewer = {
             } | null;
         } | null> | null;
     } | null;
-    readonly " $refType": Schools_viewer$ref;
+    readonly " $refType": Schools_schools$ref;
 };
 
 
 
 const node: ReaderFragment = {
   "kind": "Fragment",
-  "name": "Schools_viewer",
+  "name": "Schools_schools",
   "type": "Viewer",
-  "metadata": null,
-  "argumentDefinitions": [],
+  "metadata": {
+    "connection": [
+      {
+        "count": "count",
+        "cursor": "cursor",
+        "direction": "forward",
+        "path": [
+          "schools"
+        ]
+      }
+    ]
+  },
+  "argumentDefinitions": [
+    {
+      "kind": "LocalArgument",
+      "name": "count",
+      "type": "Int",
+      "defaultValue": null
+    },
+    {
+      "kind": "LocalArgument",
+      "name": "cursor",
+      "type": "String",
+      "defaultValue": null
+    }
+  ],
   "selections": [
     {
       "kind": "LinkedField",
-      "alias": null,
-      "name": "schools",
+      "alias": "schools",
+      "name": "__Schools_schools_connection",
       "storageKey": null,
       "args": null,
       "concreteType": "ViewerSchoolConnectionConnection",
@@ -75,11 +99,50 @@ const node: ReaderFragment = {
                   "storageKey": null
                 },
                 {
+                  "kind": "ScalarField",
+                  "alias": null,
+                  "name": "__typename",
+                  "args": null,
+                  "storageKey": null
+                },
+                {
                   "kind": "FragmentSpread",
                   "name": "School_school",
                   "args": null
                 }
               ]
+            },
+            {
+              "kind": "ScalarField",
+              "alias": null,
+              "name": "cursor",
+              "args": null,
+              "storageKey": null
+            }
+          ]
+        },
+        {
+          "kind": "LinkedField",
+          "alias": null,
+          "name": "pageInfo",
+          "storageKey": null,
+          "args": null,
+          "concreteType": "PageInfo",
+          "plural": false,
+          "selections": [
+            {
+              "kind": "ScalarField",
+              "alias": null,
+              "name": "endCursor",
+              "args": null,
+              "storageKey": null
+            },
+            {
+              "kind": "ScalarField",
+              "alias": null,
+              "name": "hasNextPage",
+              "args": null,
+              "storageKey": null
             }
           ]
         }
@@ -87,5 +150,5 @@ const node: ReaderFragment = {
     }
   ]
 };
-(node as any).hash = 'd4f6b90261f62f299abd4695643e4810';
+(node as any).hash = 'c5af4a42c0543064c2b276c12de79a25';
 export default node;

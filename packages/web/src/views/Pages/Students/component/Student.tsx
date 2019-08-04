@@ -6,11 +6,11 @@ import { Student_student } from "./__generated__/Student_student.graphql";
 
 interface Props extends RouteComponentProps {
   student: Student_student;
+  index: number;
 }
 class Student extends React.Component<Props> {
   public render() {
-    const { student } = this.props;
-    console.log("Stuident: ", student);
+    const { student, index } = this.props;
     const results = student.studentResults;
     return (
       <tr
@@ -28,7 +28,8 @@ class Student extends React.Component<Props> {
               <img
                 className="img-avatar sm"
                 // There is only 8 sample avatars
-                src={`https://coreui.io/demo/img/avatars/${(1 % 8) + 1}.jpg`}
+                src={`https://coreui.io/demo/img/avatars/${(index % 8) +
+                  1}.jpg`}
               />
             </div>
           </td>

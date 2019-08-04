@@ -24,7 +24,7 @@ class Dashboard extends React.Component<Props, State> {
       return (
         <div className="animated fadeIn">
           <Row>
-            <Schools viewer={this.props.viewer} {...this.props} />
+            <Schools schools={this.props.viewer} {...this.props} />
           </Row>
         </div>
       );
@@ -33,7 +33,7 @@ class Dashboard extends React.Component<Props, State> {
 }
 
 const query = graphql`
-  query DashboardQuery {
+  query DashboardQuery($count: Int!, $cursor: String) {
     viewer {
       ...Dashboard_viewer
     }
@@ -45,7 +45,7 @@ const DashboardFragmentContainer = createRefetchContainer(
   {
     viewer: graphql`
       fragment Dashboard_viewer on Viewer {
-        ...Schools_viewer
+        ...Schools_schools @arguments(count: $count, cursor: $cursor)
       }
     `
   },
@@ -55,7 +55,9 @@ const DashboardFragmentContainer = createRefetchContainer(
 export default props => (
   <RelayRenderer
     query={query}
-    variables={{}}
+    variables={{
+      count: 10
+    }}
     container={DashboardFragmentContainer}
     {...props}
   />

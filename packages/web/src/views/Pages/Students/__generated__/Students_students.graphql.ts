@@ -10,6 +10,15 @@ export type Students_students = {
     readonly students: {
         readonly edges: ReadonlyArray<{
             readonly node: {
+                readonly id: string;
+                readonly firstName: string;
+                readonly lastName: string;
+                readonly grade: number;
+                readonly dateEnrolled: any | null;
+                readonly studentResults: ReadonlyArray<{
+                    readonly score: number | null;
+                    readonly subject: string | null;
+                } | null> | null;
                 readonly " $fragmentRefs": Student_student$ref;
             } | null;
         } | null> | null;
@@ -19,7 +28,15 @@ export type Students_students = {
 
 
 
-const node: ReaderFragment = {
+const node: ReaderFragment = (function(){
+var v0 = {
+  "kind": "ScalarField",
+  "alias": null,
+  "name": "id",
+  "args": null,
+  "storageKey": null
+};
+return {
   "kind": "Fragment",
   "name": "Students_students",
   "type": "School",
@@ -50,13 +67,7 @@ const node: ReaderFragment = {
     }
   ],
   "selections": [
-    {
-      "kind": "ScalarField",
-      "alias": null,
-      "name": "id",
-      "args": null,
-      "storageKey": null
-    },
+    (v0/*: any*/),
     {
       "kind": "ScalarField",
       "alias": null,
@@ -98,6 +109,60 @@ const node: ReaderFragment = {
               "concreteType": "Student",
               "plural": false,
               "selections": [
+                (v0/*: any*/),
+                {
+                  "kind": "ScalarField",
+                  "alias": null,
+                  "name": "firstName",
+                  "args": null,
+                  "storageKey": null
+                },
+                {
+                  "kind": "ScalarField",
+                  "alias": null,
+                  "name": "lastName",
+                  "args": null,
+                  "storageKey": null
+                },
+                {
+                  "kind": "ScalarField",
+                  "alias": null,
+                  "name": "grade",
+                  "args": null,
+                  "storageKey": null
+                },
+                {
+                  "kind": "ScalarField",
+                  "alias": null,
+                  "name": "dateEnrolled",
+                  "args": null,
+                  "storageKey": null
+                },
+                {
+                  "kind": "LinkedField",
+                  "alias": null,
+                  "name": "studentResults",
+                  "storageKey": null,
+                  "args": null,
+                  "concreteType": "Results",
+                  "plural": true,
+                  "selections": [
+                    {
+                      "kind": "ScalarField",
+                      "alias": null,
+                      "name": "score",
+                      "args": null,
+                      "storageKey": null
+                    },
+                    {
+                      "kind": "ScalarField",
+                      "alias": null,
+                      "name": "subject",
+                      "args": null,
+                      "storageKey": null
+                    }
+                  ]
+                },
                 {
                   "kind": "ScalarField",
                   "alias": null,
@@ -150,5 +215,6 @@ const node: ReaderFragment = {
     }
   ]
 };
-(node as any).hash = '88ece308cbc45e6b143f6c51c11209e6';
+})();
+(node as any).hash = 'c28a27dca4b68a0c2f64204a744cb144';
 export default node;

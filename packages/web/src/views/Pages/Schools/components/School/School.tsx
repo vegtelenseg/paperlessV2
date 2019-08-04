@@ -20,17 +20,14 @@ interface Props extends RouteComponentProps {
 
 class School extends React.Component<Props> {
   public render() {
-    const {
-      // @ts-ignore
-      school: { node }
-    } = this.props;
-    console.log("School:props: ", this.props);
+    const { school } = this.props;
+    console.log("School:props: ", this.props.school.id);
     return (
       <Col
         xs="12"
         sm="6"
         lg="3"
-        onClick={() => this.props.history.push(`/school/${node.id}`)}
+        onClick={() => this.props.history.push(`/school/${school.id}`)}
       >
         <Card className="text-white bg-info">
           <CardBody className="pb-0">
@@ -53,8 +50,8 @@ class School extends React.Component<Props> {
                 </DropdownMenu>
               </ButtonDropdown>
             </ButtonGroup>
-            <div className="text-value">{node.name}</div>
-            <div>{node.registeredDate}</div>
+            <div className="text-value">{school.name}</div>
+            <div>{school.registeredDate}</div>
           </CardBody>
           <div className="chart-wrapper mx-3" style={{ height: "70px" }}></div>
         </Card>
@@ -63,13 +60,14 @@ class School extends React.Component<Props> {
   }
 }
 
-const SchoolFragmentContainer = createFragmentContainer(School, {
+const SchoolFragmentContainer = createFragmentContainer(withRouter(School), {
   school: graphql`
     fragment School_school on School {
       id
       name
       registeredDate
+      ...Students_students
     }
   `
 });
-export default withRouter(SchoolFragmentContainer);
+export default SchoolFragmentContainer;

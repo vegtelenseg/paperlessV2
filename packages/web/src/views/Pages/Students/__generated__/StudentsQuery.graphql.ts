@@ -8,19 +8,9 @@ export type StudentsQueryVariables = {
     readonly cursor?: string | null;
 };
 export type StudentsQueryResponse = {
-    readonly node: ({
-        readonly name?: string | null;
-        readonly registeredDate?: any | null;
+    readonly students: {
         readonly " $fragmentRefs": Students_students$ref;
-    } & ({
-        readonly name: string | null;
-        readonly registeredDate: any | null;
-        readonly " $fragmentRefs": Students_students$ref;
-    } | {
-        /*This will never be '% other', but we need some
-        value in case none of the concrete values match.*/
-        readonly __typename: "%other";
-    })) | null;
+    } | null;
 };
 export type StudentsQuery = {
     readonly response: StudentsQueryResponse;
@@ -35,13 +25,9 @@ query StudentsQuery(
   $count: Int!
   $cursor: String
 ) {
-  node(id: $id) {
+  students: node(id: $id) {
     __typename
-    ... on School {
-      name
-      registeredDate
-      ...Students_students_1G22uz
-    }
+    ...Students_students_1G22uz
     id
   }
 }
@@ -55,6 +41,14 @@ fragment Students_students_1G22uz on School {
       node {
         ...Student_student
         id
+        firstName
+        lastName
+        grade
+        dateEnrolled
+        studentResults {
+          score
+          subject
+        }
         __typename
       }
       cursor
@@ -110,32 +104,18 @@ v1 = [
 v2 = {
   "kind": "ScalarField",
   "alias": null,
-  "name": "name",
+  "name": "__typename",
   "args": null,
   "storageKey": null
 },
 v3 = {
   "kind": "ScalarField",
   "alias": null,
-  "name": "registeredDate",
-  "args": null,
-  "storageKey": null
-},
-v4 = {
-  "kind": "ScalarField",
-  "alias": null,
-  "name": "__typename",
-  "args": null,
-  "storageKey": null
-},
-v5 = {
-  "kind": "ScalarField",
-  "alias": null,
   "name": "id",
   "args": null,
   "storageKey": null
 },
-v6 = [
+v4 = [
   {
     "kind": "Variable",
     "name": "after",
@@ -158,7 +138,7 @@ return {
     "selections": [
       {
         "kind": "LinkedField",
-        "alias": null,
+        "alias": "students",
         "name": "node",
         "storageKey": null,
         "args": (v1/*: any*/),
@@ -166,26 +146,18 @@ return {
         "plural": false,
         "selections": [
           {
-            "kind": "InlineFragment",
-            "type": "School",
-            "selections": [
-              (v2/*: any*/),
-              (v3/*: any*/),
+            "kind": "FragmentSpread",
+            "name": "Students_students",
+            "args": [
               {
-                "kind": "FragmentSpread",
-                "name": "Students_students",
-                "args": [
-                  {
-                    "kind": "Variable",
-                    "name": "count",
-                    "variableName": "count"
-                  },
-                  {
-                    "kind": "Variable",
-                    "name": "cursor",
-                    "variableName": "cursor"
-                  }
-                ]
+                "kind": "Variable",
+                "name": "count",
+                "variableName": "count"
+              },
+              {
+                "kind": "Variable",
+                "name": "cursor",
+                "variableName": "cursor"
               }
             ]
           }
@@ -200,27 +172,39 @@ return {
     "selections": [
       {
         "kind": "LinkedField",
-        "alias": null,
+        "alias": "students",
         "name": "node",
         "storageKey": null,
         "args": (v1/*: any*/),
         "concreteType": null,
         "plural": false,
         "selections": [
-          (v4/*: any*/),
-          (v5/*: any*/),
+          (v2/*: any*/),
+          (v3/*: any*/),
           {
             "kind": "InlineFragment",
             "type": "School",
             "selections": [
-              (v2/*: any*/),
-              (v3/*: any*/),
+              {
+                "kind": "ScalarField",
+                "alias": null,
+                "name": "name",
+                "args": null,
+                "storageKey": null
+              },
+              {
+                "kind": "ScalarField",
+                "alias": null,
+                "name": "registeredDate",
+                "args": null,
+                "storageKey": null
+              },
               {
                 "kind": "LinkedField",
                 "alias": null,
                 "name": "students",
                 "storageKey": null,
-                "args": (v6/*: any*/),
+                "args": (v4/*: any*/),
                 "concreteType": "ViewerStudentConnection",
                 "plural": false,
                 "selections": [
@@ -242,7 +226,7 @@ return {
                         "concreteType": "Student",
                         "plural": false,
                         "selections": [
-                          (v5/*: any*/),
+                          (v3/*: any*/),
                           {
                             "kind": "ScalarField",
                             "alias": null,
@@ -296,7 +280,7 @@ return {
                               }
                             ]
                           },
-                          (v4/*: any*/)
+                          (v2/*: any*/)
                         ]
                       },
                       {
@@ -339,7 +323,7 @@ return {
                 "kind": "LinkedHandle",
                 "alias": null,
                 "name": "students",
-                "args": (v6/*: any*/),
+                "args": (v4/*: any*/),
                 "handle": "connection",
                 "key": "Students_students",
                 "filters": null
@@ -354,10 +338,10 @@ return {
     "operationKind": "query",
     "name": "StudentsQuery",
     "id": null,
-    "text": "query StudentsQuery(\n  $id: ID!\n  $count: Int!\n  $cursor: String\n) {\n  node(id: $id) {\n    __typename\n    ... on School {\n      name\n      registeredDate\n      ...Students_students_1G22uz\n    }\n    id\n  }\n}\n\nfragment Students_students_1G22uz on School {\n  id\n  name\n  registeredDate\n  students(first: $count, after: $cursor) {\n    edges {\n      node {\n        ...Student_student\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment Student_student on Student {\n  id\n  firstName\n  lastName\n  grade\n  dateEnrolled\n  studentResults {\n    score\n    subject\n  }\n}\n",
+    "text": "query StudentsQuery(\n  $id: ID!\n  $count: Int!\n  $cursor: String\n) {\n  students: node(id: $id) {\n    __typename\n    ...Students_students_1G22uz\n    id\n  }\n}\n\nfragment Students_students_1G22uz on School {\n  id\n  name\n  registeredDate\n  students(first: $count, after: $cursor) {\n    edges {\n      node {\n        ...Student_student\n        id\n        firstName\n        lastName\n        grade\n        dateEnrolled\n        studentResults {\n          score\n          subject\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment Student_student on Student {\n  id\n  firstName\n  lastName\n  grade\n  dateEnrolled\n  studentResults {\n    score\n    subject\n  }\n}\n",
     "metadata": {}
   }
 };
 })();
-(node as any).hash = 'd72ea4b7b4d586b28d209274f8d777d5';
+(node as any).hash = '89a4fd9f21b134f54cacfb3418469ccd';
 export default node;
