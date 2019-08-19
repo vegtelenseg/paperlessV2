@@ -8,6 +8,10 @@ const Dashboard = React.lazy(() => import("./views/Dashboard/Dashboard"));
 const Login = React.lazy(() => import("./views/Pages/Login/Login"));
 const Students = React.lazy(() => import("./views/Pages/Students/Students"));
 const Drilldown = React.lazy(() => import("./views/Pages/Drilldown/Drilldown"));
+const CreateAssessment = React.lazy(() =>
+  import("./views/Pages/CreateAssessment/CreateAssessment")
+);
+
 export const routes = [
   {
     path: "/login",
@@ -56,6 +60,12 @@ export const routes = [
     exact: true,
     name: "Marks Drilldown",
     Component: Drilldown
+  },
+  {
+    path: "/assessment/create",
+    exact: true,
+    name: "Create Assessment",
+    Component: CreateAssessment
   }
 ];
 class Routes extends React.Component {

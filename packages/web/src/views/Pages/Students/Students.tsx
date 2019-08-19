@@ -20,10 +20,60 @@ interface Props extends RouteComponentProps {
   relay: RelayPaginationProp;
 }
 
-class Students extends React.Component<Props> {
+interface State {
+  selectedIndex: number;
+}
+
+const ROWS_PER_PAGE = 4;
+class Students extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      selectedIndex: 0
+    };
+  }
+
+  public shouldComponentUpdate() {
+    return false;
+  }
+  public gotoPage(index: number) {
+    this.setState({
+      selectedIndex: index
+    });
+  }
+  public handleSelectedPage = (idx: number) => {
+    if (idx === this.state.selectedIndex) {
+      return;
+    }
+    const { hasMore } = this.props.relay;
+    if (hasMore()) {
+      const { loadMore } = this.props.relay;
+      loadMore(ROWS_PER_PAGE, error => {
+        if (error) {
+          throw Error("Failed to load more: " + error.message);
+        }
+        this.gotoPage(idx);
+      });
+    }
+  };
+
   public render() {
     const { students } = this.props;
-    if (students && students.students && students.students.edges) {
+    if (
+      students &&
+      students.students &&
+      students.students.edges &&
+      students.students.total
+    ) {
+      const totalRecords = students.students.total;
+      const totalRecordsPerPage = Math.floor(totalRecords / ROWS_PER_PAGE);
+      const pages = new Array(totalRecordsPerPage).fill(null);
+      const page = this.state.selectedIndex;
+      const studentRows = students.students.edges.slice(
+        page * ROWS_PER_PAGE,
+        page * ROWS_PER_PAGE + ROWS_PER_PAGE
+      );
+      console.log("Rows: ", studentRows);
       return (
         <>
           <div className="row">
@@ -50,7 +100,7 @@ class Students extends React.Component<Props> {
                   </tr>
                 </thead>
                 <tbody>
-                  {students.students.edges.map((student, idx) => (
+                  {studentRows.map((student, idx) => (
                     <Student
                       index={idx}
                       key={idx}
@@ -69,7 +119,7 @@ class Students extends React.Component<Props> {
                 role="status"
                 aria-live="polite"
               >
-                Showing 1 to 10 of 32 entries
+                {`Showing 1 to ${totalRecordsPerPage} of ${totalRecords} entries`}
               </div>
             </div>
             <div className="col-sm-12 col-md-7">
@@ -79,7 +129,8 @@ class Students extends React.Component<Props> {
               >
                 <ul className={style.pagination}>
                   <li
-                    className="paginate_button page-item previous disabled"
+                    className={`paginate_button page-item previous ${page ===
+                      0 && "disabled"}`}
                     id="DataTables_Table_0_previous"
                   >
                     <a
@@ -91,26 +142,23 @@ class Students extends React.Component<Props> {
                       Previous
                     </a>
                   </li>
-                  <li className="paginate_button page-item active">
-                    <a
-                      href="#"
-                      aria-controls="DataTables_Table_0"
-                      data-dt-idx="1"
-                      className="page-link"
+                  {pages.map((_nothing, idx) => (
+                    <li
+                      onClick={() => this.handleSelectedPage(idx)}
+                      key={idx}
+                      className={`paginate_button page-item ${idx ===
+                        this.state.selectedIndex && "active"}`}
                     >
-                      1
-                    </a>
-                  </li>
-                  <li className="paginate_button page-item ">
-                    <a
-                      href="#"
-                      aria-controls="DataTables_Table_0"
-                      data-dt-idx="2"
-                      className="page-link"
-                    >
-                      2
-                    </a>
-                  </li>
+                      <a
+                        href="#"
+                        aria-controls="DataTables_Table_0"
+                        data-dt-idx={idx + 1}
+                        className="page-link"
+                      >
+                        {idx + 1}
+                      </a>
+                    </li>
+                  ))}
                   <li
                     className="paginate_button page-item next"
                     id="DataTables_Table_0_next"
@@ -158,6 +206,10 @@ const StudentsPaginationContainer = createPaginationContainer(
         registeredDate
         students(first: $count, after: $cursor)
           @connection(key: "Students_students") {
+          total
+          pageInfo {
+            hasNextPage
+          }
           edges {
             node {
               ...Student_student
@@ -194,7 +246,7 @@ export default moduleProps => {
       query={query}
       variables={{
         id: moduleProps.id,
-        count: 4
+        count: ROWS_PER_PAGE
       }}
       container={StudentsPaginationContainer}
       {...moduleProps}

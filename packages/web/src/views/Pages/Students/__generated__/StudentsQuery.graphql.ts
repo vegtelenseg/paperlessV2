@@ -37,6 +37,11 @@ fragment Students_students_1G22uz on School {
   name
   registeredDate
   students(first: $count, after: $cursor) {
+    total
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
     edges {
       node {
         ...Student_student
@@ -52,10 +57,6 @@ fragment Students_students_1G22uz on School {
         __typename
       }
       cursor
-    }
-    pageInfo {
-      endCursor
-      hasNextPage
     }
   }
 }
@@ -209,6 +210,38 @@ return {
                 "plural": false,
                 "selections": [
                   {
+                    "kind": "ScalarField",
+                    "alias": null,
+                    "name": "total",
+                    "args": null,
+                    "storageKey": null
+                  },
+                  {
+                    "kind": "LinkedField",
+                    "alias": null,
+                    "name": "pageInfo",
+                    "storageKey": null,
+                    "args": null,
+                    "concreteType": "PageInfo",
+                    "plural": false,
+                    "selections": [
+                      {
+                        "kind": "ScalarField",
+                        "alias": null,
+                        "name": "hasNextPage",
+                        "args": null,
+                        "storageKey": null
+                      },
+                      {
+                        "kind": "ScalarField",
+                        "alias": null,
+                        "name": "endCursor",
+                        "args": null,
+                        "storageKey": null
+                      }
+                    ]
+                  },
+                  {
                     "kind": "LinkedField",
                     "alias": null,
                     "name": "edges",
@@ -291,31 +324,6 @@ return {
                         "storageKey": null
                       }
                     ]
-                  },
-                  {
-                    "kind": "LinkedField",
-                    "alias": null,
-                    "name": "pageInfo",
-                    "storageKey": null,
-                    "args": null,
-                    "concreteType": "PageInfo",
-                    "plural": false,
-                    "selections": [
-                      {
-                        "kind": "ScalarField",
-                        "alias": null,
-                        "name": "endCursor",
-                        "args": null,
-                        "storageKey": null
-                      },
-                      {
-                        "kind": "ScalarField",
-                        "alias": null,
-                        "name": "hasNextPage",
-                        "args": null,
-                        "storageKey": null
-                      }
-                    ]
                   }
                 ]
               },
@@ -338,7 +346,7 @@ return {
     "operationKind": "query",
     "name": "StudentsQuery",
     "id": null,
-    "text": "query StudentsQuery(\n  $id: ID!\n  $count: Int!\n  $cursor: String\n) {\n  students: node(id: $id) {\n    __typename\n    ...Students_students_1G22uz\n    id\n  }\n}\n\nfragment Students_students_1G22uz on School {\n  id\n  name\n  registeredDate\n  students(first: $count, after: $cursor) {\n    edges {\n      node {\n        ...Student_student\n        id\n        firstName\n        lastName\n        grade\n        dateEnrolled\n        studentResults {\n          score\n          subject\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment Student_student on Student {\n  id\n  firstName\n  lastName\n  grade\n  dateEnrolled\n  studentResults {\n    score\n    subject\n  }\n}\n",
+    "text": "query StudentsQuery(\n  $id: ID!\n  $count: Int!\n  $cursor: String\n) {\n  students: node(id: $id) {\n    __typename\n    ...Students_students_1G22uz\n    id\n  }\n}\n\nfragment Students_students_1G22uz on School {\n  id\n  name\n  registeredDate\n  students(first: $count, after: $cursor) {\n    total\n    pageInfo {\n      hasNextPage\n      endCursor\n    }\n    edges {\n      node {\n        ...Student_student\n        id\n        firstName\n        lastName\n        grade\n        dateEnrolled\n        studentResults {\n          score\n          subject\n        }\n        __typename\n      }\n      cursor\n    }\n  }\n}\n\nfragment Student_student on Student {\n  id\n  firstName\n  lastName\n  grade\n  dateEnrolled\n  studentResults {\n    score\n    subject\n  }\n}\n",
     "metadata": {}
   }
 };

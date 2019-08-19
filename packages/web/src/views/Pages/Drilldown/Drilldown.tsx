@@ -91,8 +91,8 @@ class Drilldown extends React.Component<Props> {
 const DrilldownFragmentContainer = createFragmentContainer(
   withRouter(Drilldown),
   {
-    viewer: graphql`
-      fragment Drilldown_viewer on Student {
+    student: graphql`
+      fragment Drilldown_student on Student {
         firstName
       }
     `
@@ -121,7 +121,6 @@ const query = graphql`
 `;
 
 export default moduleProps => {
-  console.log("Module Props: ", moduleProps.studentId);
   return (
     <RelayRenderer
       query={query}

@@ -8,6 +8,33 @@ export default {
       //   variant: "info",
       //   text: "NEW"
       // }
+    },
+    {
+      name: "Assessments",
+      url: "/assessments",
+      icon: "icon-folder",
+      children: [
+        {
+          name: "Create Assessment",
+          url: "/assessment/create",
+          icon: "icon-plus"
+        },
+        {
+          name: "Edit Assessment",
+          url: "/assessment/edit",
+          icon: "icon-cursor"
+        },
+        {
+          name: "Capture Marks",
+          url: "/assessment/capture",
+          icon: "icon-cursor"
+        },
+        {
+          name: "Brand Buttons",
+          url: "/buttons/brand-buttons",
+          icon: "icon-cursor"
+        }
+      ]
     }
     // {
     //   title: true,

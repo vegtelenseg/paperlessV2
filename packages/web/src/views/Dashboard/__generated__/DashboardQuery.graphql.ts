@@ -64,6 +64,11 @@ fragment Students_students on School {
   name
   registeredDate
   students {
+    total
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
     edges {
       node {
         ...Student_student
@@ -79,10 +84,6 @@ fragment Students_students on School {
         __typename
       }
       cursor
-    }
-    pageInfo {
-      endCursor
-      hasNextPage
     }
   }
 }
@@ -137,41 +138,30 @@ v2 = {
 v3 = {
   "kind": "ScalarField",
   "alias": null,
-  "name": "__typename",
+  "name": "hasNextPage",
   "args": null,
   "storageKey": null
 },
 v4 = {
   "kind": "ScalarField",
   "alias": null,
-  "name": "cursor",
+  "name": "endCursor",
   "args": null,
   "storageKey": null
 },
 v5 = {
-  "kind": "LinkedField",
+  "kind": "ScalarField",
   "alias": null,
-  "name": "pageInfo",
-  "storageKey": null,
+  "name": "__typename",
   "args": null,
-  "concreteType": "PageInfo",
-  "plural": false,
-  "selections": [
-    {
-      "kind": "ScalarField",
-      "alias": null,
-      "name": "endCursor",
-      "args": null,
-      "storageKey": null
-    },
-    {
-      "kind": "ScalarField",
-      "alias": null,
-      "name": "hasNextPage",
-      "args": null,
-      "storageKey": null
-    }
-  ]
+  "storageKey": null
+},
+v6 = {
+  "kind": "ScalarField",
+  "alias": null,
+  "name": "cursor",
+  "args": null,
+  "storageKey": null
 };
 return {
   "kind": "Request",
@@ -266,6 +256,26 @@ return {
                         "plural": false,
                         "selections": [
                           {
+                            "kind": "ScalarField",
+                            "alias": null,
+                            "name": "total",
+                            "args": null,
+                            "storageKey": null
+                          },
+                          {
+                            "kind": "LinkedField",
+                            "alias": null,
+                            "name": "pageInfo",
+                            "storageKey": null,
+                            "args": null,
+                            "concreteType": "PageInfo",
+                            "plural": false,
+                            "selections": [
+                              (v3/*: any*/),
+                              (v4/*: any*/)
+                            ]
+                          },
+                          {
                             "kind": "LinkedField",
                             "alias": null,
                             "name": "edges",
@@ -337,13 +347,12 @@ return {
                                       }
                                     ]
                                   },
-                                  (v3/*: any*/)
+                                  (v5/*: any*/)
                                 ]
                               },
-                              (v4/*: any*/)
+                              (v6/*: any*/)
                             ]
-                          },
-                          (v5/*: any*/)
+                          }
                         ]
                       },
                       {
@@ -355,13 +364,25 @@ return {
                         "key": "Students_students",
                         "filters": null
                       },
-                      (v3/*: any*/)
+                      (v5/*: any*/)
                     ]
                   },
-                  (v4/*: any*/)
+                  (v6/*: any*/)
                 ]
               },
-              (v5/*: any*/)
+              {
+                "kind": "LinkedField",
+                "alias": null,
+                "name": "pageInfo",
+                "storageKey": null,
+                "args": null,
+                "concreteType": "PageInfo",
+                "plural": false,
+                "selections": [
+                  (v4/*: any*/),
+                  (v3/*: any*/)
+                ]
+              }
             ]
           },
           {
@@ -382,7 +403,7 @@ return {
     "operationKind": "query",
     "name": "DashboardQuery",
     "id": null,
-    "text": "query DashboardQuery(\n  $count: Int!\n  $cursor: String\n) {\n  viewer {\n    ...Dashboard_viewer\n    id\n  }\n}\n\nfragment Dashboard_viewer on Viewer {\n  ...Schools_schools_1G22uz\n}\n\nfragment Schools_schools_1G22uz on Viewer {\n  schools(first: $count, after: $cursor) {\n    edges {\n      node {\n        id\n        name\n        registeredDate\n        ...School_school\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment School_school on School {\n  id\n  name\n  registeredDate\n  ...Students_students\n}\n\nfragment Students_students on School {\n  id\n  name\n  registeredDate\n  students {\n    edges {\n      node {\n        ...Student_student\n        id\n        firstName\n        lastName\n        grade\n        dateEnrolled\n        studentResults {\n          score\n          subject\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment Student_student on Student {\n  id\n  firstName\n  lastName\n  grade\n  dateEnrolled\n  studentResults {\n    score\n    subject\n  }\n}\n",
+    "text": "query DashboardQuery(\n  $count: Int!\n  $cursor: String\n) {\n  viewer {\n    ...Dashboard_viewer\n    id\n  }\n}\n\nfragment Dashboard_viewer on Viewer {\n  ...Schools_schools_1G22uz\n}\n\nfragment Schools_schools_1G22uz on Viewer {\n  schools(first: $count, after: $cursor) {\n    edges {\n      node {\n        id\n        name\n        registeredDate\n        ...School_school\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment School_school on School {\n  id\n  name\n  registeredDate\n  ...Students_students\n}\n\nfragment Students_students on School {\n  id\n  name\n  registeredDate\n  students {\n    total\n    pageInfo {\n      hasNextPage\n      endCursor\n    }\n    edges {\n      node {\n        ...Student_student\n        id\n        firstName\n        lastName\n        grade\n        dateEnrolled\n        studentResults {\n          score\n          subject\n        }\n        __typename\n      }\n      cursor\n    }\n  }\n}\n\nfragment Student_student on Student {\n  id\n  firstName\n  lastName\n  grade\n  dateEnrolled\n  studentResults {\n    score\n    subject\n  }\n}\n",
     "metadata": {}
   }
 };

@@ -8,6 +8,10 @@ export type Students_students = {
     readonly name: string | null;
     readonly registeredDate: any | null;
     readonly students: {
+        readonly total: number | null;
+        readonly pageInfo: {
+            readonly hasNextPage: boolean;
+        };
         readonly edges: ReadonlyArray<{
             readonly node: {
                 readonly id: string;
@@ -91,6 +95,38 @@ return {
       "concreteType": "ViewerStudentConnection",
       "plural": false,
       "selections": [
+        {
+          "kind": "ScalarField",
+          "alias": null,
+          "name": "total",
+          "args": null,
+          "storageKey": null
+        },
+        {
+          "kind": "LinkedField",
+          "alias": null,
+          "name": "pageInfo",
+          "storageKey": null,
+          "args": null,
+          "concreteType": "PageInfo",
+          "plural": false,
+          "selections": [
+            {
+              "kind": "ScalarField",
+              "alias": null,
+              "name": "hasNextPage",
+              "args": null,
+              "storageKey": null
+            },
+            {
+              "kind": "ScalarField",
+              "alias": null,
+              "name": "endCursor",
+              "args": null,
+              "storageKey": null
+            }
+          ]
+        },
         {
           "kind": "LinkedField",
           "alias": null,
@@ -185,36 +221,11 @@ return {
               "storageKey": null
             }
           ]
-        },
-        {
-          "kind": "LinkedField",
-          "alias": null,
-          "name": "pageInfo",
-          "storageKey": null,
-          "args": null,
-          "concreteType": "PageInfo",
-          "plural": false,
-          "selections": [
-            {
-              "kind": "ScalarField",
-              "alias": null,
-              "name": "endCursor",
-              "args": null,
-              "storageKey": null
-            },
-            {
-              "kind": "ScalarField",
-              "alias": null,
-              "name": "hasNextPage",
-              "args": null,
-              "storageKey": null
-            }
-          ]
         }
       ]
     }
   ]
 };
 })();
-(node as any).hash = 'c28a27dca4b68a0c2f64204a744cb144';
+(node as any).hash = '30b623cada7f3d2fb628271f92492109';
 export default node;
