@@ -31,10 +31,6 @@ fragment CreateAssessment_viewer on Viewer {
     }
     id
   }
-  ...AssessmentForm_schools
-}
-
-fragment AssessmentForm_schools on Viewer {
   schools {
     edges {
       node {
@@ -45,6 +41,9 @@ fragment AssessmentForm_schools on Viewer {
           subjects {
             id
             name
+            chapters {
+              name
+            }
           }
           id
         }
@@ -63,6 +62,18 @@ var v0 = {
   "storageKey": null
 },
 v1 = {
+  "kind": "LinkedField",
+  "alias": null,
+  "name": "chapters",
+  "storageKey": null,
+  "args": null,
+  "concreteType": "Chapter",
+  "plural": true,
+  "selections": [
+    (v0/*: any*/)
+  ]
+},
+v2 = {
   "kind": "ScalarField",
   "alias": null,
   "name": "id",
@@ -126,19 +137,8 @@ return {
                 "args": null,
                 "storageKey": null
               },
-              {
-                "kind": "LinkedField",
-                "alias": null,
-                "name": "chapters",
-                "storageKey": null,
-                "args": null,
-                "concreteType": "Chapter",
-                "plural": true,
-                "selections": [
-                  (v0/*: any*/)
-                ]
-              },
-              (v1/*: any*/)
+              (v1/*: any*/),
+              (v2/*: any*/)
             ]
           },
           {
@@ -169,7 +169,7 @@ return {
                     "plural": false,
                     "selections": [
                       (v0/*: any*/),
-                      (v1/*: any*/),
+                      (v2/*: any*/),
                       {
                         "kind": "LinkedField",
                         "alias": null,
@@ -189,11 +189,12 @@ return {
                             "concreteType": "Subject",
                             "plural": true,
                             "selections": [
-                              (v1/*: any*/),
-                              (v0/*: any*/)
+                              (v2/*: any*/),
+                              (v0/*: any*/),
+                              (v1/*: any*/)
                             ]
                           },
-                          (v1/*: any*/)
+                          (v2/*: any*/)
                         ]
                       }
                     ]
@@ -202,7 +203,7 @@ return {
               }
             ]
           },
-          (v1/*: any*/)
+          (v2/*: any*/)
         ]
       }
     ]
@@ -211,7 +212,7 @@ return {
     "operationKind": "query",
     "name": "CreateAssessmentQuery",
     "id": null,
-    "text": "query CreateAssessmentQuery {\n  viewer {\n    ...CreateAssessment_viewer\n    id\n  }\n}\n\nfragment CreateAssessment_viewer on Viewer {\n  assessments {\n    kind\n    chapters {\n      name\n    }\n    id\n  }\n  ...AssessmentForm_schools\n}\n\nfragment AssessmentForm_schools on Viewer {\n  schools {\n    edges {\n      node {\n        name\n        id\n        grades {\n          name\n          subjects {\n            id\n            name\n          }\n          id\n        }\n      }\n    }\n  }\n}\n",
+    "text": "query CreateAssessmentQuery {\n  viewer {\n    ...CreateAssessment_viewer\n    id\n  }\n}\n\nfragment CreateAssessment_viewer on Viewer {\n  assessments {\n    kind\n    chapters {\n      name\n    }\n    id\n  }\n  schools {\n    edges {\n      node {\n        name\n        id\n        grades {\n          name\n          subjects {\n            id\n            name\n            chapters {\n              name\n            }\n          }\n          id\n        }\n      }\n    }\n  }\n}\n",
     "metadata": {}
   }
 };

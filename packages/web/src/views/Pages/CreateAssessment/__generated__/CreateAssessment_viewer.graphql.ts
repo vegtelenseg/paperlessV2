@@ -1,7 +1,6 @@
 /* tslint:disable */
 
 import { ReaderFragment } from "relay-runtime";
-type AssessmentForm_schools$ref = any;
 export type CreateAssessment_viewer$ref = any;
 export type CreateAssessment_viewer = {
     readonly assessments: ReadonlyArray<{
@@ -10,13 +9,57 @@ export type CreateAssessment_viewer = {
             readonly name: string;
         }> | null;
     } | null> | null;
-    readonly " $fragmentRefs": AssessmentForm_schools$ref;
+    readonly schools: {
+        readonly edges: ReadonlyArray<{
+            readonly node: {
+                readonly name: string | null;
+                readonly id: string;
+                readonly grades: ReadonlyArray<{
+                    readonly name: string;
+                    readonly subjects: ReadonlyArray<{
+                        readonly id: string;
+                        readonly name: string;
+                        readonly chapters: ReadonlyArray<{
+                            readonly name: string;
+                        } | null> | null;
+                    } | null>;
+                } | null>;
+            } | null;
+        } | null> | null;
+    } | null;
     readonly " $refType": CreateAssessment_viewer$ref;
 };
 
 
 
-const node: ReaderFragment = {
+const node: ReaderFragment = (function(){
+var v0 = {
+  "kind": "ScalarField",
+  "alias": null,
+  "name": "name",
+  "args": null,
+  "storageKey": null
+},
+v1 = {
+  "kind": "LinkedField",
+  "alias": null,
+  "name": "chapters",
+  "storageKey": null,
+  "args": null,
+  "concreteType": "Chapter",
+  "plural": true,
+  "selections": [
+    (v0/*: any*/)
+  ]
+},
+v2 = {
+  "kind": "ScalarField",
+  "alias": null,
+  "name": "id",
+  "args": null,
+  "storageKey": null
+};
+return {
   "kind": "Fragment",
   "name": "CreateAssessment_viewer",
   "type": "Viewer",
@@ -39,32 +82,72 @@ const node: ReaderFragment = {
           "args": null,
           "storageKey": null
         },
+        (v1/*: any*/)
+      ]
+    },
+    {
+      "kind": "LinkedField",
+      "alias": null,
+      "name": "schools",
+      "storageKey": null,
+      "args": null,
+      "concreteType": "ViewerSchoolConnectionConnection",
+      "plural": false,
+      "selections": [
         {
           "kind": "LinkedField",
           "alias": null,
-          "name": "chapters",
+          "name": "edges",
           "storageKey": null,
           "args": null,
-          "concreteType": "Chapter",
+          "concreteType": "ViewerSchoolConnectionEdge",
           "plural": true,
           "selections": [
             {
-              "kind": "ScalarField",
+              "kind": "LinkedField",
               "alias": null,
-              "name": "name",
+              "name": "node",
+              "storageKey": null,
               "args": null,
-              "storageKey": null
+              "concreteType": "School",
+              "plural": false,
+              "selections": [
+                (v0/*: any*/),
+                (v2/*: any*/),
+                {
+                  "kind": "LinkedField",
+                  "alias": null,
+                  "name": "grades",
+                  "storageKey": null,
+                  "args": null,
+                  "concreteType": "Grade",
+                  "plural": true,
+                  "selections": [
+                    (v0/*: any*/),
+                    {
+                      "kind": "LinkedField",
+                      "alias": null,
+                      "name": "subjects",
+                      "storageKey": null,
+                      "args": null,
+                      "concreteType": "Subject",
+                      "plural": true,
+                      "selections": [
+                        (v2/*: any*/),
+                        (v0/*: any*/),
+                        (v1/*: any*/)
+                      ]
+                    }
+                  ]
+                }
+              ]
             }
           ]
         }
       ]
-    },
-    {
-      "kind": "FragmentSpread",
-      "name": "AssessmentForm_schools",
-      "args": null
     }
   ]
 };
-(node as any).hash = '118986bc60cd7f8d6a187eae288a773a';
+})();
+(node as any).hash = '91cc5b4ff9c8b4059a511ea11cbaaf65';
 export default node;
