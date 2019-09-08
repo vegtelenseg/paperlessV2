@@ -28,12 +28,12 @@ export default {
           name: "Capture Marks",
           url: "/assessment/capture",
           icon: "icon-cursor"
-        },
-        {
-          name: "Brand Buttons",
-          url: "/buttons/brand-buttons",
-          icon: "icon-cursor"
         }
+        // {
+        //   name: "Brand Buttons",
+        //   url: "/buttons/brand-buttons",
+        //   icon: "icon-cursor"
+        // }
       ]
     }
     // {

@@ -1,7 +1,7 @@
 /* tslint:disable */
 
 import { ReaderFragment } from "relay-runtime";
-type modal_schools$ref = any;
+type AssessmentForm_schools$ref = any;
 export type CreateAssessment_viewer$ref = any;
 export type CreateAssessment_viewer = {
     readonly assessments: ReadonlyArray<{
@@ -10,7 +10,7 @@ export type CreateAssessment_viewer = {
             readonly name: string;
         }> | null;
     } | null> | null;
-    readonly " $fragmentRefs": modal_schools$ref;
+    readonly " $fragmentRefs": AssessmentForm_schools$ref;
     readonly " $refType": CreateAssessment_viewer$ref;
 };
 
@@ -61,10 +61,10 @@ const node: ReaderFragment = {
     },
     {
       "kind": "FragmentSpread",
-      "name": "modal_schools",
+      "name": "AssessmentForm_schools",
       "args": null
     }
   ]
 };
-(node as any).hash = '476c27c2357a44a491553bb09f342da8';
+(node as any).hash = '118986bc60cd7f8d6a187eae288a773a';
 export default node;

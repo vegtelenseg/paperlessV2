@@ -31,10 +31,10 @@ fragment CreateAssessment_viewer on Viewer {
     }
     id
   }
-  ...modal_schools
+  ...AssessmentForm_schools
 }
 
-fragment modal_schools on Viewer {
+fragment AssessmentForm_schools on Viewer {
   schools {
     edges {
       node {
@@ -42,6 +42,10 @@ fragment modal_schools on Viewer {
         id
         grades {
           name
+          subjects {
+            id
+            name
+          }
           id
         }
       }
@@ -176,6 +180,19 @@ return {
                         "plural": true,
                         "selections": [
                           (v0/*: any*/),
+                          {
+                            "kind": "LinkedField",
+                            "alias": null,
+                            "name": "subjects",
+                            "storageKey": null,
+                            "args": null,
+                            "concreteType": "Subject",
+                            "plural": true,
+                            "selections": [
+                              (v1/*: any*/),
+                              (v0/*: any*/)
+                            ]
+                          },
                           (v1/*: any*/)
                         ]
                       }
@@ -194,7 +211,7 @@ return {
     "operationKind": "query",
     "name": "CreateAssessmentQuery",
     "id": null,
-    "text": "query CreateAssessmentQuery {\n  viewer {\n    ...CreateAssessment_viewer\n    id\n  }\n}\n\nfragment CreateAssessment_viewer on Viewer {\n  assessments {\n    kind\n    chapters {\n      name\n    }\n    id\n  }\n  ...modal_schools\n}\n\nfragment modal_schools on Viewer {\n  schools {\n    edges {\n      node {\n        name\n        id\n        grades {\n          name\n          id\n        }\n      }\n    }\n  }\n}\n",
+    "text": "query CreateAssessmentQuery {\n  viewer {\n    ...CreateAssessment_viewer\n    id\n  }\n}\n\nfragment CreateAssessment_viewer on Viewer {\n  assessments {\n    kind\n    chapters {\n      name\n    }\n    id\n  }\n  ...AssessmentForm_schools\n}\n\nfragment AssessmentForm_schools on Viewer {\n  schools {\n    edges {\n      node {\n        name\n        id\n        grades {\n          name\n          subjects {\n            id\n            name\n          }\n          id\n        }\n      }\n    }\n  }\n}\n",
     "metadata": {}
   }
 };

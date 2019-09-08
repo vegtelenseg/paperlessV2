@@ -1,27 +1,23 @@
 import React from "react";
-import Modal from "../../../components/modal/modal";
 import { createFragmentContainer } from "react-relay";
 import { graphql } from "babel-plugin-relay/macro";
 import RelayRenderer from "../../../RelayRenderer";
 import { CreateAssessment_viewer } from "./__generated__/CreateAssessment_viewer.graphql";
-import { modal_schools } from "../../../components/modal/__generated__/modal_schools.graphql";
+import { withRouter, RouteComponentProps } from "react-router";
+import AssessmentForm, { Grade } from "./components/AssessmentForm";
 
 export interface School {
   name: string;
   id: string;
 }
 
-export interface Grade {
-  name: string;
-}
-
-interface Props {
+interface Props extends RouteComponentProps {
   viewer: CreateAssessment_viewer;
 }
 
 interface State {
   school: School;
-  grades: Grade[];
+  grade: Grade;
 }
 
 class CreateAssessment extends React.Component<Props, State> {
@@ -29,54 +25,34 @@ class CreateAssessment extends React.Component<Props, State> {
     super(props);
     this.state = {
       school: null as any,
-      grades: null as any
+      grade: null as any
     };
   }
   public setSelectedSchool = (school: School) => {
     if (school) {
       this.setState({
-        school: school
+        school
       });
     }
   };
 
-  public setSelectedGrades = (
-    selectedSchool: School,
-    schools: modal_schools
-  ) => {
-    const school = schools.schools!.edges!.find(school => {
-      return (
-        school!.node!.id !==
-        (selectedSchool ? selectedSchool.id : "U2Nob29sOjE5")
-      );
-    });
-    // @ts-ignore
-    const grades = school!.node.grades;
+  public setSelectedGrade = (grade: Grade) => {
     this.setState({
-      grades: grades as Grade[]
+      grade
     });
   };
 
-  public onClose = () => {
-    alert("Close clicked");
-    return null;
-  };
-  public onSubmit = () => {
-    alert("Submit clicked");
-    return null;
-  };
   public render() {
     const { viewer } = this.props;
     if (viewer) {
       return (
         <>
-          <Modal
-            onClose={() => this.onClose()}
-            onSubmit={() => this.onSubmit()}
+          <AssessmentForm
             schools={viewer as any}
+            assessments={viewer.assessments as any}
             selectedSchool={this.state.school}
-            selectedGrades={this.state.grades}
-            setSelectedGrades={this.setSelectedGrades}
+            selectedGrade={this.state.grade}
+            setSelectedGrade={this.setSelectedGrade}
             setSelectedSchool={this.setSelectedSchool}
           />
         </>
@@ -86,7 +62,7 @@ class CreateAssessment extends React.Component<Props, State> {
 }
 
 const CreateAssessmentFragmentContainer = createFragmentContainer(
-  CreateAssessment,
+  withRouter(CreateAssessment),
   {
     viewer: graphql`
       fragment CreateAssessment_viewer on Viewer {
@@ -96,8 +72,7 @@ const CreateAssessmentFragmentContainer = createFragmentContainer(
             name
           }
         }
-
-        ...modal_schools
+        ...AssessmentForm_schools
       }
     `
   }

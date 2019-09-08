@@ -1,8 +1,8 @@
 /* tslint:disable */
 
 import { ReaderFragment } from "relay-runtime";
-export type modal_schools$ref = any;
-export type modal_schools = {
+export type AssessmentForm_schools$ref = any;
+export type AssessmentForm_schools = {
     readonly schools: {
         readonly edges: ReadonlyArray<{
             readonly node: {
@@ -10,11 +10,15 @@ export type modal_schools = {
                 readonly id: string;
                 readonly grades: ReadonlyArray<{
                     readonly name: string;
+                    readonly subjects: ReadonlyArray<{
+                        readonly id: string;
+                        readonly name: string;
+                    } | null>;
                 } | null>;
             } | null;
         } | null> | null;
     } | null;
-    readonly " $refType": modal_schools$ref;
+    readonly " $refType": AssessmentForm_schools$ref;
 };
 
 
@@ -26,10 +30,17 @@ var v0 = {
   "name": "name",
   "args": null,
   "storageKey": null
+},
+v1 = {
+  "kind": "ScalarField",
+  "alias": null,
+  "name": "id",
+  "args": null,
+  "storageKey": null
 };
 return {
   "kind": "Fragment",
-  "name": "modal_schools",
+  "name": "AssessmentForm_schools",
   "type": "Viewer",
   "metadata": null,
   "argumentDefinitions": [],
@@ -62,13 +73,7 @@ return {
               "plural": false,
               "selections": [
                 (v0/*: any*/),
-                {
-                  "kind": "ScalarField",
-                  "alias": null,
-                  "name": "id",
-                  "args": null,
-                  "storageKey": null
-                },
+                (v1/*: any*/),
                 {
                   "kind": "LinkedField",
                   "alias": null,
@@ -78,7 +83,20 @@ return {
                   "concreteType": "Grade",
                   "plural": true,
                   "selections": [
-                    (v0/*: any*/)
+                    (v0/*: any*/),
+                    {
+                      "kind": "LinkedField",
+                      "alias": null,
+                      "name": "subjects",
+                      "storageKey": null,
+                      "args": null,
+                      "concreteType": "Subject",
+                      "plural": true,
+                      "selections": [
+                        (v1/*: any*/),
+                        (v0/*: any*/)
+                      ]
+                    }
                   ]
                 }
               ]
@@ -90,5 +108,5 @@ return {
   ]
 };
 })();
-(node as any).hash = '839ce9395e1e19c3a89c53c817dab022';
+(node as any).hash = '4b1e3cbaeb529ac00b30a78f6395ca63';
 export default node;
