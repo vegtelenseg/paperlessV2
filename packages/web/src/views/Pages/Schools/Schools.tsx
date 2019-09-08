@@ -2,21 +2,21 @@ import React from "react";
 import graphql from "babel-plugin-relay/macro";
 import { RouteComponentProps } from "react-router";
 import { createFragmentContainer } from "react-relay";
-import { Schools_viewer } from "./__generated__/schools_viewer.graphql";
+import { Schools_schools } from "./__generated__/schools_schools.graphql";
 import School from "./components/School/School";
 
 interface Props extends RouteComponentProps {
-  viewer: Schools_viewer;
+  schools: Schools_schools;
 }
 
 class Schools extends React.Component<Props> {
   public render() {
     const {
-      viewer: { schools }
+      schools: { schools }
     } = this.props;
     if (schools && schools.edges) {
       return schools.edges.map((school, idx) => (
-        <School key={`${school}-${idx}`} school={school as any} />
+        <School key={`${school}-${idx}`} school={school!.node as any} />
       ));
     } else {
       return <div>Loading...</div>;
@@ -25,15 +25,17 @@ class Schools extends React.Component<Props> {
 }
 
 const SchoolFragmentContainer = createFragmentContainer(Schools, {
-  viewer: graphql`
-    fragment Schools_viewer on Viewer {
-      schools {
+  schools: graphql`
+    fragment Schools_schools on Viewer
+      @argumentDefinitions(count: { type: "Int" }, cursor: { type: "String" }) {
+      schools(first: $count, after: $cursor)
+        @connection(key: "Schools_schools") {
         edges {
           node {
             id
             name
             registeredDate
-            ...School_viewer
+            ...School_school
           }
         }
       }

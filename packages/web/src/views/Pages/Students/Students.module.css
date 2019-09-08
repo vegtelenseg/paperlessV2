@@ -1,0 +1,19 @@
+.pagination {
+  display: flex;
+  justify-content: flex-end;
+  padding-left: 0;
+  list-style: none;
+  border-radius: .25rem;
+}
+
+.dataTables_paginate {
+  margin: 0;
+  white-space: nowrap;
+  text-align: right;
+}
+
+.dataTables_paginate ul .pagination {
+  margin: 2px 0;
+  white-space: nowrap;
+  justify-content: flex-end;
+}

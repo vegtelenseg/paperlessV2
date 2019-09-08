@@ -1,17 +1,17 @@
 /* tslint:disable */
 
 import { ReaderFragment } from "relay-runtime";
-export type Drilldown_viewer$ref = any;
-export type Drilldown_viewer = {
+export type Drilldown_student$ref = any;
+export type Drilldown_student = {
     readonly firstName: string;
-    readonly " $refType": Drilldown_viewer$ref;
+    readonly " $refType": Drilldown_student$ref;
 };
 
 
 
 const node: ReaderFragment = {
   "kind": "Fragment",
-  "name": "Drilldown_viewer",
+  "name": "Drilldown_student",
   "type": "Student",
   "metadata": null,
   "argumentDefinitions": [],
@@ -25,5 +25,5 @@ const node: ReaderFragment = {
     }
   ]
 };
-(node as any).hash = '2516194a846618675c76cf57c02d58f7';
+(node as any).hash = '92fae397be714be07d670aeb91f7b32b';
 export default node;

@@ -5,6 +5,7 @@ import {Teacher} from './teacher.graphql';
 import {Student} from './student.graphql';
 import {globalIdField} from 'graphql-relay';
 import {nodeInterface} from '../Relay';
+import { Chapter } from './Chapter.graphql';
 
 export const Subject: GraphQLObjectType = newJoinMonsterGraphQLObjectType({
   name: 'Subject',
@@ -40,6 +41,10 @@ export const Subject: GraphQLObjectType = newJoinMonsterGraphQLObjectType({
         ],
       },
     },
+    chapters: {
+      type: GraphQLList(Chapter),
+      sqlJoin: (subjectTable, chapterTable) => `${subjectTable}.id = ${chapterTable}.subject_id`
+    }
   }),
   interfaces: [nodeInterface],
 });
