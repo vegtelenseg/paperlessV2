@@ -1,5 +1,5 @@
 # source: http://localhost:5000/graphql
-# timestamp: Sun Sep 08 2019 13:40:27 GMT+0200 (South Africa Standard Time)
+# timestamp: Fri Oct 11 2019 08:56:47 GMT+0200 (South Africa Standard Time)
 
 """Keeps information about an assessment"""
 type Assessment implements Node {
@@ -59,6 +59,11 @@ type Grade implements Node {
   subjects: [Subject]!
 }
 
+type Mutation {
+  registerUser(input: RegisterUsersMutationInput!): RegisterUsersMutationPayload
+  loginUser(input: UsersLoginMutationInput!): UsersLoginMutationPayload
+}
+
 """An object with an ID"""
 interface Node {
   """The id of the object."""
@@ -94,6 +99,17 @@ type Query {
     id: ID!
   ): Node
   viewer: Viewer!
+}
+
+input RegisterUsersMutationInput {
+  email: String!
+  password: String!
+  clientMutationId: String
+}
+
+type RegisterUsersMutationPayload {
+  email: String!
+  clientMutationId: String
 }
 
 type Results {
@@ -160,6 +176,19 @@ type Teacher implements Node {
   employmentDate: Date!
   subjects: [Subject]
   school: School
+}
+
+input UsersLoginMutationInput {
+  email: String!
+  password: String!
+  clientMutationId: String
+}
+
+type UsersLoginMutationPayload {
+  ok: Boolean
+  token: String
+  refreshToken: String
+  clientMutationId: String
 }
 
 type Viewer implements Node {

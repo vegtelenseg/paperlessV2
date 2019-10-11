@@ -2,6 +2,7 @@ import {GraphQLNonNull, GraphQLObjectType, GraphQLSchema} from 'graphql';
 
 import RootQuery from './models/root-query.graphql';
 import {nodeField} from './Relay';
+import mutation from './mutations'
 
 const query = new GraphQLObjectType({
   name: 'Query',
@@ -16,4 +17,5 @@ const query = new GraphQLObjectType({
 
 export default new GraphQLSchema({
   query,
+  mutation
 });

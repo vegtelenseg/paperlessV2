@@ -21,7 +21,7 @@ import navigation from "../../_nav";
 const DefaultAside = React.lazy(() => import("./DefaultAside"));
 const DefaultFooter = React.lazy(() => import("./DefaultFooter"));
 const DefaultHeader = React.lazy(() => import("./DefaultHeader"));
-const Routes = React.lazy(() => import("../../Routes"));
+// const Routes = React.lazy(() => import("../../Routes"));
 
 class DefaultLayout extends React.Component<RouteComponentProps> {
   loading = () => (
@@ -54,7 +54,7 @@ class DefaultLayout extends React.Component<RouteComponentProps> {
             <AppBreadcrumb appRoutes={routes} />
             <Container fluid>
               <Suspense fallback={this.loading()}>
-                <Routes />
+                {/* <Routes /> */}
               </Suspense>
             </Container>
           </main>

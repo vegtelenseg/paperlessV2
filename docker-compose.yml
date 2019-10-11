@@ -9,7 +9,7 @@ services:
       POSTGRES_DB: test
     ports:
 # Perhaps consider PORT binding
-      - 5432
+      - 5432:5432
     volumes:
       - "./dumps:/dumps"
       - db-postgres:/var/opt/postgres

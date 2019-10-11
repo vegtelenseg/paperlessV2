@@ -178,6 +178,16 @@ export async function up(knex: Knex) {
     table.date('registered_date').defaultTo(knex.fn.now());
   });
 
+  await knex.schema.createTable('users', (table: TableBuilder) => {
+    table
+      .increments()
+      .primary()
+      .notNullable();
+    table.string('email').notNullable();
+    table.string('password').notNullable();
+    table.date('createdAt').defaultTo(knex.fn.now());
+  });
+
   // Should be composite key
   await knex.schema.createTable('school_teacher', (table: TableBuilder) => {
     table

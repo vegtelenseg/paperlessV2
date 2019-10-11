@@ -8,9 +8,22 @@ import "./index.css";
 import "react-widgets/dist/css/react-widgets.css";
 import * as serviceWorker from "./serviceWorker";
 
-ReactDOM.render(<App />, document.getElementById("root"));
+
+import AuthPersistGate from './components/AuthPersisteGate';
+import { AuthContextType } from './contexts/AuthContext';
+
+
+
+ReactDOM.render(
+  <AuthPersistGate>
+    {(auth: AuthContextType) => <App auth={auth} />}
+  </AuthPersistGate>,
+  document.getElementById('root')
+);
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: http://bit.ly/CRA-PWA
+
+// TODO change this for the project to work offline
 serviceWorker.unregister();
