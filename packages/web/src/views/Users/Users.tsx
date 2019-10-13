@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { Badge, Card, CardBody, CardHeader, Col, Row, Table } from "reactstrap";
 
@@ -39,7 +39,7 @@ function UserRow(props) {
   );
 }
 
-class Users extends React.Component {
+class Users extends Component {
   render() {
     const userList = usersData.filter(user => user.id < 10);
 

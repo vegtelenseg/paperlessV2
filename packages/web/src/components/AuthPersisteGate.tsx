@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { AuthContextType } from '../contexts/AuthContext';
+import * as React from "react";
+import { AuthContextType } from "../contexts/AuthContext";
 // import LoadingMask from './LoadingMask';
 // import { store } from '../../store';
 
@@ -18,13 +18,13 @@ export default class AuthPersistGate extends React.Component<Props, State> {
 
     this.state = {
       loading: true,
-      auth: { authenticated: false },
+      auth: { authenticated: false }
     };
   }
 
   public componentDidMount() {
     if (localStorage) {
-      const authRaw = localStorage.getItem('auth');
+      const authRaw = localStorage.getItem("auth");
 
       if (authRaw) {
         try {
@@ -38,7 +38,7 @@ export default class AuthPersistGate extends React.Component<Props, State> {
           this.setState({ auth });
         } catch (ex) {
           // tslint:disable-next-line
-          console.log('Failed to parse stored auth');
+          console.log("Failed to parse stored auth");
         }
       }
     }

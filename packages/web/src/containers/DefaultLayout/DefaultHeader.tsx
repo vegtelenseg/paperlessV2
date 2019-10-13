@@ -45,6 +45,11 @@ class DefaultHeader extends React.Component<Props> {
             </Link>
           </NavItem>
           <NavItem className="px-3">
+            <NavLink to="/register" className="nav-link">
+              Register User
+            </NavLink>
+          </NavItem>
+          <NavItem className="px-3">
             <NavLink to="#" className="nav-link">
               Settings
             </NavLink>

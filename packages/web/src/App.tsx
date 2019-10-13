@@ -3,12 +3,12 @@ import { createBrowserHistory as createHistory } from "history";
 import { Router, Switch, Route } from "react-router-dom";
 // import { renderRoutes } from 'react-router-config';
 import "./App.scss";
-// import { DefaultLayout } from "./containers";
-import RelayContext, { RelayState } from './contexts/RelayContext';
+import { DefaultLayout } from "./containers";
+import RelayContext, { RelayState } from "./contexts/RelayContext";
 import createNetworkLayer from "./createNetworkLayer";
 import { RecordSource, Store, Environment } from "relay-runtime";
-import { Login } from './views';
-import { AuthContextType } from './contexts/AuthContext';
+import { Login } from "./views";
+import { AuthContextType } from "./contexts/AuthContext";
 
 const loading = () => (
   <div className="animated fadeIn pt-3 text-center">Loading...</div>
@@ -31,19 +31,18 @@ class App extends React.Component<Props, State> {
       loading: true,
       auth: props.auth,
       environment: this.createEnvironment(
-        props.auth.authenticated ? props.auth.token : ''
-      ),
+        props.auth.authenticated ? props.auth.token : ""
+      )
     };
   }
 
   public handleLogin = async ({
     username,
-    token,
+    token
   }: {
     username: string;
     token: string;
   }) => {
-
     // store.dispatch({
     //   payload: { username, token },
     //   type: 'LOGIN',
@@ -52,7 +51,7 @@ class App extends React.Component<Props, State> {
     return new Promise(resolve => {
       this.setState(
         {
-          auth: { authenticated: true, token, username },
+          auth: { authenticated: true, token, username }
         },
         () => {
           // this.saveAuth();
@@ -93,10 +92,14 @@ class App extends React.Component<Props, State> {
       <RelayContext.Provider value={environment}>
         <Router history={this.history}>
           <React.Suspense fallback={loading()}>
-          <Switch>
-            <Route exact path="/login" render={props => <Login environment={environment} {...props}/>} />
-          </Switch>
-            {/* <DefaultLayout /> */}
+            <Switch>
+              <Route
+                exact
+                path="/login"
+                render={props => <Login environment={environment} {...props} />}
+              />
+            </Switch>
+            <DefaultLayout />
           </React.Suspense>
         </Router>
       </RelayContext.Provider>

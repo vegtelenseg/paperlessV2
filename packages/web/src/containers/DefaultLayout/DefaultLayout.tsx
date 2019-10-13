@@ -13,7 +13,7 @@ import {
   AppSidebarMinimizer,
   AppSidebarNav
 } from "@coreui/react";
-import { routes } from "../../Routes";
+import Routes, { routes } from "../../Routes";
 import { RouteComponentProps, withRouter } from "react-router";
 import navigation from "../../_nav";
 // sidebar nav config
@@ -54,7 +54,7 @@ class DefaultLayout extends React.Component<RouteComponentProps> {
             <AppBreadcrumb appRoutes={routes} />
             <Container fluid>
               <Suspense fallback={this.loading()}>
-                {/* <Routes /> */}
+                <Routes />
               </Suspense>
             </Container>
           </main>

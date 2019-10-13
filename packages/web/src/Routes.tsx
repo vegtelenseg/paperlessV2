@@ -1,5 +1,7 @@
 import React from "react";
 import { Switch, Route } from "react-router-dom";
+import Users from "./views/Users/Users";
+import User from "./views/Users/User";
 
 const Register = React.lazy(() => import("./views/Pages/Register/Register"));
 const Page404 = React.lazy(() => import("./views/Pages/Page404/Page404"));
@@ -66,7 +68,14 @@ export const routes = [
     exact: true,
     name: "Create Assessment",
     Component: CreateAssessment
-  }
+  },
+  {
+    path: "/users",
+    exact: true,
+    name: "Users",
+    Component: Users
+  },
+  { path: "/users/:id", exact: true, name: "User Details", Component: User }
 ];
 class Routes extends React.Component {
   public render() {
