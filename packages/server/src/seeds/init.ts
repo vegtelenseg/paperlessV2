@@ -224,7 +224,7 @@ export async function seed(knex: Knex) {
   });
   for (let i = 0; i < studentList.length; i++) {
     for (let j = 0; j < assessmendChaptersList.length; j++) {
-      const score = Math.floor(Math.random() * 10);
+      const score = Math.floor(Math.random() * 5);
       await StudentResult.query(knex)
         .context({context})
         .insertGraph({

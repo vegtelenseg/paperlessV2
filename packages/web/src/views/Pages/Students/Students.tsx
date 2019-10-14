@@ -24,7 +24,7 @@ interface State {
   selectedIndex: number;
 }
 
-const ROWS_PER_PAGE = 4;
+const ROWS_PER_PAGE = 18;
 class Students extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
